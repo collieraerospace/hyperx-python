@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hyperx"
-version = "0.0.1c"
+version = "0.0.2"
 authors = [
   { name="Noah Prezant", email="noah.prezant@collieraerospace.com" },
 ]
