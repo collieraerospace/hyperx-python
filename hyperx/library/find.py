@@ -3,13 +3,13 @@ Utilities for finding HyperX files.
 """
 
 import os
-from pathlib import Path
 import winreg
 
 
 def _TryGetEnvInstallFolder() -> str | None:
     '''Looks for the HyperX installation folder in the environment variables.'''
-    return os.environ.get('HyperXInstallFolder', None)
+    value = os.environ.get('HyperXInstallFolder', '')
+    return value if value != '' else None
 
 
 def _TryGetRegistryInstallFolder(keyType: int) -> str | None:

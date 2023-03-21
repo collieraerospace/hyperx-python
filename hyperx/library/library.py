@@ -9,28 +9,12 @@ from pathlib import Path
 from .find import AutoDetectInstallFolder
 
 
-override = None
-
-
-def SetLibrary(path: os.PathLike):
-    '''
-    Overrides the automatically detected path to the HyperX scripting library.
-    This path must be a folder than contains the HyperX.* DLLs.
-    '''
-    global override
-    override = path
-
-
 def ReferenceLibrary():
     '''
     Adds references to the C# HyperX scripting library.
     '''
-    global override
-    if override is None:
-        installFolder = AutoDetectInstallFolder()
-        libFolder = Path(installFolder) / 'Executable'
-    else:
-        libFolder = Path(override)
+    installFolder = AutoDetectInstallFolder()
+    libFolder = Path(installFolder) / 'Executable'
 
     scriptingDll = libFolder / 'HyperX.Scripting.dll'
     typesDll = libFolder / 'HyperX.Types.dll'

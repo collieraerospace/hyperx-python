@@ -15,9 +15,7 @@ Basic usage:
     >>>     print(f'Active project = {hdb.ActiveProject}')
 """
 
-from .api import Open
-
-from .library import SetLibrary
-
-# TODO remove this once everything is wrapped.
 from .library import ReferenceLibrary
+ReferenceLibrary()
+
+from .api import Open
