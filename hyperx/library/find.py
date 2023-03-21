@@ -8,7 +8,7 @@ import winreg
 
 def _TryGetEnvInstallFolder() -> str | None:
     '''Looks for the HyperX installation folder in the environment variables.'''
-    value = os.environ.get('HyperXInstallFolder', '')
+    value = os.environ.get('HyperXInstall', '')
     return value if value != '' else None
 
 
@@ -40,5 +40,8 @@ def AutoDetectInstallFolder() -> str:
     if folder is None:
         folder = _TryGetRegistryInstallFolder(winreg.HKEY_LOCAL_MACHINE)
     if folder is None:
-        raise RuntimeError('Cannot find HyperX install directory')
+        raise RuntimeError(
+            'Cannot find HyperX install directory.'
+            ' Try setting the "HyperXInstall" environment variable with'
+            ' a path to your HyperX installation directory.')
     return folder

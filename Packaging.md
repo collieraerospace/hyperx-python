@@ -28,6 +28,14 @@ Finally upload to official
 twine upload dist/*
 ```
 
+## Testing Locally
+
+Can also install directly from the wheel.
+
+```terminal
+pip install path/to/wheel.whl
+```
+
 ## Testing on PyPI
 
 Allows installing dependencies from standard PyPI.
