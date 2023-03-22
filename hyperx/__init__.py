@@ -24,7 +24,7 @@ variable `HyperXInstall`
 """
 
 # TODO remove once encapsulated
-from .library import hxapi, hxtypes
+from .library import _api, _types
 
 from .api import Db
 from .utils import Open, OpenWithDefault, WriteCsv
