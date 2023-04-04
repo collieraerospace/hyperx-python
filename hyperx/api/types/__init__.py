@@ -15,3 +15,11 @@ from .FamilyConceptUID import FamilyConceptUID
 from .FamilyObjectUID import FamilyObjectUID
 from .FeaSolutionType import FeaSolutionType
 from .FemType import FemType
+from .JointObject import JointObject
+from .LimitUltimate import LimitUltimate
+from .LoadCaseType import LoadCaseType
+from .MarginCode import MarginCode
+from .ProjectModelFormat import ProjectModelFormat
+from .TemperatureChoiceType import TemperatureChoiceType
+from .ToolingSelectionType import ToolingSelectionType
+from .UserConstantDataType import UserConstantDataType
