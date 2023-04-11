@@ -18,8 +18,10 @@ from .FemType import FemType
 from .JointObject import JointObject
 from .LimitUltimate import LimitUltimate
 from .LoadCaseType import LoadCaseType
+from .LoadSubCaseFactor import LoadSubCaseFactor
 from .MarginCode import MarginCode
 from .ProjectModelFormat import ProjectModelFormat
+from .SectionCutPropertyLocation import SectionCutPropertyLocation
 from .TemperatureChoiceType import TemperatureChoiceType
 from .ToolingSelectionType import ToolingSelectionType
 from .UserConstantDataType import UserConstantDataType
