@@ -31,6 +31,7 @@ from .utils import Open, OpenWithDefault, WriteCsv
 from typing import TypeVar, Generic, overload
 from enum import Enum
 from System.Collections.Generic import List, IEnumerable
+from System import Guid, DateTime
 
 from abc import ABC, abstractmethod
 
@@ -254,6 +255,24 @@ class AnalysisResultCol(Generic[T]):
 
         return tup
 
+
+class Centroid:
+    def __init__(self, centroid: _api.Centroid):
+        self.Centroid = centroid
+
+    @property
+    def X(self):
+        return self.Centroid.X
+    
+    @property
+    def Y(self):
+        return self.Centroid.Y
+    
+    @property
+    def Z(self):
+        return self.Centroid.Z
+    
+
 class ZoneBase(ZoneJointEntity):
     @property
     def Centroid(self) -> Centroid:
@@ -278,23 +297,6 @@ class ZoneBase(ZoneJointEntity):
     
     def GetMinimumMargin(self) -> Margin:
         return Margin(self.Entity.GetMinimumMargin())
-
-
-class Centroid:
-    def __init__(self, centroid: _api.Centroid):
-        self.Centroid = centroid
-
-    @property
-    def X(self):
-        return self.Centroid.X
-    
-    @property
-    def Y(self):
-        return self.Centroid.Y
-    
-    @property
-    def Z(self):
-        return self.Centroid.Z
 
 
 class Element(IdEntity):
@@ -837,8 +839,182 @@ class RundeckCol(IdEntityCol[Rundeck]):
     def RemoveRundeck(self, id: int) -> RundeckRemoveStatus:
         return RundeckRemoveStatus[self.Entity.RemoveRundeck(id).ToString()]
 
+class DesignLoadSubcase(IdNameEntity):
+    def __init__(self, designLoadSubcase: _api.DesignLoadSubcase):
+        self.Entity = designLoadSubcase
+
+    @property
+    def AbaqusLoadCaseName(self) -> str:
+        return self.Entity.AbaqueLoadCaseName
+    
+    @property
+    def AbaqusStepName(self) -> str:
+        return self.Entity.AbaqusStepName
+    
+    @property
+    def AbaqusStepTime(self) -> float:
+        return self.Entity.AbaqusStepTime
+    
+    @property
+    def Description(self) -> str:
+        return self.Entity.Description
+    
+    @property
+    def IsEditable(self) -> bool:
+        return self.Entity.IsEditable
+    
+    @property
+    def IsThermal(self) -> bool:
+        return self.Entity.IsThermal
+    
+    @property
+    def ModificationDate(self) -> DateTime:
+        return self.Entity.ModificationDate
+
+    @property
+    def NastranLoadId(self) -> int:
+        return self.Entity.NastranLoadId
+
+    @property
+    def NastranSpcId(self) -> int:
+        return self.Entity.NastranSpcId
+    
+    @property
+    def NastranSubcaseId(self) -> int:
+        return self.Entity.NastranSubcaseId
+    
+    @property
+    def RunDeckId(self) -> int:
+        return self.Entity.RunDeckId
+    
+    @property
+    def RunDeckOrder(self) -> int:
+        return self.Entity.RunDeckOrder
+    
+    @property
+    def SolutionType(self) -> types.FeaSolutionType:
+        return types.FeaSolutionType[self.Entity.SolutionType.ToString()]
+
+
+class DesignLoadSubcaseTemperature(IdNameEntity):
+    def __init__(self, designLoadSubcaseTemperature: _api.DesignLoadSubcaseTemperature):
+        self.Entity = designLoadSubcaseTemperature
+
+    @property
+    def Subcase(self) -> DesignLoadSubcase:
+        return DesignLoadSubcase(self.Entity.Subcase)
+    
+    @property
+    def TemperatureChoiceType(self) -> types.TemperatureChoiceType:
+        return types.TemperatureChoiceType[self.Entity.TemperatureChoiceType.ToString()]
+    
+    @property
+    def Value(self) -> float:
+        return self.Entity.Value
+
+class DesignLoadSubcaseMultiplier(IdNameEntity):
+    def __init__(self, designLoadSubcaseMultiplier: _api.DesignLoadSubcaseMultiplier):
+        self.Entity = designLoadSubcaseMultiplier
+
+    @property
+    def LimitFactor(self) -> float:
+        return self.Entity.LimitFactor
+    
+    @property
+    def Subcase(self) -> DesignLoadSubcase:
+        return DesignLoadSubcase(self.Entity.Subcase)
+    
+    @property
+    def UltimateFactor(self) -> float:
+        return self.Entity.UltimateFactor
+    
+    @property
+    def Value(self) -> float:
+        return self.Entity.Value
+
+
+class DesignLoadSubcaseMultiplierCol(IdNameEntityCol[DesignLoadSubcaseMultiplier]):
+    def __init__(self, designLoadSubcaseMultiplierCol: _api.DesignLoadSubcaseMultiplierCol):
+        self.Entity = designLoadSubcaseMultiplierCol
+        self.CollectedClass = DesignLoadSubcaseMultiplier
+        self.DesignLoadSubcaseMultiplierList = tuple([DesignLoadSubcaseMultiplier(designLoadSubcaseMultiplier) for designLoadSubcaseMultiplier in self.Entity])
+
+    def __iter__(self):
+        yield from self.DesignLoadSubcaseMultiplierList
+    
+    def __getitem__(self, index: int):
+        return self.DesignLoadSubcaseMultiplierList[index]
+    
+    def __len__(self):
+        return len(self.DesignLoadSubcaseMultiplierList)
+
+
+class DesignLoad(IdNameEntity):
+    def __init__(self, designLoad: _api.DesignLoad):
+        self.Entity = designLoad
+
+    @property
+    def AnalysisTemperature(self) -> DesignLoadSubcaseTemperature:
+        return DesignLoadSubcaseTemperature(self.Entity.AnalysisTemperature)
+
+    @property
+    def Description(self) -> str:
+        return self.Entity.Description
+    
+    @property
+    def InitialTemperature(self) -> DesignLoadSubcaseTemperature:
+        return DesignLoadSubcaseTemperature(self.Entity.InitialTemperature)
+    
+    @property
+    def IsActive(self) -> bool:
+        return self.Entity.IsActive
+    
+    @property
+    def IsEditable(self) -> bool:
+        return self.Entity.IsEditable
+    
+    @property
+    def IsVirtual(self) -> bool:
+        return self.Entity.IsVirtual
+    
+    @property
+    def ModificationDate(self) -> DateTime:
+        return self.Entity.ModificationDate
+    
+    @property
+    def SubcaseMultipliers(self) -> DesignLoadSubcaseMultiplierCol:
+        return DesignLoadSubcaseMultiplierCol(self.Entity.SubcaseMultipliers)
+    
+    @property
+    def Types(self) -> list[types.LoadCaseType]:
+        return [types.LoadCaseType[loadCaseType.ToString()] for loadCaseType in self.Entity.LoadCaseTypes]
+    
+    @property
+    def UID(self) -> Guid:
+        return self.Entity.UID
+
+
+class DesignLoadCol(IdNameEntityCol[DesignLoad]):
+    def __init__(self, designLoadCol: _api.DesignLoadCol):
+        self.Entity = designLoadCol
+        self.CollectedClass = DesignLoad
+        self.DesignLoadList = tuple([DesignLoad(designLoad) for designLoad in self.Entity])
+
+    def __iter__(self):
+        yield from self.DesignLoadList
+    
+    def __getitem__(self, index: int):
+        return self.DesignLoadList[index]
+    
+    def __len__(self):
+        return len(self.DesignLoadList)
+
 
 class Project:
+    @property
+    def DesignLoads(self) -> DesignLoadCol:
+        return DesignLoadCol(self.Project.DesignLoads)
+    
     @property
     def WorkingFolder(self) -> str:
         return self.Project.WorkingFolder
@@ -847,6 +1023,10 @@ class Project:
     def FemDataSet(self) -> FemDataSet:
         return FemDataSet(self.Project.FemDataSet)
     
+    @property
+    def FemFormat(self) -> types.ProjectModelFormat:
+        return types.ProjectModelFormat[self.Project.FemFormat.ToString()]
+
     @property
     def Beams(self) -> ZoneCol:
         return ZoneCol(self.Project.Beams)
@@ -868,6 +1048,10 @@ class Project:
         return ZoneCol(self.Project.Zones)
     
     @property
+    def Joints(self) -> JointCol:
+        return JointCol(self.Project.Joints)
+
+    @property
     def Sets(self) -> SetCol:
         return SetCol(self.Project.Sets)
 
@@ -875,6 +1059,10 @@ class Project:
     def Structures(self) -> StructureCol:
         return StructureCol(self.Project.Structures)
     
+    @property
+    def PanelSegments(self) -> PanelSegmentCol:
+        return PanelSegmentCol(self.Project.PanelSegments)
+
     @property
     def Rundecks(self) -> RundeckCol:
         return RundeckCol(self.Project.Rundecks)
