@@ -503,7 +503,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
     def AddZone(self, zone) -> CollectionModificationStatus:
         if isinstance(zone, int):
             return CollectionModificationStatus[self.Entity.AddZone(zone).ToString()]
-        if Zone.__instancecheck__(zone):
+        if isinstance(zone, Zone):
             return CollectionModificationStatus[self.Entity.AddZone(zone.Entity).ToString()]
 
     def RemoveJoint(self, id: int) -> CollectionModificationStatus:
@@ -555,16 +555,17 @@ class ZoneJointContainer(IdNameEntityRenameable):
         return CollectionModificationStatus(self.Entity.RemoveZones(zones))
     
     def RemoveZones(self, zones) -> CollectionModificationStatus:
-        if list[int].__instancecheck__(zones): 
+        if isinstance(zones, list): 
             idList = List[int]()
             for id in zones:
-                idList.Add(id)
+                if isinstance(id, int):
+                    idList.Add(id)
 
             enumerable = IEnumerable(idList)
             result = self.Entity.RemoveZones(enumerable)
             return CollectionModificationStatus[result.ToString()]
         
-        if ZoneCol.__instancecheck__(zones):
+        if isinstance(zones, ZoneCol):
             return CollectionModificationStatus[self.Entity.RemoveZones(zones.Entity).ToString()]
 
 
@@ -619,7 +620,7 @@ class Structure(ZoneJointContainer):
         if isinstance(zone, int):
             return CollectionModificationStatus[self.Entity.AddZone(zone).ToString()]
         
-        if Zone.__instancecheck__(zone):
+        if isinstance(zone, Zone):
             return CollectionModificationStatus[self.Entity.AddZone(zone.Entity).ToString()]
 
     def CreateZone(self, elementIds: list[int], name: str = None) -> None:
@@ -651,7 +652,7 @@ class StructureCol(ZoneJointContainerCol[Structure]):
         if isinstance(structure, int):
             return self.Entity.DeleteStructure(structure)
         
-        if Structure.__instancecheck__(structure):
+        if isinstance(structure, Structure):
             return self.Entity.DeleteStructure(structure.Entity)
     
     def Create(self, name: str) -> bool:
