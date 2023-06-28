@@ -3731,7 +3731,7 @@ class Project:
 			for thing in joints:
 				if thing is not None:
 					jointsList.Add(thing.Entity)
-		return dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]](self.Entity.GetJointAnalysisResults(joints if joints is None else jointsList, _types.AnalysisResultToReturn(analysisResultType.value)))
+		return dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]](self.Entity.GetJointAnalysisResults(joints if joints is None else jointsList, _api.AnalysisResultToReturn(analysisResultType.value)))
 
 	def GetObjectName(self, zoneId: int, objectId: int) -> str:
 		return self.Entity.GetObjectName(zoneId, objectId)
@@ -3742,7 +3742,7 @@ class Project:
 			for thing in zones:
 				if thing is not None:
 					zonesList.Add(thing.Entity)
-		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneConceptAnalysisResults(zones if zones is None else zonesList, _types.AnalysisResultToReturn(analysisResultType.value)))
+		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneConceptAnalysisResults(zones if zones is None else zonesList, _api.AnalysisResultToReturn(analysisResultType.value)))
 
 	def GetZoneObjectAnalysisResults(self, zones: list[Zone] = None, analysisResultType: AnalysisResultToReturn = AnalysisResultToReturn.Minimum) -> dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]]:
 		zonesList = List[_api.Zone]()
@@ -3750,7 +3750,7 @@ class Project:
 			for thing in zones:
 				if thing is not None:
 					zonesList.Add(thing.Entity)
-		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneObjectAnalysisResults(zones if zones is None else zonesList, _types.AnalysisResultToReturn(analysisResultType.value)))
+		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneObjectAnalysisResults(zones if zones is None else zonesList, _api.AnalysisResultToReturn(analysisResultType.value)))
 
 	def ImportFem(self) -> None:
 		return self.Entity.ImportFem()
@@ -3759,7 +3759,7 @@ class Project:
 		return self.Entity.SetFemFormat(_types.ProjectModelFormat(femFormat.value))
 
 	def SetFemUnits(self, femForceId: DbForceUnit, femLengthId: DbLengthUnit, femMassId: DbMassUnit, femTemperatureId: DbTemperatureUnit) -> SetUnitsStatus:
-		return SetUnitsStatus[self.Entity.SetFemUnits(_types.DbForceUnit(femForceId.value), _types.DbLengthUnit(femLengthId.value), _types.DbMassUnit(femMassId.value), _types.DbTemperatureUnit(femTemperatureId.value)).ToString()]
+		return SetUnitsStatus[self.Entity.SetFemUnits(_api.DbForceUnit(femForceId.value), _api.DbLengthUnit(femLengthId.value), _api.DbMassUnit(femMassId.value), _api.DbTemperatureUnit(femTemperatureId.value)).ToString()]
 
 	def SizeJoints(self, joints: list[Joint] = None) -> tuple[bool, str, set[int]]:
 		jointsList = List[_api.Joint]()
