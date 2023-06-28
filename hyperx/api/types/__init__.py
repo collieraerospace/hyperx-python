@@ -8,6 +8,8 @@ from .CorrectionIndependentDefinition import CorrectionIndependentDefinition
 from .CorrectionProperty import CorrectionProperty
 from .CorrectionValueType import CorrectionValueType
 from .DiscreteDefinitionType import DiscreteDefinitionType
+from .DiscreteFieldDataType import DiscreteFieldDataType
+from .DiscreteFieldPhysicalEntityType import DiscreteFieldPhysicalEntityType
 from .DiscreteTechnique import DiscreteTechnique
 from .EquationParameterId import EquationParameterId
 from .FamilyCategory import FamilyCategory
