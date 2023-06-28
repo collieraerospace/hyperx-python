@@ -24,7 +24,7 @@ variable `HyperXInstall`
 """
 
 # TODO remove once encapsulated
-from .library import _api
+from .library import _api, _types
 
 from .api import Db, types
 from .utils import Open, OpenWithDefault, WriteCsv
@@ -53,6 +53,7 @@ class CollectionModificationStatus(Enum):
 class CreateDatabaseStatus(Enum):
 	Success = 1
 	TemplateNotFound = 2
+	ImproperExtension = 3
 
 class MaterialCreationStatus(Enum):
 	Success = 1
@@ -317,7 +318,7 @@ class FailureSetting(IdNameEntity):
 class IdEntityCol(Generic[T], ABC):
 	def __init__(self, idEntityCol: _api.IdEntityCol):
 		self.Entity = idEntityCol
-		self.IdEntityColList = tuple([IdEntityCol(idEntityCol) for idEntityCol in self.Entity])
+		self.IdEntityColList = tuple([IdEntity(idEntityCol) for idEntityCol in self.Entity])
 
 	def Contains(self, id: int) -> bool:
 		return self.Entity.Contains(id)
@@ -1035,7 +1036,7 @@ class EntityWithAssignableProperties(IdNameEntityRenameable):
 class AnalysisResultCol(Generic[T]):
 	def __init__(self, analysisResultCol: _api.AnalysisResultCol):
 		self.Entity = analysisResultCol
-		self.AnalysisResultColList = tuple([AnalysisResultCol(analysisResultCol) for analysisResultCol in self.Entity])
+		self.AnalysisResultColList = tuple([AnalysisResult(analysisResultCol) for analysisResultCol in self.Entity])
 
 	def Count(self) -> int:
 		return self.Entity.Count()
@@ -1167,7 +1168,7 @@ class PanelSegment(ZoneBase):
 		return self.Entity.RightSkinZoneId
 
 	def GetElements(self, discreteDefinitionType: types.DiscreteDefinitionType) -> ElementCol:
-		return ElementCol(self.Entity.GetElements(discreteDefinitionType.value))
+		return ElementCol(self.Entity.GetElements(_types.DiscreteDefinitionType(discreteDefinitionType.value)))
 
 	def SetObjectElements(self, discreteDefinitionType: types.DiscreteDefinitionType, elementIds: tuple[int]) -> None:
 		elementIdsList = List[int]()
@@ -1176,7 +1177,7 @@ class PanelSegment(ZoneBase):
 				if thing is not None:
 					elementIdsList.Add(thing)
 		elementIdsEnumerable = IEnumerable(elementIdsList)
-		return self.Entity.SetObjectElements(discreteDefinitionType.value, elementIdsEnumerable)
+		return self.Entity.SetObjectElements(_types.DiscreteDefinitionType(discreteDefinitionType.value), elementIdsEnumerable)
 
 
 class Zone(ZoneBase):
@@ -2043,7 +2044,7 @@ class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
 		return types.CorrectionEquation[self.Entity.CorrectionEquation.ToString()]
 
 	def AddCorrectionFactorValue(self, equationParameterName: types.EquationParameterId, valueToAdd: float) -> OrthotropicCorrectionFactorValue:
-		return OrthotropicCorrectionFactorValue(self.Entity.AddCorrectionFactorValue(equationParameterName.value, valueToAdd))
+		return OrthotropicCorrectionFactorValue(self.Entity.AddCorrectionFactorValue(_types.EquationParameterId(equationParameterName.value), valueToAdd))
 
 
 class TabularCorrectionFactorRow:
@@ -2292,13 +2293,13 @@ class OrthotropicTemperature:
 		return self.Entity.TTc
 
 	def AddCurvePoint(self, property: types.AllowablePropertyName, x: float, y: float) -> OrthotropicAllowableCurvePoint:
-		return OrthotropicAllowableCurvePoint(self.Entity.AddCurvePoint(property.value, x, y))
+		return OrthotropicAllowableCurvePoint(self.Entity.AddCurvePoint(_types.AllowablePropertyName(property.value), x, y))
 
 	def DeleteCurvePoint(self, property: types.AllowablePropertyName, x: float) -> bool:
-		return self.Entity.DeleteCurvePoint(property.value, x)
+		return self.Entity.DeleteCurvePoint(_types.AllowablePropertyName(property.value), x)
 
 	def GetCurvePoint(self, property: types.AllowablePropertyName, x: float) -> OrthotropicAllowableCurvePoint:
-		return OrthotropicAllowableCurvePoint(self.Entity.GetCurvePoint(property.value, x))
+		return OrthotropicAllowableCurvePoint(self.Entity.GetCurvePoint(_types.AllowablePropertyName(property.value), x))
 
 
 class Orthotropic:
@@ -2398,22 +2399,22 @@ class Orthotropic:
 		return self.Entity.IsEffectiveLaminate()
 
 	def HasLaminateAllowable(self, property: types.AllowablePropertyName) -> bool:
-		return self.Entity.HasLaminateAllowable(property.value)
+		return self.Entity.HasLaminateAllowable(_types.AllowablePropertyName(property.value))
 
 	def AddLaminateAllowable(self, property: types.AllowablePropertyName, method: types.AllowableMethodName) -> OrthotropicLaminateAllowable:
-		return OrthotropicLaminateAllowable(self.Entity.AddLaminateAllowable(property.value, method.value))
+		return OrthotropicLaminateAllowable(self.Entity.AddLaminateAllowable(_types.AllowablePropertyName(property.value), _types.AllowableMethodName(method.value)))
 
 	def GetLaminateAllowable(self, lookupAllowableProperty: types.AllowablePropertyName) -> OrthotropicLaminateAllowable:
-		return OrthotropicLaminateAllowable(self.Entity.GetLaminateAllowable(lookupAllowableProperty.value))
+		return OrthotropicLaminateAllowable(self.Entity.GetLaminateAllowable(_types.AllowablePropertyName(lookupAllowableProperty.value)))
 
 	def AddEquationCorrectionFactor(self, propertyId: types.CorrectionProperty, correctionId: types.CorrectionId, equationId: types.CorrectionEquation) -> OrthotropicEquationCorrectionFactor:
-		return OrthotropicEquationCorrectionFactor(self.Entity.AddEquationCorrectionFactor(propertyId.value, correctionId.value, equationId.value))
+		return OrthotropicEquationCorrectionFactor(self.Entity.AddEquationCorrectionFactor(_types.CorrectionProperty(propertyId.value), _types.CorrectionId(correctionId.value), _types.CorrectionEquation(equationId.value)))
 
 	def GetEquationCorrectionFactor(self, property: types.CorrectionProperty, correction: types.CorrectionId) -> OrthotropicEquationCorrectionFactor:
-		return OrthotropicEquationCorrectionFactor(self.Entity.GetEquationCorrectionFactor(property.value, correction.value))
+		return OrthotropicEquationCorrectionFactor(self.Entity.GetEquationCorrectionFactor(_types.CorrectionProperty(property.value), _types.CorrectionId(correction.value)))
 
 	def GetTabularCorrectionFactor(self, property: types.CorrectionProperty, correction: types.CorrectionId) -> OrthotropicTabularCorrectionFactor:
-		return OrthotropicTabularCorrectionFactor(self.Entity.GetTabularCorrectionFactor(property.value, correction.value))
+		return OrthotropicTabularCorrectionFactor(self.Entity.GetTabularCorrectionFactor(_types.CorrectionProperty(property.value), _types.CorrectionId(correction.value)))
 
 	def Save(self) -> None:
 		return self.Entity.Save()
@@ -2779,16 +2780,16 @@ class SectionCut(IdNameEntity):
 		return self.Entity.SetOrigin(vector.Entity)
 
 	def GetBeamLoads(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> BeamLoads:
-		return BeamLoads(self.Entity.GetBeamLoads(loadCaseId, factor.value))
+		return BeamLoads(self.Entity.GetBeamLoads(loadCaseId, _types.LoadSubCaseFactor(factor.value)))
 
 	def InclinationAngle(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> float:
-		return self.Entity.InclinationAngle(loadCaseId, factor.value)
+		return self.Entity.InclinationAngle(loadCaseId, _types.LoadSubCaseFactor(factor.value))
 
 	def HorizontalIntercept(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> float:
-		return self.Entity.HorizontalIntercept(loadCaseId, factor.value)
+		return self.Entity.HorizontalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value))
 
 	def VerticalIntercept(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> float:
-		return self.Entity.VerticalIntercept(loadCaseId, factor.value)
+		return self.Entity.VerticalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value))
 
 	def SetElements(self, elements: list[int]) -> bool:
 		elementsList = List[int]()
@@ -3075,7 +3076,7 @@ class Structure(ZoneJointContainer):
 		return self.Entity.CreateZone(elementIdsEnumerable, name)
 
 	def CreatePanelSegment(self, discreteTechnique: types.DiscreteTechnique, discreteElementLkp: dict[types.DiscreteDefinitionType, list[int]], name: str = None) -> int:
-		return self.Entity.CreatePanelSegment(discreteTechnique.value, discreteElementLkp.Entity, name)
+		return self.Entity.CreatePanelSegment(_types.DiscreteTechnique(discreteTechnique.value), discreteElementLkp.Entity, name)
 
 	@overload
 	def Remove(self, zoneIds: tuple[int], jointIds: tuple[int]) -> CollectionModificationStatus:
@@ -3395,7 +3396,7 @@ class DiscreteFieldTableCol(IdNameEntityCol[DiscreteFieldTable]):
 		self.DiscreteFieldTableColList = tuple([DiscreteFieldTable(discreteFieldTableCol) for discreteFieldTableCol in self.Entity])
 
 	def Create(self, name: str, entityType: types.DiscreteFieldPhysicalEntityType, dataType: types.DiscreteFieldDataType) -> int:
-		return self.Entity.Create(name, entityType.value, dataType.value)
+		return self.Entity.Create(name, _types.DiscreteFieldPhysicalEntityType(entityType.value), _types.DiscreteFieldDataType(dataType.value))
 
 	def CreateFromVCP(self, filepath: str) -> list[int]:
 		return list[int](self.Entity.CreateFromVCP(filepath))
@@ -3730,7 +3731,7 @@ class Project:
 			for thing in joints:
 				if thing is not None:
 					jointsList.Add(thing.Entity)
-		return dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]](self.Entity.GetJointAnalysisResults(joints if joints is None else jointsList, analysisResultType.value))
+		return dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]](self.Entity.GetJointAnalysisResults(joints if joints is None else jointsList, _types.AnalysisResultToReturn(analysisResultType.value)))
 
 	def GetObjectName(self, zoneId: int, objectId: int) -> str:
 		return self.Entity.GetObjectName(zoneId, objectId)
@@ -3741,7 +3742,7 @@ class Project:
 			for thing in zones:
 				if thing is not None:
 					zonesList.Add(thing.Entity)
-		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneConceptAnalysisResults(zones if zones is None else zonesList, analysisResultType.value))
+		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneConceptAnalysisResults(zones if zones is None else zonesList, _types.AnalysisResultToReturn(analysisResultType.value)))
 
 	def GetZoneObjectAnalysisResults(self, zones: list[Zone] = None, analysisResultType: AnalysisResultToReturn = AnalysisResultToReturn.Minimum) -> dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]]:
 		zonesList = List[_api.Zone]()
@@ -3749,16 +3750,16 @@ class Project:
 			for thing in zones:
 				if thing is not None:
 					zonesList.Add(thing.Entity)
-		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneObjectAnalysisResults(zones if zones is None else zonesList, analysisResultType.value))
+		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneObjectAnalysisResults(zones if zones is None else zonesList, _types.AnalysisResultToReturn(analysisResultType.value)))
 
 	def ImportFem(self) -> None:
 		return self.Entity.ImportFem()
 
 	def SetFemFormat(self, femFormat: types.ProjectModelFormat) -> None:
-		return self.Entity.SetFemFormat(femFormat.value)
+		return self.Entity.SetFemFormat(_types.ProjectModelFormat(femFormat.value))
 
 	def SetFemUnits(self, femForceId: DbForceUnit, femLengthId: DbLengthUnit, femMassId: DbMassUnit, femTemperatureId: DbTemperatureUnit) -> SetUnitsStatus:
-		return SetUnitsStatus[self.Entity.SetFemUnits(femForceId.value, femLengthId.value, femMassId.value, femTemperatureId.value).ToString()]
+		return SetUnitsStatus[self.Entity.SetFemUnits(_types.DbForceUnit(femForceId.value), _types.DbLengthUnit(femLengthId.value), _types.DbMassUnit(femMassId.value), _types.DbTemperatureUnit(femTemperatureId.value)).ToString()]
 
 	def SizeJoints(self, joints: list[Joint] = None) -> tuple[bool, str, set[int]]:
 		jointsList = List[_api.Joint]()
@@ -3769,23 +3770,21 @@ class Project:
 		result = self.Entity.SizeJoints(joints if joints is None else jointsList)
 		return tuple([result.Item1, result.Item2, result.Item3])
 
+	@overload
 	def AnalyzeZones(self, zones: list[Zone] = None) -> tuple[bool, str]:
-		zonesList = List[_api.Zone]()
-		if zones is not None:
-			for thing in zones:
-				if thing is not None:
-					zonesList.Add(thing.Entity)
-		result = self.Entity.AnalyzeZones(zones if zones is None else zonesList)
-		return tuple([result.Item1, result.Item2])
+		pass
 
-	def SizeZones(self, zones: list[Zone] = None, analyzeOnly: bool = False) -> tuple[bool, str]:
-		zonesList = List[_api.Zone]()
-		if zones is not None:
-			for thing in zones:
-				if thing is not None:
-					zonesList.Add(thing.Entity)
-		result = self.Entity.SizeZones(zones if zones is None else zonesList, analyzeOnly)
-		return tuple([result.Item1, result.Item2])
+	@overload
+	def AnalyzeZones(self, zoneIds: list[int]) -> tuple[bool, str]:
+		pass
+
+	@overload
+	def SizeZones(self, zones: list[Zone] = None) -> tuple[bool, str]:
+		pass
+
+	@overload
+	def SizeZones(self, zoneIds: list[int]) -> tuple[bool, str]:
+		pass
 
 	def UnimportFemAsync(self) -> Task:
 		return Task(self.Entity.UnimportFemAsync())
@@ -3803,6 +3802,44 @@ class Project:
 	@overload
 	def ExportCad(self, cadIds: tuple[int], filePath: str) -> None:
 		pass
+
+	def AnalyzeZones(self, item1 = None) -> tuple[bool, str]:
+		if isinstance(item1, list):
+			zonesList = List[_api.Zone]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						zonesList.Add(thing.Entity)
+			result = self.Entity.AnalyzeZones(item1 if item1 is None else zonesList)
+			return tuple([result.Item1, result.Item2])
+
+		if isinstance(item1, list):
+			zoneIdsList = List[int]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						zoneIdsList.Add(thing)
+			result = self.Entity.AnalyzeZones(zoneIdsList)
+			return tuple([result.Item1, result.Item2])
+
+	def SizeZones(self, item1 = None) -> tuple[bool, str]:
+		if isinstance(item1, list):
+			zonesList = List[_api.Zone]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						zonesList.Add(thing.Entity)
+			result = self.Entity.SizeZones(item1 if item1 is None else zonesList)
+			return tuple([result.Item1, result.Item2])
+
+		if isinstance(item1, list):
+			zoneIdsList = List[int]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						zoneIdsList.Add(thing)
+			result = self.Entity.SizeZones(zoneIdsList)
+			return tuple([result.Item1, result.Item2])
 
 	def ExportCad(self, item1 = None, item2 = None) -> None:
 		if isinstance(item1, str):
@@ -3857,7 +3894,7 @@ class FailureModeCategoryCol(IdNameEntityCol[FailureModeCategory]):
 class FoamCol(Generic[T]):
 	def __init__(self, foamCol: _api.FoamCol):
 		self.Entity = foamCol
-		self.FoamColList = tuple([FoamCol(foamCol) for foamCol in self.Entity])
+		self.FoamColList = tuple([Foam(foamCol) for foamCol in self.Entity])
 
 	def Count(self) -> int:
 		return self.Entity.Count()
@@ -3898,7 +3935,7 @@ class FoamCol(Generic[T]):
 class HoneycombCol(Generic[T]):
 	def __init__(self, honeycombCol: _api.HoneycombCol):
 		self.Entity = honeycombCol
-		self.HoneycombColList = tuple([HoneycombCol(honeycombCol) for honeycombCol in self.Entity])
+		self.HoneycombColList = tuple([Honeycomb(honeycombCol) for honeycombCol in self.Entity])
 
 	def Count(self) -> int:
 		return self.Entity.Count()
@@ -3939,7 +3976,7 @@ class HoneycombCol(Generic[T]):
 class IsotropicCol(Generic[T]):
 	def __init__(self, isotropicCol: _api.IsotropicCol):
 		self.Entity = isotropicCol
-		self.IsotropicColList = tuple([IsotropicCol(isotropicCol) for isotropicCol in self.Entity])
+		self.IsotropicColList = tuple([Isotropic(isotropicCol) for isotropicCol in self.Entity])
 
 	def Count(self) -> int:
 		return self.Entity.Count()
@@ -3980,7 +4017,7 @@ class IsotropicCol(Generic[T]):
 class OrthotropicCol(Generic[T]):
 	def __init__(self, orthotropicCol: _api.OrthotropicCol):
 		self.Entity = orthotropicCol
-		self.OrthotropicColList = tuple([OrthotropicCol(orthotropicCol) for orthotropicCol in self.Entity])
+		self.OrthotropicColList = tuple([Orthotropic(orthotropicCol) for orthotropicCol in self.Entity])
 
 	def Count(self) -> int:
 		return self.Entity.Count()
@@ -4120,7 +4157,7 @@ class Application:
 		return self.Entity.CopyProject(projectId, newName, copyDesignProperties, copyAnalysisProperties, copyLoadProperties, copyWorkingFolder)
 
 	def CreateAnalysisProperty(self, name: str, type: types.FamilyCategory) -> int:
-		return self.Entity.CreateAnalysisProperty(name, type.value)
+		return self.Entity.CreateAnalysisProperty(name, _types.FamilyCategory(type.value))
 
 	def CreateFailureMode(self, failureModeCategoryId: int) -> int:
 		return self.Entity.CreateFailureMode(failureModeCategoryId)
