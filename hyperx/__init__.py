@@ -11,8 +11,8 @@ The HyperX python package is a library, written in python, for python developers
 Basic usage:
 
     >>> import hyperx
-    >>> with hyperx.Open('mydatabase.hdb3') as hdb:
-    >>>     print(f'Active project = {hdb.ActiveProject}')
+    >>> database = hyperx.Open('mydatabase.hdb3')
+    >>> print(f'Active project = {database.ActiveProject}')
 
 The HyperX installation folder is found automatically if the installer was run.
 Otherwise, the installation folder can be specified by setting the environment

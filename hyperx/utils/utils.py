@@ -9,10 +9,21 @@ from pathlib import Path
 from typing import Any
 
 from ..api import Application
+from ..library import _api
 
 def Open(hdbPath: os.PathLike) -> Application:
     '''Opens a HyperX database for script access.'''
-    pass
+    if not os.path.isabs(hdbPath):
+        hdbPath = os.path.abspath(hdbPath)
+    
+    if not os.path.exists(hdbPath):
+        print(f'Could not find database at path {hdbPath}. Exiting script')
+        return
+
+    _api.Environment.Initialize()
+    database = _api.Application()
+    database.OpenDatabase(hdbPath)
+    return database
 
 
 def OpenWithDefault(filepath: str):
