@@ -23,7 +23,6 @@ variable `HyperXInstall`
     >>> import hyperx
 """
 
-# TODO remove once encapsulated
 from .library import _api, _types
 
 from .api import Db, types
@@ -37,6 +36,15 @@ from System import Guid, DateTime
 from abc import ABC, abstractmethod
 
 T = TypeVar('T')
+
+def MakeCSharpIntList(ints: list[int]) -> List[int]:
+	intsList = List[int]()
+	if ints is not None:
+		for thing in ints:
+			if thing is not None:
+				intsList.Add(thing)
+	
+	return intsList
 
 class AnalysisResultToReturn(Enum):
 	Limit = 1
@@ -142,200 +150,195 @@ class UnitSystem(Enum):
 
 class IdEntity(ABC):
 	def __init__(self, idEntity: _api.IdEntity):
-		self.Entity = idEntity
+		self._Entity = idEntity
 
 	@property
 	def Id(self) -> int:
-		return self.Entity.Id
+		return self._Entity.Id
 
 
 class IdNameEntity(IdEntity):
 	def __init__(self, idNameEntity: _api.IdNameEntity):
-		self.Entity = idNameEntity
+		self._Entity = idNameEntity
 
 	@property
 	def Name(self) -> str:
-		return self.Entity.Name
+		return self._Entity.Name
 
 class AnalysisDefinition(IdNameEntity):
 	def __init__(self, analysisDefinition: _api.AnalysisDefinition):
-		self.Entity = analysisDefinition
+		self._Entity = analysisDefinition
 
 	@property
 	def AnalysisId(self) -> int:
-		return self.Entity.AnalysisId
+		return self._Entity.AnalysisId
 
 	@property
 	def Description(self) -> str:
-		return self.Entity.Description
+		return self._Entity.Description
 
 
 class Margin:
 	def __init__(self, margin: _api.Margin):
-		self.Entity = margin
+		self._Entity = margin
 
 	@property
 	def AdjustedMargin(self) -> float:
-		return self.Entity.AdjustedMargin
+		return self._Entity.AdjustedMargin
 
 	@property
 	def IsFailureCode(self) -> bool:
-		return self.Entity.IsFailureCode
+		return self._Entity.IsFailureCode
 
 	@property
 	def IsInformationalCode(self) -> bool:
-		return self.Entity.IsInformationalCode
+		return self._Entity.IsInformationalCode
 
 	@property
 	def MarginCode(self) -> types.MarginCode:
-		return types.MarginCode[self.Entity.MarginCode.ToString()]
+		return types.MarginCode[self._Entity.MarginCode.ToString()]
 
 
 class AnalysisResult(ABC):
 	def __init__(self, analysisResult: _api.AnalysisResult):
-		self.Entity = analysisResult
+		self._Entity = analysisResult
 
 	@property
 	def LimitUltimate(self) -> types.LimitUltimate:
-		return types.LimitUltimate[self.Entity.LimitUltimate.ToString()]
+		return types.LimitUltimate[self._Entity.LimitUltimate.ToString()]
 
 	@property
 	def LoadCaseId(self) -> int:
-		return self.Entity.LoadCaseId
+		return self._Entity.LoadCaseId
 
 	@property
 	def Margin(self) -> Margin:
-		return Margin(self.Entity.Margin)
+		return Margin(self._Entity.Margin)
 
 	@property
 	def AnalysisDefinition(self) -> AnalysisDefinition:
-		return AnalysisDefinition(self.Entity.AnalysisDefinition)
+		return AnalysisDefinition(self._Entity.AnalysisDefinition)
 
 
 class JointAnalysisResult(AnalysisResult):
 	def __init__(self, jointAnalysisResult: _api.JointAnalysisResult):
-		self.Entity = jointAnalysisResult
+		self._Entity = jointAnalysisResult
 
 	@property
 	def ObjectId(self) -> types.JointObject:
-		return types.JointObject[self.Entity.JointObject.ToString()]
+		return types.JointObject[self._Entity.JointObject.ToString()]
 
 
 class ZoneAnalysisConceptResult(AnalysisResult):
 	def __init__(self, zoneAnalysisConceptResult: _api.ZoneAnalysisConceptResult):
-		self.Entity = zoneAnalysisConceptResult
+		self._Entity = zoneAnalysisConceptResult
 
 	@property
 	def ConceptId(self) -> types.FamilyConceptUID:
-		return types.FamilyConceptUID[self.Entity.FamilyConceptUID.ToString()]
+		return types.FamilyConceptUID[self._Entity.FamilyConceptUID.ToString()]
 
 
 class ZoneAnalysisObjectResult(AnalysisResult):
 	def __init__(self, zoneAnalysisObjectResult: _api.ZoneAnalysisObjectResult):
-		self.Entity = zoneAnalysisObjectResult
+		self._Entity = zoneAnalysisObjectResult
 
 	@property
 	def ObjectId(self) -> types.FamilyObjectUID:
-		return types.FamilyObjectUID[self.Entity.FamilyObjectUID.ToString()]
+		return types.FamilyObjectUID[self._Entity.FamilyObjectUID.ToString()]
 
 
 class AssignableProperty(IdNameEntity):
 	def __init__(self, assignableProperty: _api.AssignableProperty):
-		self.Entity = assignableProperty
+		self._Entity = assignableProperty
 
 
 class AssignablePropertyWithFamilyCategory(AssignableProperty):
 	def __init__(self, assignablePropertyWithFamilyCategory: _api.AssignablePropertyWithFamilyCategory):
-		self.Entity = assignablePropertyWithFamilyCategory
+		self._Entity = assignablePropertyWithFamilyCategory
 
 	@property
 	def FamilyCategory(self) -> types.FamilyCategory:
-		return types.FamilyCategory[self.Entity.FamilyCategory.ToString()]
+		return types.FamilyCategory[self._Entity.FamilyCategory.ToString()]
 
 
 class FailureObjectGroup(IdNameEntity):
 	def __init__(self, failureObjectGroup: _api.FailureObjectGroup):
-		self.Entity = failureObjectGroup
+		self._Entity = failureObjectGroup
 
 	@property
 	def IsEnabled(self) -> bool:
-		return self.Entity.IsEnabled
+		return self._Entity.IsEnabled
 
 	@property
 	def LimitUltimate(self) -> types.LimitUltimate:
-		return types.LimitUltimate[self.Entity.LimitUltimate.ToString()]
+		return types.LimitUltimate[self._Entity.LimitUltimate.ToString()]
 
 	@property
 	def RequiredMargin(self) -> float:
-		return self.Entity.RequiredMargin
+		return self._Entity.RequiredMargin
 
 
 class FailureSetting(IdNameEntity):
 	def __init__(self, failureSetting: _api.FailureSetting):
-		self.Entity = failureSetting
+		self._Entity = failureSetting
 
 	@property
 	def CategoryId(self) -> int:
-		return self.Entity.CategoryId
+		return self._Entity.CategoryId
 
 	@property
 	def DataType(self) -> types.UserConstantDataType:
-		return types.UserConstantDataType[self.Entity.UserConstantDataType.ToString()]
+		return types.UserConstantDataType[self._Entity.UserConstantDataType.ToString()]
 
 	@property
 	def DefaultValue(self) -> str:
-		return self.Entity.DefaultValue
+		return self._Entity.DefaultValue
 
 	@property
 	def Description(self) -> str:
-		return self.Entity.Description
+		return self._Entity.Description
 
 	@property
 	def EnumValues(self) -> dict[int, str]:
 		enumValuesDict = {}
-		for kvp in self.Entity.EnumValues:
+		for kvp in self._Entity.EnumValues:
 			enumValuesDict[int[kvp.Key.ToString()]] = str(kvp.Value)
 
 		return enumValuesDict
 
 	@property
 	def PackageId(self) -> int:
-		return self.Entity.PackageId
+		return self._Entity.PackageId
 
 	@property
 	def PackageSettingId(self) -> int:
-		return self.Entity.PackageSettingId
+		return self._Entity.PackageSettingId
 
 	@property
 	def UID(self) -> Guid:
-		return self.Entity.UID
+		return self._Entity.UID
 
 	@property
 	def Value(self) -> str:
-		return self.Entity.Value
+		return self._Entity.Value
 
 
 class IdEntityCol(Generic[T], ABC):
 	def __init__(self, idEntityCol: _api.IdEntityCol):
-		self.Entity = idEntityCol
-		self.IdEntityColList = tuple([IdEntity(idEntityCol) for idEntityCol in self.Entity])
+		self._Entity = idEntityCol
+
+	@property
+	def IdEntityColList(self) -> tuple[IdEntity]:
+		return tuple([IdEntity(idEntityCol) for idEntityCol in self._Entity])
 
 	def Contains(self, id: int) -> bool:
-		return self.Entity.Contains(id)
+		return self._Entity.Contains(id)
 
 	def Count(self) -> int:
-		return self.Entity.Count()
+		return self._Entity.Count()
 
 	def Get(self, id: int) -> T:
-		return self.Entity.Get(id)
-
-	def GetEnumerator(self) -> tuple[T]:
-		enumerator = self.Entity.GetEnumerator()
-		tup = ()
-		for item in enumerator:
-			tup += (item)
-
-		return tup
+		return self._Entity.Get(id)
 
 	def __getitem__(self, index: int):
 		return self.IdEntityColList[index]
@@ -349,24 +352,27 @@ class IdEntityCol(Generic[T], ABC):
 
 class IdNameEntityCol(IdEntityCol, Generic[T]):
 	def __init__(self, idNameEntityCol: _api.IdNameEntityCol):
-		self.Entity = idNameEntityCol
-		self.CollectedClass = T
-		self.IdNameEntityColList = tuple([T(idNameEntityCol) for idNameEntityCol in self.Entity])
+		self._Entity = idNameEntityCol
+		self._CollectedClass = T
+
+	@property
+	def IdNameEntityColList(self) -> tuple[T]:
+		return tuple([T(idNameEntityCol) for idNameEntityCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> T:
-		pass
+	def Get(self, name: str) -> T: ...
 
 	@overload
-	def Get(self, id: int) -> T:
-		pass
+	def Get(self, id: int) -> T: ...
 
 	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
-			return self.Entity.Get(item1)
+			return self._Entity.Get(item1)
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.IdNameEntityColList[index]
@@ -380,17 +386,18 @@ class IdNameEntityCol(IdEntityCol, Generic[T]):
 
 class FailureObjectGroupCol(IdNameEntityCol[FailureObjectGroup]):
 	def __init__(self, failureObjectGroupCol: _api.FailureObjectGroupCol):
-		self.Entity = failureObjectGroupCol
-		self.CollectedClass = FailureObjectGroup
-		self.FailureObjectGroupColList = tuple([FailureObjectGroup(failureObjectGroupCol) for failureObjectGroupCol in self.Entity])
+		self._Entity = failureObjectGroupCol
+		self._CollectedClass = FailureObjectGroup
+
+	@property
+	def FailureObjectGroupColList(self) -> tuple[FailureObjectGroup]:
+		return tuple([FailureObjectGroup(failureObjectGroupCol) for failureObjectGroupCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> FailureObjectGroup:
-		pass
+	def Get(self, name: str) -> FailureObjectGroup: ...
 
 	@overload
-	def Get(self, id: int) -> FailureObjectGroup:
-		pass
+	def Get(self, id: int) -> FailureObjectGroup: ...
 
 	def Get(self, item1 = None) -> FailureObjectGroup:
 		if isinstance(item1, str):
@@ -398,6 +405,8 @@ class FailureObjectGroupCol(IdNameEntityCol[FailureObjectGroup]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.FailureObjectGroupColList[index]
@@ -411,17 +420,18 @@ class FailureObjectGroupCol(IdNameEntityCol[FailureObjectGroup]):
 
 class FailureSettingCol(IdNameEntityCol[FailureSetting]):
 	def __init__(self, failureSettingCol: _api.FailureSettingCol):
-		self.Entity = failureSettingCol
-		self.CollectedClass = FailureSetting
-		self.FailureSettingColList = tuple([FailureSetting(failureSettingCol) for failureSettingCol in self.Entity])
+		self._Entity = failureSettingCol
+		self._CollectedClass = FailureSetting
+
+	@property
+	def FailureSettingColList(self) -> tuple[FailureSetting]:
+		return tuple([FailureSetting(failureSettingCol) for failureSettingCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> FailureSetting:
-		pass
+	def Get(self, name: str) -> FailureSetting: ...
 
 	@overload
-	def Get(self, id: int) -> FailureSetting:
-		pass
+	def Get(self, id: int) -> FailureSetting: ...
 
 	def Get(self, item1 = None) -> FailureSetting:
 		if isinstance(item1, str):
@@ -429,6 +439,8 @@ class FailureSettingCol(IdNameEntityCol[FailureSetting]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.FailureSettingColList[index]
@@ -442,54 +454,55 @@ class FailureSettingCol(IdNameEntityCol[FailureSetting]):
 
 class FailureCriterion(IdNameEntity):
 	def __init__(self, failureCriterion: _api.FailureCriterion):
-		self.Entity = failureCriterion
+		self._Entity = failureCriterion
 
 	@property
 	def Description(self) -> str:
-		return self.Entity.Description
+		return self._Entity.Description
 
 	@property
 	def IsEnabled(self) -> bool:
-		return self.Entity.IsEnabled
+		return self._Entity.IsEnabled
 
 	@property
 	def LimitUltimate(self) -> types.LimitUltimate:
-		return types.LimitUltimate[self.Entity.LimitUltimate.ToString()]
+		return types.LimitUltimate[self._Entity.LimitUltimate.ToString()]
 
 	@property
 	def ObjectGroups(self) -> FailureObjectGroupCol:
-		return FailureObjectGroupCol(self.Entity.ObjectGroups)
+		return FailureObjectGroupCol(self._Entity.ObjectGroups)
 
 	@property
 	def RequiredMargin(self) -> float:
-		return self.Entity.RequiredMargin
+		return self._Entity.RequiredMargin
 
 	@property
 	def Settings(self) -> FailureSettingCol:
-		return FailureSettingCol(self.Entity.Settings)
+		return FailureSettingCol(self._Entity.Settings)
 
 
 class IdNameEntityRenameable(IdNameEntity):
 	def __init__(self, idNameEntityRenameable: _api.IdNameEntityRenameable):
-		self.Entity = idNameEntityRenameable
+		self._Entity = idNameEntityRenameable
 
 	def Rename(self, name: str) -> None:
-		return self.Entity.Rename(name)
+		return self._Entity.Rename(name)
 
 
 class FailureCriterionCol(IdNameEntityCol[FailureCriterion]):
 	def __init__(self, failureCriterionCol: _api.FailureCriterionCol):
-		self.Entity = failureCriterionCol
-		self.CollectedClass = FailureCriterion
-		self.FailureCriterionColList = tuple([FailureCriterion(failureCriterionCol) for failureCriterionCol in self.Entity])
+		self._Entity = failureCriterionCol
+		self._CollectedClass = FailureCriterion
+
+	@property
+	def FailureCriterionColList(self) -> tuple[FailureCriterion]:
+		return tuple([FailureCriterion(failureCriterionCol) for failureCriterionCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> FailureCriterion:
-		pass
+	def Get(self, name: str) -> FailureCriterion: ...
 
 	@overload
-	def Get(self, id: int) -> FailureCriterion:
-		pass
+	def Get(self, id: int) -> FailureCriterion: ...
 
 	def Get(self, item1 = None) -> FailureCriterion:
 		if isinstance(item1, str):
@@ -497,6 +510,8 @@ class FailureCriterionCol(IdNameEntityCol[FailureCriterion]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.FailureCriterionColList[index]
@@ -510,38 +525,39 @@ class FailureCriterionCol(IdNameEntityCol[FailureCriterion]):
 
 class FailureMode(IdNameEntityRenameable):
 	def __init__(self, failureMode: _api.FailureMode):
-		self.Entity = failureMode
+		self._Entity = failureMode
 
 	@property
 	def AnalysisCategoryId(self) -> int:
-		return self.Entity.AnalysisCategoryId
+		return self._Entity.AnalysisCategoryId
 
 	@property
 	def AnalysisCategoryName(self) -> str:
-		return self.Entity.AnalysisCategoryName
+		return self._Entity.AnalysisCategoryName
 
 	@property
 	def Criteria(self) -> FailureCriterionCol:
-		return FailureCriterionCol(self.Entity.Criteria)
+		return FailureCriterionCol(self._Entity.Criteria)
 
 	@property
 	def Settings(self) -> FailureSettingCol:
-		return FailureSettingCol(self.Entity.Settings)
+		return FailureSettingCol(self._Entity.Settings)
 
 
 class FailureModeCol(IdNameEntityCol[FailureMode]):
 	def __init__(self, failureModeCol: _api.FailureModeCol):
-		self.Entity = failureModeCol
-		self.CollectedClass = FailureMode
-		self.FailureModeColList = tuple([FailureMode(failureModeCol) for failureModeCol in self.Entity])
+		self._Entity = failureModeCol
+		self._CollectedClass = FailureMode
+
+	@property
+	def FailureModeColList(self) -> tuple[FailureMode]:
+		return tuple([FailureMode(failureModeCol) for failureModeCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> FailureMode:
-		pass
+	def Get(self, name: str) -> FailureMode: ...
 
 	@overload
-	def Get(self, id: int) -> FailureMode:
-		pass
+	def Get(self, id: int) -> FailureMode: ...
 
 	def Get(self, item1 = None) -> FailureMode:
 		if isinstance(item1, str):
@@ -549,6 +565,8 @@ class FailureModeCol(IdNameEntityCol[FailureMode]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.FailureModeColList[index]
@@ -562,180 +580,173 @@ class FailureModeCol(IdNameEntityCol[FailureMode]):
 
 class AnalysisProperty(AssignablePropertyWithFamilyCategory):
 	def __init__(self, analysisProperty: _api.AnalysisProperty):
-		self.Entity = analysisProperty
+		self._Entity = analysisProperty
 
 	@property
 	def FailureModes(self) -> FailureModeCol:
-		return FailureModeCol(self.Entity.FailureModes)
+		return FailureModeCol(self._Entity.FailureModes)
 
 	@overload
-	def AddFailureMode(self, id: int) -> None:
-		pass
+	def AddFailureMode(self, id: int) -> None: ...
 
 	@overload
-	def AddFailureMode(self, ids: tuple[int]) -> None:
-		pass
+	def AddFailureMode(self, ids: tuple[int]) -> None: ...
 
 	@overload
-	def RemoveFailureMode(self, id: int) -> None:
-		pass
+	def RemoveFailureMode(self, id: int) -> None: ...
 
 	@overload
-	def RemoveFailureMode(self, ids: tuple[int]) -> None:
-		pass
+	def RemoveFailureMode(self, ids: tuple[int]) -> None: ...
 
 	def AddFailureMode(self, item1 = None) -> None:
 		if isinstance(item1, int):
-			return self.Entity.AddFailureMode(item1)
+			return self._Entity.AddFailureMode(item1)
 
 		if isinstance(item1, tuple):
-			idsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						idsList.Add(thing)
+			idsList = MakeCSharpIntList(item1)
 			idsEnumerable = IEnumerable(idsList)
-			return self.Entity.AddFailureMode(idsEnumerable)
+			return self._Entity.AddFailureMode(idsEnumerable)
+
+		return self._Entity.AddFailureMode(item1)
 
 	def RemoveFailureMode(self, item1 = None) -> None:
 		if isinstance(item1, int):
-			return self.Entity.RemoveFailureMode(item1)
+			return self._Entity.RemoveFailureMode(item1)
 
 		if isinstance(item1, tuple):
-			idsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						idsList.Add(thing)
+			idsList = MakeCSharpIntList(item1)
 			idsEnumerable = IEnumerable(idsList)
-			return self.Entity.RemoveFailureMode(idsEnumerable)
+			return self._Entity.RemoveFailureMode(idsEnumerable)
+
+		return self._Entity.RemoveFailureMode(item1)
 
 
 class DesignProperty(AssignablePropertyWithFamilyCategory):
 	def __init__(self, designProperty: _api.DesignProperty):
-		self.Entity = designProperty
+		self._Entity = designProperty
 
 	def Copy(self, newName: str) -> int:
-		return self.Entity.Copy(newName)
+		return self._Entity.Copy(newName)
 
 
 class LoadProperty(AssignableProperty):
 	def __init__(self, loadProperty: _api.LoadProperty):
-		self.Entity = loadProperty
+		self._Entity = loadProperty
 
 
 class DesignLoadSubcase(IdNameEntity):
 	def __init__(self, designLoadSubcase: _api.DesignLoadSubcase):
-		self.Entity = designLoadSubcase
+		self._Entity = designLoadSubcase
 
 	@property
 	def RunDeckId(self) -> int:
-		return self.Entity.RunDeckId
+		return self._Entity.RunDeckId
 
 	@property
 	def IsThermal(self) -> bool:
-		return self.Entity.IsThermal
+		return self._Entity.IsThermal
 
 	@property
 	def IsEditable(self) -> bool:
-		return self.Entity.IsEditable
+		return self._Entity.IsEditable
 
 	@property
 	def Description(self) -> str:
-		return self.Entity.Description
+		return self._Entity.Description
 
 	@property
 	def ModificationDate(self) -> DateTime:
-		return self.Entity.ModificationDate
+		return self._Entity.ModificationDate
 
 	@property
 	def NastranSubcaseId(self) -> int:
-		return self.Entity.NastranSubcaseId
+		return self._Entity.NastranSubcaseId
 
 	@property
 	def NastranLoadId(self) -> int:
-		return self.Entity.NastranLoadId
+		return self._Entity.NastranLoadId
 
 	@property
 	def NastranSpcId(self) -> int:
-		return self.Entity.NastranSpcId
+		return self._Entity.NastranSpcId
 
 	@property
 	def AbaqusStepName(self) -> str:
-		return self.Entity.AbaqusStepName
+		return self._Entity.AbaqusStepName
 
 	@property
 	def AbaqusLoadCaseName(self) -> str:
-		return self.Entity.AbaqusLoadCaseName
+		return self._Entity.AbaqusLoadCaseName
 
 	@property
 	def AbaqusStepTime(self) -> float:
-		return self.Entity.AbaqusStepTime
+		return self._Entity.AbaqusStepTime
 
 	@property
 	def RunDeckOrder(self) -> int:
-		return self.Entity.RunDeckOrder
+		return self._Entity.RunDeckOrder
 
 	@property
 	def SolutionType(self) -> types.FeaSolutionType:
-		return types.FeaSolutionType[self.Entity.FeaSolutionType.ToString()]
+		return types.FeaSolutionType[self._Entity.FeaSolutionType.ToString()]
 
 
 class DesignLoadSubcaseMultiplier(IdNameEntity):
 	def __init__(self, designLoadSubcaseMultiplier: _api.DesignLoadSubcaseMultiplier):
-		self.Entity = designLoadSubcaseMultiplier
+		self._Entity = designLoadSubcaseMultiplier
 
 	@property
 	def LimitFactor(self) -> float:
-		return self.Entity.LimitFactor
+		return self._Entity.LimitFactor
 
 	@property
 	def Subcase(self) -> DesignLoadSubcase:
-		return DesignLoadSubcase(self.Entity.Subcase)
+		return DesignLoadSubcase(self._Entity.Subcase)
 
 	@property
 	def UltimateFactor(self) -> float:
-		return self.Entity.UltimateFactor
+		return self._Entity.UltimateFactor
 
 	@property
 	def Value(self) -> float:
-		return self.Entity.Value
+		return self._Entity.Value
 
 
 class DesignLoadSubcaseTemperature(IdNameEntity):
 	def __init__(self, designLoadSubcaseTemperature: _api.DesignLoadSubcaseTemperature):
-		self.Entity = designLoadSubcaseTemperature
+		self._Entity = designLoadSubcaseTemperature
 
 	@property
 	def HasTemperatureSubcase(self) -> bool:
-		return self.Entity.HasTemperatureSubcase
+		return self._Entity.HasTemperatureSubcase
 
 	@property
 	def Subcase(self) -> DesignLoadSubcase:
-		return DesignLoadSubcase(self.Entity.Subcase)
+		return DesignLoadSubcase(self._Entity.Subcase)
 
 	@property
 	def TemperatureChoiceType(self) -> types.TemperatureChoiceType:
-		return types.TemperatureChoiceType[self.Entity.TemperatureChoiceType.ToString()]
+		return types.TemperatureChoiceType[self._Entity.TemperatureChoiceType.ToString()]
 
 	@property
 	def Value(self) -> float:
-		return self.Entity.Value
+		return self._Entity.Value
 
 
 class DesignLoadSubcaseMultiplierCol(IdNameEntityCol[DesignLoadSubcaseMultiplier]):
 	def __init__(self, designLoadSubcaseMultiplierCol: _api.DesignLoadSubcaseMultiplierCol):
-		self.Entity = designLoadSubcaseMultiplierCol
-		self.CollectedClass = DesignLoadSubcaseMultiplier
-		self.DesignLoadSubcaseMultiplierColList = tuple([DesignLoadSubcaseMultiplier(designLoadSubcaseMultiplierCol) for designLoadSubcaseMultiplierCol in self.Entity])
+		self._Entity = designLoadSubcaseMultiplierCol
+		self._CollectedClass = DesignLoadSubcaseMultiplier
+
+	@property
+	def DesignLoadSubcaseMultiplierColList(self) -> tuple[DesignLoadSubcaseMultiplier]:
+		return tuple([DesignLoadSubcaseMultiplier(designLoadSubcaseMultiplierCol) for designLoadSubcaseMultiplierCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> DesignLoadSubcaseMultiplier:
-		pass
+	def Get(self, name: str) -> DesignLoadSubcaseMultiplier: ...
 
 	@overload
-	def Get(self, id: int) -> DesignLoadSubcaseMultiplier:
-		pass
+	def Get(self, id: int) -> DesignLoadSubcaseMultiplier: ...
 
 	def Get(self, item1 = None) -> DesignLoadSubcaseMultiplier:
 		if isinstance(item1, str):
@@ -743,6 +754,8 @@ class DesignLoadSubcaseMultiplierCol(IdNameEntityCol[DesignLoadSubcaseMultiplier
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.DesignLoadSubcaseMultiplierColList[index]
@@ -756,81 +769,81 @@ class DesignLoadSubcaseMultiplierCol(IdNameEntityCol[DesignLoadSubcaseMultiplier
 
 class DesignLoad(IdNameEntity):
 	def __init__(self, designLoad: _api.DesignLoad):
-		self.Entity = designLoad
+		self._Entity = designLoad
 
 	@property
 	def AnalysisTemperature(self) -> DesignLoadSubcaseTemperature:
-		return DesignLoadSubcaseTemperature(self.Entity.AnalysisTemperature)
+		return DesignLoadSubcaseTemperature(self._Entity.AnalysisTemperature)
 
 	@property
 	def Description(self) -> str:
-		return self.Entity.Description
+		return self._Entity.Description
 
 	@property
 	def InitialTemperature(self) -> DesignLoadSubcaseTemperature:
-		return DesignLoadSubcaseTemperature(self.Entity.InitialTemperature)
+		return DesignLoadSubcaseTemperature(self._Entity.InitialTemperature)
 
 	@property
 	def IsActive(self) -> bool:
-		return self.Entity.IsActive
+		return self._Entity.IsActive
 
 	@property
 	def IsEditable(self) -> bool:
-		return self.Entity.IsEditable
+		return self._Entity.IsEditable
 
 	@property
 	def IsVirtual(self) -> bool:
-		return self.Entity.IsVirtual
+		return self._Entity.IsVirtual
 
 	@property
 	def ModificationDate(self) -> DateTime:
-		return self.Entity.ModificationDate
+		return self._Entity.ModificationDate
 
 	@property
 	def SubcaseMultipliers(self) -> DesignLoadSubcaseMultiplierCol:
-		return DesignLoadSubcaseMultiplierCol(self.Entity.SubcaseMultipliers)
+		return DesignLoadSubcaseMultiplierCol(self._Entity.SubcaseMultipliers)
 
 	@property
 	def Types(self) -> list[types.LoadCaseType]:
-		return [types.LoadCaseType[loadCaseType.ToString()] for loadCaseType in self.Entity.Types]
+		return [types.LoadCaseType[loadCaseType.ToString()] for loadCaseType in self._Entity.Types]
 
 	@property
 	def UID(self) -> Guid:
-		return self.Entity.UID
+		return self._Entity.UID
 
 
 class Vector3d:
 	def __init__(self, vector3d: _api.Vector3d):
-		self.Entity = vector3d
+		self._Entity = vector3d
 
 	@property
 	def X(self) -> float:
-		return self.Entity.X
+		return self._Entity.X
 
 	@property
 	def Y(self) -> float:
-		return self.Entity.Y
+		return self._Entity.Y
 
 	@property
 	def Z(self) -> float:
-		return self.Entity.Z
+		return self._Entity.Z
 
 	@overload
-	def Equals(self, other) -> bool:
-		pass
+	def Equals(self, other) -> bool: ...
 
 	@overload
-	def Equals(self, obj) -> bool:
-		pass
+	def Equals(self, obj) -> bool: ...
 
 	def GetHashCode(self) -> int:
-		return self.Entity.GetHashCode()
+		return self._Entity.GetHashCode()
 
 	def Equals(self, item1 = None) -> bool:
 		if isinstance(item1, Vector3d):
-			return self.Entity.Equals(item1)
+			return self._Entity.Equals(item1)
 
-		return self.Entity.Equals(item1)
+		return self._Entity.Equals(item1)
+
+		return self._Entity.Equals(item1)
 
 	def __eq__(self, other):
 		return self.Equals(other)
@@ -841,213 +854,208 @@ class Vector3d:
 
 class DiscreteFieldTable(IdNameEntityRenameable):
 	def __init__(self, discreteFieldTable: _api.DiscreteFieldTable):
-		self.Entity = discreteFieldTable
+		self._Entity = discreteFieldTable
 
 	@property
 	def Columns(self) -> dict[int, str]:
 		columnsDict = {}
-		for kvp in self.Entity.Columns:
+		for kvp in self._Entity.Columns:
 			columnsDict[int[kvp.Key.ToString()]] = str(kvp.Value)
 
 		return columnsDict
 
 	@property
 	def ColumnCount(self) -> int:
-		return self.Entity.ColumnCount
+		return self._Entity.ColumnCount
 
 	@property
 	def DataType(self) -> types.DiscreteFieldDataType:
-		return types.DiscreteFieldDataType[self.Entity.DiscreteFieldDataType.ToString()]
+		return types.DiscreteFieldDataType[self._Entity.DiscreteFieldDataType.ToString()]
 
 	@property
 	def PhysicalEntityType(self) -> types.DiscreteFieldPhysicalEntityType:
-		return types.DiscreteFieldPhysicalEntityType[self.Entity.DiscreteFieldPhysicalEntityType.ToString()]
+		return types.DiscreteFieldPhysicalEntityType[self._Entity.DiscreteFieldPhysicalEntityType.ToString()]
 
 	@property
 	def PointIds(self) -> list[Vector3d]:
-		return [Vector3d[vector3d.ToString()] for vector3d in self.Entity.PointIds]
+		return [Vector3d[vector3d.ToString()] for vector3d in self._Entity.PointIds]
 
 	@property
 	def RowCount(self) -> int:
-		return self.Entity.RowCount
+		return self._Entity.RowCount
 
 	@property
 	def RowIds(self) -> list[int]:
-		return [int32 for int32 in self.Entity.RowIds]
+		return [int32 for int32 in self._Entity.RowIds]
 
 	def AddColumn(self, name: str) -> int:
-		return self.Entity.AddColumn(name)
+		return self._Entity.AddColumn(name)
 
 	def AddPointRow(self, pointId: Vector3d) -> None:
-		return self.Entity.AddPointRow(pointId.Entity)
+		return self._Entity.AddPointRow(pointId._Entity)
 
 	@overload
-	def ReadNumericCell(self, entityId: int, columnId: int) -> float:
-		pass
+	def ReadNumericCell(self, entityId: int, columnId: int) -> float: ...
 
 	@overload
-	def ReadNumericCell(self, pointId: Vector3d, columnId: int) -> float:
-		pass
+	def ReadNumericCell(self, pointId: Vector3d, columnId: int) -> float: ...
 
 	@overload
-	def ReadStringCell(self, entityId: int, columnId: int) -> str:
-		pass
+	def ReadStringCell(self, entityId: int, columnId: int) -> str: ...
 
 	@overload
-	def ReadStringCell(self, pointId: Vector3d, columnId: int) -> str:
-		pass
+	def ReadStringCell(self, pointId: Vector3d, columnId: int) -> str: ...
 
 	def SetColumnName(self, columnId: int, name: str) -> None:
-		return self.Entity.SetColumnName(columnId, name)
+		return self._Entity.SetColumnName(columnId, name)
 
 	@overload
-	def SetNumericValue(self, entityId: int, columnId: int, value: float) -> None:
-		pass
+	def SetNumericValue(self, entityId: int, columnId: int, value: float) -> None: ...
 
 	@overload
-	def SetNumericValue(self, pointId: Vector3d, columnId: int, value: float) -> None:
-		pass
+	def SetNumericValue(self, pointId: Vector3d, columnId: int, value: float) -> None: ...
 
 	@overload
-	def SetStringValue(self, entityId: int, columnId: int, value: str) -> None:
-		pass
+	def SetStringValue(self, entityId: int, columnId: int, value: str) -> None: ...
 
 	@overload
-	def SetStringValue(self, pointId: Vector3d, columnId: int, value: str) -> None:
-		pass
+	def SetStringValue(self, pointId: Vector3d, columnId: int, value: str) -> None: ...
 
 	def DeleteAllRows(self) -> None:
-		return self.Entity.DeleteAllRows()
+		return self._Entity.DeleteAllRows()
 
 	def DeleteColumn(self, columnId: int) -> None:
-		return self.Entity.DeleteColumn(columnId)
+		return self._Entity.DeleteColumn(columnId)
 
 	def DeletePointRow(self, pointId: Vector3d) -> None:
-		return self.Entity.DeletePointRow(pointId.Entity)
+		return self._Entity.DeletePointRow(pointId._Entity)
 
 	def DeleteRow(self, entityId: int) -> None:
-		return self.Entity.DeleteRow(entityId)
+		return self._Entity.DeleteRow(entityId)
 
 	def DeleteRowsAndColumns(self) -> None:
-		return self.Entity.DeleteRowsAndColumns()
+		return self._Entity.DeleteRowsAndColumns()
 
 	def ReadNumericCell(self, item1 = None, item2 = None) -> float:
 		if isinstance(item1, int) and isinstance(item2, int):
-			return self.Entity.ReadNumericCell(item1, item2)
+			return self._Entity.ReadNumericCell(item1, item2)
 
 		if isinstance(item1, Vector3d) and isinstance(item2, int):
-			return self.Entity.ReadNumericCell(item1, item2)
+			return self._Entity.ReadNumericCell(item1, item2)
+
+		return self._Entity.ReadNumericCell(item1, item2)
 
 	def ReadStringCell(self, item1 = None, item2 = None) -> str:
 		if isinstance(item1, int) and isinstance(item2, int):
-			return self.Entity.ReadStringCell(item1, item2)
+			return self._Entity.ReadStringCell(item1, item2)
 
 		if isinstance(item1, Vector3d) and isinstance(item2, int):
-			return self.Entity.ReadStringCell(item1, item2)
+			return self._Entity.ReadStringCell(item1, item2)
+
+		return self._Entity.ReadStringCell(item1, item2)
 
 	def SetNumericValue(self, item1 = None, item2 = None, item3 = None) -> None:
 		if isinstance(item1, int) and isinstance(item2, int) and isinstance(item3, float):
-			return self.Entity.SetNumericValue(item1, item2, item3)
+			return self._Entity.SetNumericValue(item1, item2, item3)
 
 		if isinstance(item1, Vector3d) and isinstance(item2, int) and isinstance(item3, float):
-			return self.Entity.SetNumericValue(item1, item2, item3)
+			return self._Entity.SetNumericValue(item1, item2, item3)
+
+		return self._Entity.SetNumericValue(item1, item2, item3)
 
 	def SetStringValue(self, item1 = None, item2 = None, item3 = None) -> None:
 		if isinstance(item1, int) and isinstance(item2, int) and isinstance(item3, str):
-			return self.Entity.SetStringValue(item1, item2, item3)
+			return self._Entity.SetStringValue(item1, item2, item3)
 
 		if isinstance(item1, Vector3d) and isinstance(item2, int) and isinstance(item3, str):
-			return self.Entity.SetStringValue(item1, item2, item3)
+			return self._Entity.SetStringValue(item1, item2, item3)
+
+		return self._Entity.SetStringValue(item1, item2, item3)
 
 
 class Centroid:
 	def __init__(self, centroid: _api.Centroid):
-		self.Entity = centroid
+		self._Entity = centroid
 
 	@property
 	def X(self) -> float:
-		return self.Entity.X
+		return self._Entity.X
 
 	@property
 	def Y(self) -> float:
-		return self.Entity.Y
+		return self._Entity.Y
 
 	@property
 	def Z(self) -> float:
-		return self.Entity.Z
+		return self._Entity.Z
 
 
 class Element(IdEntity):
 	def __init__(self, element: _api.Element):
-		self.Entity = element
+		self._Entity = element
 
 	@property
 	def MarginOfSafety(self) -> float:
-		return self.Entity.MarginOfSafety
+		return self._Entity.MarginOfSafety
 
 	@property
 	def Centroid(self) -> Centroid:
-		return Centroid(self.Entity.Centroid)
+		return Centroid(self._Entity.Centroid)
 
 
 class FailureModeCategory(IdNameEntity):
 	def __init__(self, failureModeCategory: _api.FailureModeCategory):
-		self.Entity = failureModeCategory
+		self._Entity = failureModeCategory
 
 	@property
 	def PackageId(self) -> int:
-		return self.Entity.PackageId
+		return self._Entity.PackageId
 
 
 class EntityWithAssignableProperties(IdNameEntityRenameable):
 	def __init__(self, entityWithAssignableProperties: _api.EntityWithAssignableProperties):
-		self.Entity = entityWithAssignableProperties
+		self._Entity = entityWithAssignableProperties
 
 	@property
 	def AssignedAnalysisProperty(self) -> AnalysisProperty:
-		return AnalysisProperty(self.Entity.AssignedAnalysisProperty)
+		return AnalysisProperty(self._Entity.AssignedAnalysisProperty)
 
 	@property
 	def AssignedDesignProperty(self) -> DesignProperty:
-		thisClass = type(self.Entity.AssignedDesignProperty).__name__
+		thisClass = type(self._Entity.AssignedDesignProperty).__name__
 		givenClass = DesignProperty
 		for subclass in DesignProperty.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(self.Entity.AssignedDesignProperty)
+		return givenClass(self._Entity.AssignedDesignProperty)
 
 	@property
 	def AssignedLoadProperty(self) -> LoadProperty:
-		return LoadProperty(self.Entity.AssignedLoadProperty)
+		return LoadProperty(self._Entity.AssignedLoadProperty)
 
 	def AssignAnalysisProperty(self, id: int) -> PropertyAssignmentStatus:
-		return PropertyAssignmentStatus[self.Entity.AssignAnalysisProperty(id).ToString()]
+		return PropertyAssignmentStatus[self._Entity.AssignAnalysisProperty(id).ToString()]
 
 	def AssignDesignProperty(self, id: int) -> PropertyAssignmentStatus:
-		return PropertyAssignmentStatus[self.Entity.AssignDesignProperty(id).ToString()]
+		return PropertyAssignmentStatus[self._Entity.AssignDesignProperty(id).ToString()]
 
 	def AssignLoadProperty(self, id: int) -> PropertyAssignmentStatus:
-		return PropertyAssignmentStatus[self.Entity.AssignLoadProperty(id).ToString()]
+		return PropertyAssignmentStatus[self._Entity.AssignLoadProperty(id).ToString()]
 
 	def AssignProperty(self, property: AssignableProperty) -> PropertyAssignmentStatus:
-		return PropertyAssignmentStatus[self.Entity.AssignProperty(property.Entity).ToString()]
+		return PropertyAssignmentStatus[self._Entity.AssignProperty(property._Entity).ToString()]
 
 
 class AnalysisResultCol(Generic[T]):
 	def __init__(self, analysisResultCol: _api.AnalysisResultCol):
-		self.Entity = analysisResultCol
-		self.AnalysisResultColList = tuple([AnalysisResult(analysisResultCol) for analysisResultCol in self.Entity])
+		self._Entity = analysisResultCol
+
+	@property
+	def AnalysisResultColList(self) -> tuple[AnalysisResult]:
+		return tuple([AnalysisResult(analysisResultCol) for analysisResultCol in self._Entity])
 
 	def Count(self) -> int:
-		return self.Entity.Count()
-
-	def GetEnumerator(self) -> tuple[T]:
-		enumerator = self.Entity.GetEnumerator()
-		tup = ()
-		for item in enumerator:
-			tup += (item)
-
-		return tup
+		return self._Entity.Count()
 
 	def __getitem__(self, index: int):
 		return self.AnalysisResultColList[index]
@@ -1061,69 +1069,72 @@ class AnalysisResultCol(Generic[T]):
 
 class ZoneJointEntity(EntityWithAssignableProperties):
 	def __init__(self, zoneJointEntity: _api.ZoneJointEntity):
-		self.Entity = zoneJointEntity
+		self._Entity = zoneJointEntity
 
 	@abstractmethod
 	def GetMinimumMargin(self) -> Margin:
-		return Margin(self.Entity.GetMinimumMargin())
+		return Margin(self._Entity.GetMinimumMargin())
 
 	@abstractmethod
 	def GetControllingResult(self) -> AnalysisResult:
-		return AnalysisResult(self.Entity.GetControllingResult())
+		return AnalysisResult(self._Entity.GetControllingResult())
 
 	@abstractmethod
 	def GetAllResults(self) -> AnalysisResultCol:
-		return AnalysisResultCol(self.Entity.GetAllResults())
+		return AnalysisResultCol(self._Entity.GetAllResults())
 
 
 class Joint(ZoneJointEntity):
 	def __init__(self, joint: _api.Joint):
-		self.Entity = joint
+		self._Entity = joint
 
 	def GetAllResults(self) -> AnalysisResultCol:
-		return AnalysisResultCol(self.Entity.GetAllResults())
+		return AnalysisResultCol(self._Entity.GetAllResults())
 
 	def GetControllingResult(self) -> AnalysisResult:
-		return AnalysisResult(self.Entity.GetControllingResult())
+		return AnalysisResult(self._Entity.GetControllingResult())
 
 	def GetMinimumMargin(self) -> Margin:
-		return Margin(self.Entity.GetMinimumMargin())
+		return Margin(self._Entity.GetMinimumMargin())
 
 
 class ZoneBase(ZoneJointEntity):
 	def __init__(self, zoneBase: _api.ZoneBase):
-		self.Entity = zoneBase
+		self._Entity = zoneBase
 
 	@property
 	def Centroid(self) -> Centroid:
-		return Centroid(self.Entity.Centroid)
+		return Centroid(self._Entity.Centroid)
 
 	@property
 	def Id(self) -> int:
-		return self.Entity.Id
+		return self._Entity.Id
 
 	@property
 	def Weight(self) -> float:
-		return self.Entity.Weight
+		return self._Entity.Weight
 
 	def RenumberZone(self, newId: int) -> ZoneIdUpdateStatus:
-		return ZoneIdUpdateStatus[self.Entity.RenumberZone(newId).ToString()]
+		return ZoneIdUpdateStatus[self._Entity.RenumberZone(newId).ToString()]
 
 	def GetAllResults(self) -> AnalysisResultCol:
-		return AnalysisResultCol(self.Entity.GetAllResults())
+		return AnalysisResultCol(self._Entity.GetAllResults())
 
 	def GetControllingResult(self) -> AnalysisResult:
-		return AnalysisResult(self.Entity.GetControllingResult())
+		return AnalysisResult(self._Entity.GetControllingResult())
 
 	def GetMinimumMargin(self) -> Margin:
-		return Margin(self.Entity.GetMinimumMargin())
+		return Margin(self._Entity.GetMinimumMargin())
 
 
 class ElementCol(IdEntityCol[Element]):
 	def __init__(self, elementCol: _api.ElementCol):
-		self.Entity = elementCol
-		self.CollectedClass = Element
-		self.ElementColList = tuple([Element(elementCol) for elementCol in self.Entity])
+		self._Entity = elementCol
+		self._CollectedClass = Element
+
+	@property
+	def ElementColList(self) -> tuple[Element]:
+		return tuple([Element(elementCol) for elementCol in self._Entity])
 
 	def __getitem__(self, index: int):
 		return self.ElementColList[index]
@@ -1137,83 +1148,76 @@ class ElementCol(IdEntityCol[Element]):
 
 class PanelSegment(ZoneBase):
 	def __init__(self, panelSegment: _api.PanelSegment):
-		self.Entity = panelSegment
+		self._Entity = panelSegment
 
 	@property
 	def ElementsByObjectOrSkin(self) -> dict[types.DiscreteDefinitionType, ElementCol]:
 		elementsByObjectOrSkinDict = {}
-		for kvp in self.Entity.ElementsByObjectOrSkin:
+		for kvp in self._Entity.ElementsByObjectOrSkin:
 			elementsByObjectOrSkinDict[types.DiscreteDefinitionType[kvp.Key.ToString()]] = ElementCol(kvp.Value)
 
 		return elementsByObjectOrSkinDict
 
 	@property
 	def Skins(self) -> tuple[types.DiscreteDefinitionType]:
-		return tuple([types.DiscreteDefinitionType(discreteDefinitionType) for discreteDefinitionType in self.Entity.Skins])
+		return tuple([types.DiscreteDefinitionType(discreteDefinitionType) for discreteDefinitionType in self._Entity.Skins])
 
 	@property
 	def Objects(self) -> tuple[types.DiscreteDefinitionType]:
-		return tuple([types.DiscreteDefinitionType(discreteDefinitionType) for discreteDefinitionType in self.Entity.Objects])
+		return tuple([types.DiscreteDefinitionType(discreteDefinitionType) for discreteDefinitionType in self._Entity.Objects])
 
 	@property
 	def DiscreteTechnique(self) -> types.DiscreteTechnique:
-		return types.DiscreteTechnique[self.Entity.DiscreteTechnique.ToString()]
+		return types.DiscreteTechnique[self._Entity.DiscreteTechnique.ToString()]
 
 	@property
 	def LeftSkinZoneId(self) -> int:
-		return self.Entity.LeftSkinZoneId
+		return self._Entity.LeftSkinZoneId
 
 	@property
 	def RightSkinZoneId(self) -> int:
-		return self.Entity.RightSkinZoneId
+		return self._Entity.RightSkinZoneId
 
 	def GetElements(self, discreteDefinitionType: types.DiscreteDefinitionType) -> ElementCol:
-		return ElementCol(self.Entity.GetElements(_types.DiscreteDefinitionType(discreteDefinitionType.value)))
+		return ElementCol(self._Entity.GetElements(_types.DiscreteDefinitionType(discreteDefinitionType.value)))
 
 	def SetObjectElements(self, discreteDefinitionType: types.DiscreteDefinitionType, elementIds: tuple[int]) -> None:
-		elementIdsList = List[int]()
-		if elementIds is not None:
-			for thing in elementIds:
-				if thing is not None:
-					elementIdsList.Add(thing)
+		elementIdsList = MakeCSharpIntList(elementIds)
 		elementIdsEnumerable = IEnumerable(elementIdsList)
-		return self.Entity.SetObjectElements(_types.DiscreteDefinitionType(discreteDefinitionType.value), elementIdsEnumerable)
+		return self._Entity.SetObjectElements(_types.DiscreteDefinitionType(discreteDefinitionType.value), elementIdsEnumerable)
 
 
 class Zone(ZoneBase):
 	def __init__(self, zone: _api.Zone):
-		self.Entity = zone
+		self._Entity = zone
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self.Entity.Elements)
+		return ElementCol(self._Entity.Elements)
 
 	def AddElements(self, elementIds: tuple[int]) -> None:
-		elementIdsList = List[int]()
-		if elementIds is not None:
-			for thing in elementIds:
-				if thing is not None:
-					elementIdsList.Add(thing)
+		elementIdsList = MakeCSharpIntList(elementIds)
 		elementIdsEnumerable = IEnumerable(elementIdsList)
-		return self.Entity.AddElements(elementIdsEnumerable)
+		return self._Entity.AddElements(elementIdsEnumerable)
 
 
 class EntityWithAssignablePropertiesCol(IdNameEntityCol, Generic[T]):
 	def __init__(self, entityWithAssignablePropertiesCol: _api.EntityWithAssignablePropertiesCol):
-		self.Entity = entityWithAssignablePropertiesCol
-		self.CollectedClass = T
-		self.EntityWithAssignablePropertiesColList = tuple([T(entityWithAssignablePropertiesCol) for entityWithAssignablePropertiesCol in self.Entity])
+		self._Entity = entityWithAssignablePropertiesCol
+		self._CollectedClass = T
+
+	@property
+	def EntityWithAssignablePropertiesColList(self) -> tuple[T]:
+		return tuple([T(entityWithAssignablePropertiesCol) for entityWithAssignablePropertiesCol in self._Entity])
 
 	def AssignPropertyToAll(self, property: AssignableProperty) -> PropertyAssignmentStatus:
-		return PropertyAssignmentStatus[self.Entity.AssignPropertyToAll(property.Entity).ToString()]
+		return PropertyAssignmentStatus[self._Entity.AssignPropertyToAll(property._Entity).ToString()]
 
 	@overload
-	def Get(self, name: str) -> T:
-		pass
+	def Get(self, name: str) -> T: ...
 
 	@overload
-	def Get(self, id: int) -> T:
-		pass
+	def Get(self, id: int) -> T: ...
 
 	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
@@ -1221,6 +1225,8 @@ class EntityWithAssignablePropertiesCol(IdNameEntityCol, Generic[T]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.EntityWithAssignablePropertiesColList[index]
@@ -1234,17 +1240,18 @@ class EntityWithAssignablePropertiesCol(IdNameEntityCol, Generic[T]):
 
 class JointCol(EntityWithAssignablePropertiesCol[Joint]):
 	def __init__(self, jointCol: _api.JointCol):
-		self.Entity = jointCol
-		self.CollectedClass = Joint
-		self.JointColList = tuple([Joint(jointCol) for jointCol in self.Entity])
+		self._Entity = jointCol
+		self._CollectedClass = Joint
+
+	@property
+	def JointColList(self) -> tuple[Joint]:
+		return tuple([Joint(jointCol) for jointCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> Joint:
-		pass
+	def Get(self, name: str) -> Joint: ...
 
 	@overload
-	def Get(self, id: int) -> Joint:
-		pass
+	def Get(self, id: int) -> Joint: ...
 
 	def Get(self, item1 = None) -> Joint:
 		if isinstance(item1, str):
@@ -1252,6 +1259,8 @@ class JointCol(EntityWithAssignablePropertiesCol[Joint]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.JointColList[index]
@@ -1265,17 +1274,18 @@ class JointCol(EntityWithAssignablePropertiesCol[Joint]):
 
 class PanelSegmentCol(EntityWithAssignablePropertiesCol[PanelSegment]):
 	def __init__(self, panelSegmentCol: _api.PanelSegmentCol):
-		self.Entity = panelSegmentCol
-		self.CollectedClass = PanelSegment
-		self.PanelSegmentColList = tuple([PanelSegment(panelSegmentCol) for panelSegmentCol in self.Entity])
+		self._Entity = panelSegmentCol
+		self._CollectedClass = PanelSegment
+
+	@property
+	def PanelSegmentColList(self) -> tuple[PanelSegment]:
+		return tuple([PanelSegment(panelSegmentCol) for panelSegmentCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> PanelSegment:
-		pass
+	def Get(self, name: str) -> PanelSegment: ...
 
 	@overload
-	def Get(self, id: int) -> PanelSegment:
-		pass
+	def Get(self, id: int) -> PanelSegment: ...
 
 	def Get(self, item1 = None) -> PanelSegment:
 		if isinstance(item1, str):
@@ -1283,6 +1293,8 @@ class PanelSegmentCol(EntityWithAssignablePropertiesCol[PanelSegment]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.PanelSegmentColList[index]
@@ -1296,17 +1308,18 @@ class PanelSegmentCol(EntityWithAssignablePropertiesCol[PanelSegment]):
 
 class ZoneCol(EntityWithAssignablePropertiesCol[Zone]):
 	def __init__(self, zoneCol: _api.ZoneCol):
-		self.Entity = zoneCol
-		self.CollectedClass = Zone
-		self.ZoneColList = tuple([Zone(zoneCol) for zoneCol in self.Entity])
+		self._Entity = zoneCol
+		self._CollectedClass = Zone
+
+	@property
+	def ZoneColList(self) -> tuple[Zone]:
+		return tuple([Zone(zoneCol) for zoneCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> Zone:
-		pass
+	def Get(self, name: str) -> Zone: ...
 
 	@overload
-	def Get(self, id: int) -> Zone:
-		pass
+	def Get(self, id: int) -> Zone: ...
 
 	def Get(self, item1 = None) -> Zone:
 		if isinstance(item1, str):
@@ -1314,6 +1327,8 @@ class ZoneCol(EntityWithAssignablePropertiesCol[Zone]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.ZoneColList[index]
@@ -1327,1127 +1342,1114 @@ class ZoneCol(EntityWithAssignablePropertiesCol[Zone]):
 
 class ZoneJointContainer(IdNameEntityRenameable):
 	def __init__(self, zoneJointContainer: _api.ZoneJointContainer):
-		self.Entity = zoneJointContainer
+		self._Entity = zoneJointContainer
 
 	@property
 	def Centroid(self) -> Centroid:
-		return Centroid(self.Entity.Centroid)
+		return Centroid(self._Entity.Centroid)
 
 	@property
 	def Joints(self) -> JointCol:
-		return JointCol(self.Entity.Joints)
+		return JointCol(self._Entity.Joints)
 
 	@property
 	def PanelSegments(self) -> PanelSegmentCol:
-		return PanelSegmentCol(self.Entity.PanelSegments)
+		return PanelSegmentCol(self._Entity.PanelSegments)
 
 	@property
 	def TotalBeamLength(self) -> float:
-		return self.Entity.TotalBeamLength
+		return self._Entity.TotalBeamLength
 
 	@property
 	def TotalPanelArea(self) -> float:
-		return self.Entity.TotalPanelArea
+		return self._Entity.TotalPanelArea
 
 	@property
 	def TotalZoneWeight(self) -> float:
-		return self.Entity.TotalZoneWeight
+		return self._Entity.TotalZoneWeight
 
 	@property
 	def Zones(self) -> ZoneCol:
-		return ZoneCol(self.Entity.Zones)
+		return ZoneCol(self._Entity.Zones)
 
 	@overload
-	def AddJoint(self, id: int) -> CollectionModificationStatus:
-		pass
+	def AddJoint(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddJoint(self, joint: Joint) -> CollectionModificationStatus:
-		pass
+	def AddJoint(self, joint: Joint) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoint(self, id: int) -> CollectionModificationStatus:
-		pass
+	def RemoveJoint(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoint(self, joint: Joint) -> CollectionModificationStatus:
-		pass
+	def RemoveJoint(self, joint: Joint) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoints(self, jointIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def RemoveJoints(self, jointIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoints(self, joints: JointCol) -> CollectionModificationStatus:
-		pass
+	def RemoveJoints(self, joints: JointCol) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddZone(self, id: int) -> CollectionModificationStatus:
-		pass
+	def AddZone(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddZone(self, zone: Zone) -> CollectionModificationStatus:
-		pass
+	def AddZone(self, zone: Zone) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZone(self, id: int) -> CollectionModificationStatus:
-		pass
+	def RemoveZone(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZone(self, zone: Zone) -> CollectionModificationStatus:
-		pass
+	def RemoveZone(self, zone: Zone) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZones(self, zoneIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def RemoveZones(self, zoneIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZones(self, zones: ZoneCol) -> CollectionModificationStatus:
-		pass
+	def RemoveZones(self, zones: ZoneCol) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddPanelSegment(self, id: int) -> CollectionModificationStatus:
-		pass
+	def AddPanelSegment(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddPanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus:
-		pass
+	def AddPanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegment(self, id: int) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegment(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegments(self, segmentIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegments(self, segmentIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegments(self, segments: PanelSegmentCol) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegments(self, segments: PanelSegmentCol) -> CollectionModificationStatus: ...
 
 	def AddJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
-			return CollectionModificationStatus[self.Entity.AddJoint(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddJoint(item1).ToString()]
 
 		if isinstance(item1, Joint):
-			return CollectionModificationStatus[self.Entity.AddJoint(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddJoint(item1).ToString()]
+
+		return self._Entity.AddJoint(item1)
 
 	def RemoveJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
-			return CollectionModificationStatus[self.Entity.RemoveJoint(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveJoint(item1).ToString()]
 
 		if isinstance(item1, Joint):
-			return CollectionModificationStatus[self.Entity.RemoveJoint(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveJoint(item1).ToString()]
+
+		return self._Entity.RemoveJoint(item1)
 
 	def RemoveJoints(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple):
-			jointIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						jointIdsList.Add(thing)
+			jointIdsList = MakeCSharpIntList(item1)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
-			return CollectionModificationStatus[self.Entity.RemoveJoints(jointIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveJoints(jointIdsEnumerable).ToString()]
 
 		if isinstance(item1, JointCol):
-			return CollectionModificationStatus[self.Entity.RemoveJoints(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveJoints(item1).ToString()]
+
+		return self._Entity.RemoveJoints(jointIdsEnumerable)
 
 	def AddZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
-			return CollectionModificationStatus[self.Entity.AddZone(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddZone(item1).ToString()]
 
 		if isinstance(item1, Zone):
-			return CollectionModificationStatus[self.Entity.AddZone(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddZone(item1).ToString()]
+
+		return self._Entity.AddZone(item1)
 
 	def RemoveZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
-			return CollectionModificationStatus[self.Entity.RemoveZone(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveZone(item1).ToString()]
 
 		if isinstance(item1, Zone):
-			return CollectionModificationStatus[self.Entity.RemoveZone(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveZone(item1).ToString()]
+
+		return self._Entity.RemoveZone(item1)
 
 	def RemoveZones(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple):
-			zoneIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						zoneIdsList.Add(thing)
+			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
-			return CollectionModificationStatus[self.Entity.RemoveZones(zoneIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveZones(zoneIdsEnumerable).ToString()]
 
 		if isinstance(item1, ZoneCol):
-			return CollectionModificationStatus[self.Entity.RemoveZones(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveZones(item1).ToString()]
+
+		return self._Entity.RemoveZones(zoneIdsEnumerable)
 
 	def AddPanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
-			return CollectionModificationStatus[self.Entity.AddPanelSegment(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddPanelSegment(item1).ToString()]
 
 		if isinstance(item1, PanelSegment):
-			return CollectionModificationStatus[self.Entity.AddPanelSegment(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddPanelSegment(item1).ToString()]
+
+		return self._Entity.AddPanelSegment(item1)
 
 	def RemovePanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
-			return CollectionModificationStatus[self.Entity.RemovePanelSegment(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.RemovePanelSegment(item1).ToString()]
 
 		if isinstance(item1, PanelSegment):
-			return CollectionModificationStatus[self.Entity.RemovePanelSegment(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.RemovePanelSegment(item1).ToString()]
+
+		return self._Entity.RemovePanelSegment(item1)
 
 	def RemovePanelSegments(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple):
-			segmentIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						segmentIdsList.Add(thing)
+			segmentIdsList = MakeCSharpIntList(item1)
 			segmentIdsEnumerable = IEnumerable(segmentIdsList)
-			return CollectionModificationStatus[self.Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
 
 		if isinstance(item1, PanelSegmentCol):
-			return CollectionModificationStatus[self.Entity.RemovePanelSegments(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.RemovePanelSegments(item1).ToString()]
+
+		return self._Entity.RemovePanelSegments(segmentIdsEnumerable)
 
 
 class FoamTemperature:
 	def __init__(self, foamTemperature: _api.FoamTemperature):
-		self.Entity = foamTemperature
+		self._Entity = foamTemperature
 
 	@property
 	def Temperature(self) -> float:
-		return self.Entity.Temperature
+		return self._Entity.Temperature
 
 	@property
 	def Et(self) -> float:
-		return self.Entity.Et
+		return self._Entity.Et
 
 	@property
 	def Ec(self) -> float:
-		return self.Entity.Ec
+		return self._Entity.Ec
 
 	@property
 	def G(self) -> float:
-		return self.Entity.G
+		return self._Entity.G
 
 	@property
 	def Ef(self) -> float:
-		return self.Entity.Ef
+		return self._Entity.Ef
 
 	@property
 	def Ftu(self) -> float:
-		return self.Entity.Ftu
+		return self._Entity.Ftu
 
 	@property
 	def Fcu(self) -> float:
-		return self.Entity.Fcu
+		return self._Entity.Fcu
 
 	@property
 	def Fsu(self) -> float:
-		return self.Entity.Fsu
+		return self._Entity.Fsu
 
 	@property
 	def Ffu(self) -> float:
-		return self.Entity.Ffu
+		return self._Entity.Ffu
 
 	@property
 	def K(self) -> float:
-		return self.Entity.K
+		return self._Entity.K
 
 	@property
 	def C(self) -> float:
-		return self.Entity.C
+		return self._Entity.C
 
 
 class Foam:
 	def __init__(self, foam: _api.Foam):
-		self.Entity = foam
+		self._Entity = foam
 
 	@property
 	def MaterialFamilyName(self) -> str:
-		return self.Entity.MaterialFamilyName
+		return self._Entity.MaterialFamilyName
 
 	@property
 	def CreationDate(self) -> DateTime:
-		return self.Entity.CreationDate
+		return self._Entity.CreationDate
 
 	@property
 	def ModificationDate(self) -> DateTime:
-		return self.Entity.ModificationDate
+		return self._Entity.ModificationDate
 
 	@property
 	def Name(self) -> str:
-		return self.Entity.Name
+		return self._Entity.Name
 
 	@property
 	def Wet(self) -> bool:
-		return self.Entity.Wet
+		return self._Entity.Wet
 
 	@property
 	def Density(self) -> float:
-		return self.Entity.Density
+		return self._Entity.Density
 
 	@property
 	def Form(self) -> str:
-		return self.Entity.Form
+		return self._Entity.Form
 
 	@property
 	def Specification(self) -> str:
-		return self.Entity.Specification
+		return self._Entity.Specification
 
 	@property
 	def MaterialDescription(self) -> str:
-		return self.Entity.MaterialDescription
+		return self._Entity.MaterialDescription
 
 	@property
 	def UserNote(self) -> str:
-		return self.Entity.UserNote
+		return self._Entity.UserNote
 
 	@property
 	def FemMaterialId(self) -> int:
-		return self.Entity.FemMaterialId
+		return self._Entity.FemMaterialId
 
 	@property
 	def Cost(self) -> float:
-		return self.Entity.Cost
+		return self._Entity.Cost
 
 	@property
 	def BucklingStiffnessKnockdown(self) -> float:
-		return self.Entity.BucklingStiffnessKnockdown
+		return self._Entity.BucklingStiffnessKnockdown
 
 	@property
 	def Absorption(self) -> float:
-		return self.Entity.Absorption
+		return self._Entity.Absorption
 
 	@property
 	def Manufacturer(self) -> str:
-		return self.Entity.Manufacturer
+		return self._Entity.Manufacturer
 
 	def AddTemperatureProperty(self, temperature: float, et: float = None, ec: float = None, g: float = None, ef: float = None, ftu: float = None, fcu: float = None, fsu: float = None, ffu: float = None, k: float = None, c: float = None) -> FoamTemperature:
-		return FoamTemperature(self.Entity.AddTemperatureProperty(temperature, et, ec, g, ef, ftu, fcu, fsu, ffu, k, c))
+		return FoamTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, ef, ftu, fcu, fsu, ffu, k, c))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
-		return self.Entity.DeleteTemperatureProperty(temperature)
+		return self._Entity.DeleteTemperatureProperty(temperature)
 
 	def GetTemperature(self, lookupTemperature: float) -> FoamTemperature:
-		return FoamTemperature(self.Entity.GetTemperature(lookupTemperature))
+		return FoamTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def Save(self) -> None:
-		return self.Entity.Save()
+		return self._Entity.Save()
 
 
 class HoneycombTemperature:
 	def __init__(self, honeycombTemperature: _api.HoneycombTemperature):
-		self.Entity = honeycombTemperature
+		self._Entity = honeycombTemperature
 
 	@property
 	def Temperature(self) -> float:
-		return self.Entity.Temperature
+		return self._Entity.Temperature
 
 	@property
 	def Et(self) -> float:
-		return self.Entity.Et
+		return self._Entity.Et
 
 	@property
 	def Ec(self) -> float:
-		return self.Entity.Ec
+		return self._Entity.Ec
 
 	@property
 	def Gw(self) -> float:
-		return self.Entity.Gw
+		return self._Entity.Gw
 
 	@property
 	def Gl(self) -> float:
-		return self.Entity.Gl
+		return self._Entity.Gl
 
 	@property
 	def Ftu(self) -> float:
-		return self.Entity.Ftu
+		return self._Entity.Ftu
 
 	@property
 	def Fcus(self) -> float:
-		return self.Entity.Fcus
+		return self._Entity.Fcus
 
 	@property
 	def Fcub(self) -> float:
-		return self.Entity.Fcub
+		return self._Entity.Fcub
 
 	@property
 	def Fcuc(self) -> float:
-		return self.Entity.Fcuc
+		return self._Entity.Fcuc
 
 	@property
 	def Fsuw(self) -> float:
-		return self.Entity.Fsuw
+		return self._Entity.Fsuw
 
 	@property
 	def Fsul(self) -> float:
-		return self.Entity.Fsul
+		return self._Entity.Fsul
 
 	@property
 	def SScfl(self) -> float:
-		return self.Entity.SScfl
+		return self._Entity.SScfl
 
 	@property
 	def SScfh(self) -> float:
-		return self.Entity.SScfh
+		return self._Entity.SScfh
 
 	@property
 	def Kl(self) -> float:
-		return self.Entity.Kl
+		return self._Entity.Kl
 
 	@property
 	def Kw(self) -> float:
-		return self.Entity.Kw
+		return self._Entity.Kw
 
 	@property
 	def Kt(self) -> float:
-		return self.Entity.Kt
+		return self._Entity.Kt
 
 	@property
 	def C(self) -> float:
-		return self.Entity.C
+		return self._Entity.C
 
 
 class Honeycomb:
 	def __init__(self, honeycomb: _api.Honeycomb):
-		self.Entity = honeycomb
+		self._Entity = honeycomb
 
 	@property
 	def MaterialFamilyName(self) -> str:
-		return self.Entity.MaterialFamilyName
+		return self._Entity.MaterialFamilyName
 
 	@property
 	def CreationDate(self) -> DateTime:
-		return self.Entity.CreationDate
+		return self._Entity.CreationDate
 
 	@property
 	def ModificationDate(self) -> DateTime:
-		return self.Entity.ModificationDate
+		return self._Entity.ModificationDate
 
 	@property
 	def Name(self) -> str:
-		return self.Entity.Name
+		return self._Entity.Name
 
 	@property
 	def Wet(self) -> bool:
-		return self.Entity.Wet
+		return self._Entity.Wet
 
 	@property
 	def Density(self) -> float:
-		return self.Entity.Density
+		return self._Entity.Density
 
 	@property
 	def Form(self) -> str:
-		return self.Entity.Form
+		return self._Entity.Form
 
 	@property
 	def Specification(self) -> str:
-		return self.Entity.Specification
+		return self._Entity.Specification
 
 	@property
 	def MaterialDescription(self) -> str:
-		return self.Entity.MaterialDescription
+		return self._Entity.MaterialDescription
 
 	@property
 	def UserNote(self) -> str:
-		return self.Entity.UserNote
+		return self._Entity.UserNote
 
 	@property
 	def FemMaterialId(self) -> int:
-		return self.Entity.FemMaterialId
+		return self._Entity.FemMaterialId
 
 	@property
 	def Cost(self) -> float:
-		return self.Entity.Cost
+		return self._Entity.Cost
 
 	@property
 	def CellSize(self) -> float:
-		return self.Entity.CellSize
+		return self._Entity.CellSize
 
 	@property
 	def Manufacturer(self) -> str:
-		return self.Entity.Manufacturer
+		return self._Entity.Manufacturer
 
 	def AddTemperatureProperty(self, temperature: float, et: float = None, ec: float = None, gw: float = None, gl: float = None, ftu: float = None, fcus: float = None, fcub: float = None, fcuc: float = None, fsuw: float = None, fsul: float = None, sScfl: float = None, sScfh: float = None, k1: float = None, k2: float = None, k3: float = None, c: float = None) -> HoneycombTemperature:
-		return HoneycombTemperature(self.Entity.AddTemperatureProperty(temperature, et, ec, gw, gl, ftu, fcus, fcub, fcuc, fsuw, fsul, sScfl, sScfh, k1, k2, k3, c))
+		return HoneycombTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, gw, gl, ftu, fcus, fcub, fcuc, fsuw, fsul, sScfl, sScfh, k1, k2, k3, c))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
-		return self.Entity.DeleteTemperatureProperty(temperature)
+		return self._Entity.DeleteTemperatureProperty(temperature)
 
 	def GetTemperature(self, lookupTemperature: float) -> HoneycombTemperature:
-		return HoneycombTemperature(self.Entity.GetTemperature(lookupTemperature))
+		return HoneycombTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def Save(self) -> None:
-		return self.Entity.Save()
+		return self._Entity.Save()
 
 
 class IsotropicTemperature:
 	def __init__(self, isotropicTemperature: _api.IsotropicTemperature):
-		self.Entity = isotropicTemperature
+		self._Entity = isotropicTemperature
 
 	@property
 	def Temperature(self) -> float:
-		return self.Entity.Temperature
+		return self._Entity.Temperature
 
 	@property
 	def Et(self) -> float:
-		return self.Entity.Et
+		return self._Entity.Et
 
 	@property
 	def Ec(self) -> float:
-		return self.Entity.Ec
+		return self._Entity.Ec
 
 	@property
 	def G(self) -> float:
-		return self.Entity.G
+		return self._Entity.G
 
 	@property
 	def n(self) -> float:
-		return self.Entity.n
+		return self._Entity.n
 
 	@property
 	def F02(self) -> float:
-		return self.Entity.F02
+		return self._Entity.F02
 
 	@property
 	def FtuL(self) -> float:
-		return self.Entity.FtuL
+		return self._Entity.FtuL
 
 	@property
 	def FtyL(self) -> float:
-		return self.Entity.FtyL
+		return self._Entity.FtyL
 
 	@property
 	def FcyL(self) -> float:
-		return self.Entity.FcyL
+		return self._Entity.FcyL
 
 	@property
 	def FtuLT(self) -> float:
-		return self.Entity.FtuLT
+		return self._Entity.FtuLT
 
 	@property
 	def FtyLT(self) -> float:
-		return self.Entity.FtyLT
+		return self._Entity.FtyLT
 
 	@property
 	def FcyLT(self) -> float:
-		return self.Entity.FcyLT
+		return self._Entity.FcyLT
 
 	@property
 	def Fsu(self) -> float:
-		return self.Entity.Fsu
+		return self._Entity.Fsu
 
 	@property
 	def Fbru15(self) -> float:
-		return self.Entity.Fbru15
+		return self._Entity.Fbru15
 
 	@property
 	def Fbry15(self) -> float:
-		return self.Entity.Fbry15
+		return self._Entity.Fbry15
 
 	@property
 	def Fbru20(self) -> float:
-		return self.Entity.Fbru20
+		return self._Entity.Fbru20
 
 	@property
 	def Fbry20(self) -> float:
-		return self.Entity.Fbry20
+		return self._Entity.Fbry20
 
 	@property
 	def alpha(self) -> float:
-		return self.Entity.alpha
+		return self._Entity.alpha
 
 	@property
 	def K(self) -> float:
-		return self.Entity.K
+		return self._Entity.K
 
 	@property
 	def C(self) -> float:
-		return self.Entity.C
+		return self._Entity.C
 
 	@property
 	def etyL(self) -> float:
-		return self.Entity.etyL
+		return self._Entity.etyL
 
 	@property
 	def ecyL(self) -> float:
-		return self.Entity.ecyL
+		return self._Entity.ecyL
 
 	@property
 	def etyLT(self) -> float:
-		return self.Entity.etyLT
+		return self._Entity.etyLT
 
 	@property
 	def ecyLT(self) -> float:
-		return self.Entity.ecyLT
+		return self._Entity.ecyLT
 
 	@property
 	def esu(self) -> float:
-		return self.Entity.esu
+		return self._Entity.esu
 
 	@property
 	def Fpadh(self) -> float:
-		return self.Entity.Fpadh
+		return self._Entity.Fpadh
 
 	@property
 	def Fsadh(self) -> float:
-		return self.Entity.Fsadh
+		return self._Entity.Fsadh
 
 	@property
 	def esadh(self) -> float:
-		return self.Entity.esadh
+		return self._Entity.esadh
 
 	@property
 	def cd(self) -> float:
-		return self.Entity.cd
+		return self._Entity.cd
 
 	@property
 	def Ffwt(self) -> float:
-		return self.Entity.Ffwt
+		return self._Entity.Ffwt
 
 	@property
 	def Ffxz(self) -> float:
-		return self.Entity.Ffxz
+		return self._Entity.Ffxz
 
 	@property
 	def Ffyz(self) -> float:
-		return self.Entity.Ffyz
+		return self._Entity.Ffyz
 
 	@property
 	def FtFatigue(self) -> float:
-		return self.Entity.FtFatigue
+		return self._Entity.FtFatigue
 
 	@property
 	def FcFatigue(self) -> float:
-		return self.Entity.FcFatigue
+		return self._Entity.FcFatigue
 
 
 class Isotropic:
 	def __init__(self, isotropic: _api.Isotropic):
-		self.Entity = isotropic
+		self._Entity = isotropic
 
 	@property
 	def MaterialFamilyName(self) -> str:
-		return self.Entity.MaterialFamilyName
+		return self._Entity.MaterialFamilyName
 
 	@property
 	def CreationDate(self) -> DateTime:
-		return self.Entity.CreationDate
+		return self._Entity.CreationDate
 
 	@property
 	def ModificationDate(self) -> DateTime:
-		return self.Entity.ModificationDate
+		return self._Entity.ModificationDate
 
 	@property
 	def Name(self) -> str:
-		return self.Entity.Name
+		return self._Entity.Name
 
 	@property
 	def Form(self) -> str:
-		return self.Entity.Form
+		return self._Entity.Form
 
 	@property
 	def Specification(self) -> str:
-		return self.Entity.Specification
+		return self._Entity.Specification
 
 	@property
 	def Temper(self) -> str:
-		return self.Entity.Temper
+		return self._Entity.Temper
 
 	@property
 	def Basis(self) -> str:
-		return self.Entity.Basis
+		return self._Entity.Basis
 
 	@property
 	def Density(self) -> float:
-		return self.Entity.Density
+		return self._Entity.Density
 
 	@property
 	def MaterialDescription(self) -> str:
-		return self.Entity.MaterialDescription
+		return self._Entity.MaterialDescription
 
 	@property
 	def UserNote(self) -> str:
-		return self.Entity.UserNote
+		return self._Entity.UserNote
 
 	@property
 	def FemMaterialId(self) -> int:
-		return self.Entity.FemMaterialId
+		return self._Entity.FemMaterialId
 
 	@property
 	def Cost(self) -> float:
-		return self.Entity.Cost
+		return self._Entity.Cost
 
 	@property
 	def BucklingStiffnessKnockdown(self) -> float:
-		return self.Entity.BucklingStiffnessKnockdown
+		return self._Entity.BucklingStiffnessKnockdown
 
 	def AddTemperatureProperty(self, temperature: float, et: float = None, ec: float = None, g: float = None, n: float = None, f02: float = None, ftuL: float = None, ftyL: float = None, fcyL: float = None, ftuLT: float = None, ftyLT: float = None, fcyLT: float = None, fsu: float = None, fbru15: float = None, fbry15: float = None, fbru20: float = None, fbry20: float = None, alpha: float = None, k: float = None, c: float = None, etyL: float = None, ecyL: float = None, etyLT: float = None, ecyLT: float = None, esu: float = None, fpadh: float = None, fsadh: float = None, esadh: float = None, cd: float = None, ffwt: float = None, ffxz: float = None, ffyz: float = None, ftFatigue: float = None, fcFatigue: float = None) -> IsotropicTemperature:
-		return IsotropicTemperature(self.Entity.AddTemperatureProperty(temperature, et, ec, g, n, f02, ftuL, ftyL, fcyL, ftuLT, ftyLT, fcyLT, fsu, fbru15, fbry15, fbru20, fbry20, alpha, k, c, etyL, ecyL, etyLT, ecyLT, esu, fpadh, fsadh, esadh, cd, ffwt, ffxz, ffyz, ftFatigue, fcFatigue))
+		return IsotropicTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, n, f02, ftuL, ftyL, fcyL, ftuLT, ftyLT, fcyLT, fsu, fbru15, fbry15, fbru20, fbry20, alpha, k, c, etyL, ecyL, etyLT, ecyLT, esu, fpadh, fsadh, esadh, cd, ffwt, ffxz, ffyz, ftFatigue, fcFatigue))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
-		return self.Entity.DeleteTemperatureProperty(temperature)
+		return self._Entity.DeleteTemperatureProperty(temperature)
 
 	def GetTemperature(self, lookupTemperature: float) -> IsotropicTemperature:
-		return IsotropicTemperature(self.Entity.GetTemperature(lookupTemperature))
+		return IsotropicTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def Save(self) -> None:
-		return self.Entity.Save()
+		return self._Entity.Save()
 
 
 class OrthotropicCorrectionFactorBase(ABC):
 	def __init__(self, orthotropicCorrectionFactorBase: _api.OrthotropicCorrectionFactorBase):
-		self.Entity = orthotropicCorrectionFactorBase
+		self._Entity = orthotropicCorrectionFactorBase
 
 	@property
 	def CorrectionId(self) -> types.CorrectionId:
-		return types.CorrectionId[self.Entity.CorrectionId.ToString()]
+		return types.CorrectionId[self._Entity.CorrectionId.ToString()]
 
 	@property
 	def PropertyId(self) -> types.CorrectionProperty:
-		return types.CorrectionProperty[self.Entity.CorrectionProperty.ToString()]
+		return types.CorrectionProperty[self._Entity.CorrectionProperty.ToString()]
 
 
 class OrthotropicCorrectionFactorValue:
 	def __init__(self, orthotropicCorrectionFactorValue: _api.OrthotropicCorrectionFactorValue):
-		self.Entity = orthotropicCorrectionFactorValue
+		self._Entity = orthotropicCorrectionFactorValue
 
 	@property
 	def Property(self) -> types.CorrectionProperty:
-		return types.CorrectionProperty[self.Entity.CorrectionProperty.ToString()]
+		return types.CorrectionProperty[self._Entity.CorrectionProperty.ToString()]
 
 	@property
 	def Correction(self) -> types.CorrectionId:
-		return types.CorrectionId[self.Entity.CorrectionId.ToString()]
+		return types.CorrectionId[self._Entity.CorrectionId.ToString()]
 
 	@property
 	def Equation(self) -> types.CorrectionEquation:
-		return types.CorrectionEquation[self.Entity.CorrectionEquation.ToString()]
+		return types.CorrectionEquation[self._Entity.CorrectionEquation.ToString()]
 
 	@property
 	def EquationParameter(self) -> types.EquationParameterId:
-		return types.EquationParameterId[self.Entity.EquationParameterId.ToString()]
+		return types.EquationParameterId[self._Entity.EquationParameterId.ToString()]
 
 	@property
 	def Value(self) -> float:
-		return self.Entity.Value
+		return self._Entity.Value
 
 
 class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
 	def __init__(self, orthotropicEquationCorrectionFactor: _api.OrthotropicEquationCorrectionFactor):
-		self.Entity = orthotropicEquationCorrectionFactor
+		self._Entity = orthotropicEquationCorrectionFactor
 
 	@property
 	def Equation(self) -> types.CorrectionEquation:
-		return types.CorrectionEquation[self.Entity.CorrectionEquation.ToString()]
+		return types.CorrectionEquation[self._Entity.CorrectionEquation.ToString()]
 
 	def AddCorrectionFactorValue(self, equationParameterName: types.EquationParameterId, valueToAdd: float) -> OrthotropicCorrectionFactorValue:
-		return OrthotropicCorrectionFactorValue(self.Entity.AddCorrectionFactorValue(_types.EquationParameterId(equationParameterName.value), valueToAdd))
+		return OrthotropicCorrectionFactorValue(self._Entity.AddCorrectionFactorValue(_types.EquationParameterId(equationParameterName.value), valueToAdd))
 
 
 class TabularCorrectionFactorRow:
 	def __init__(self, tabularCorrectionFactorRow: _api.TabularCorrectionFactorRow):
-		self.Entity = tabularCorrectionFactorRow
+		self._Entity = tabularCorrectionFactorRow
 
 	@property
 	def DependentValue(self) -> float:
-		return self.Entity.DependentValue
+		return self._Entity.DependentValue
 
 
 class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
 	def __init__(self, orthotropicTabularCorrectionFactor: _api.OrthotropicTabularCorrectionFactor):
-		self.Entity = orthotropicTabularCorrectionFactor
+		self._Entity = orthotropicTabularCorrectionFactor
 
 	@property
 	def CorrectionFactorRows(self) -> dict[int, TabularCorrectionFactorRow]:
 		correctionFactorRowsDict = {}
-		for kvp in self.Entity.CorrectionFactorRows:
+		for kvp in self._Entity.CorrectionFactorRows:
 			correctionFactorRowsDict[int[kvp.Key.ToString()]] = TabularCorrectionFactorRow(kvp.Value)
 
 		return correctionFactorRowsDict
 
 	@property
 	def CorrectionIndependentDefinitions(self) -> set[types.CorrectionIndependentDefinition]:
-		return {types.CorrectionIndependentDefinition(correctionIndependentDefinition) for correctionIndependentDefinition in self.Entity.CorrectionIndependentDefinitions}
+		return {types.CorrectionIndependentDefinition(correctionIndependentDefinition) for correctionIndependentDefinition in self._Entity.CorrectionIndependentDefinitions}
 
 	@overload
-	def SetIndependentValue(self, correctionPointId: int, cid: types.CorrectionIndependentDefinition, value: float) -> None:
-		pass
+	def SetIndependentValue(self, correctionPointId: int, cid: types.CorrectionIndependentDefinition, value: float) -> None: ...
 
 	@overload
-	def SetIndependentValue(self, correctionPointId: int, cid: types.CorrectionIndependentDefinition, value: bool) -> None:
-		pass
+	def SetIndependentValue(self, correctionPointId: int, cid: types.CorrectionIndependentDefinition, value: bool) -> None: ...
 
 	@overload
-	def SetIndependentValue(self, correctionPointId: int, cid: types.CorrectionIndependentDefinition, value: int) -> None:
-		pass
+	def SetIndependentValue(self, correctionPointId: int, cid: types.CorrectionIndependentDefinition, value: int) -> None: ...
 
 	def SetKValue(self, correctionPointId: int, value: float) -> None:
-		return self.Entity.SetKValue(correctionPointId, value)
+		return self._Entity.SetKValue(correctionPointId, value)
 
 	def SetIndependentValue(self, item1 = None, item2 = None, item3 = None) -> None:
 		if isinstance(item1, int) and isinstance(item2, types.CorrectionIndependentDefinition) and isinstance(item3, float):
-			return self.Entity.SetIndependentValue(item1, item2, item3)
+			return self._Entity.SetIndependentValue(item1, item2, item3)
 
 		if isinstance(item1, int) and isinstance(item2, types.CorrectionIndependentDefinition) and isinstance(item3, bool):
-			return self.Entity.SetIndependentValue(item1, item2, item3)
+			return self._Entity.SetIndependentValue(item1, item2, item3)
 
 		if isinstance(item1, int) and isinstance(item2, types.CorrectionIndependentDefinition) and isinstance(item3, int):
-			return self.Entity.SetIndependentValue(item1, item2, item3)
+			return self._Entity.SetIndependentValue(item1, item2, item3)
+
+		return self._Entity.SetIndependentValue(item1, item2, item3)
 
 
 class OrthotropicAllowableCurvePoint:
 	def __init__(self, orthotropicAllowableCurvePoint: _api.OrthotropicAllowableCurvePoint):
-		self.Entity = orthotropicAllowableCurvePoint
+		self._Entity = orthotropicAllowableCurvePoint
 
 	@property
 	def Property_ID(self) -> types.AllowablePropertyName:
-		return types.AllowablePropertyName[self.Entity.AllowablePropertyName.ToString()]
+		return types.AllowablePropertyName[self._Entity.AllowablePropertyName.ToString()]
 
 	@property
 	def Temperature(self) -> float:
-		return self.Entity.Temperature
+		return self._Entity.Temperature
 
 	@property
 	def X(self) -> float:
-		return self.Entity.X
+		return self._Entity.X
 
 	@property
 	def Y(self) -> float:
-		return self.Entity.Y
+		return self._Entity.Y
 
 
 class OrthotropicLaminateAllowable:
 	def __init__(self, orthotropicLaminateAllowable: _api.OrthotropicLaminateAllowable):
-		self.Entity = orthotropicLaminateAllowable
+		self._Entity = orthotropicLaminateAllowable
 
 	@property
 	def Property_ID(self) -> types.AllowablePropertyName:
-		return types.AllowablePropertyName[self.Entity.AllowablePropertyName.ToString()]
+		return types.AllowablePropertyName[self._Entity.AllowablePropertyName.ToString()]
 
 	@property
 	def Method_ID(self) -> types.AllowableMethodName:
-		return types.AllowableMethodName[self.Entity.AllowableMethodName.ToString()]
+		return types.AllowableMethodName[self._Entity.AllowableMethodName.ToString()]
 
 
 class OrthotropicTemperature:
 	def __init__(self, orthotropicTemperature: _api.OrthotropicTemperature):
-		self.Entity = orthotropicTemperature
+		self._Entity = orthotropicTemperature
 
 	@property
 	def Temperature(self) -> float:
-		return self.Entity.Temperature
+		return self._Entity.Temperature
 
 	@property
 	def Et1(self) -> float:
-		return self.Entity.Et1
+		return self._Entity.Et1
 
 	@property
 	def Et2(self) -> float:
-		return self.Entity.Et2
+		return self._Entity.Et2
 
 	@property
 	def vt12(self) -> float:
-		return self.Entity.vt12
+		return self._Entity.vt12
 
 	@property
 	def Ec1(self) -> float:
-		return self.Entity.Ec1
+		return self._Entity.Ec1
 
 	@property
 	def Ec2(self) -> float:
-		return self.Entity.Ec2
+		return self._Entity.Ec2
 
 	@property
 	def vc12(self) -> float:
-		return self.Entity.vc12
+		return self._Entity.vc12
 
 	@property
 	def G12(self) -> float:
-		return self.Entity.G12
+		return self._Entity.G12
 
 	@property
 	def G13(self) -> float:
-		return self.Entity.G13
+		return self._Entity.G13
 
 	@property
 	def G23(self) -> float:
-		return self.Entity.G23
+		return self._Entity.G23
 
 	@property
 	def Ftu1(self) -> float:
-		return self.Entity.Ftu1
+		return self._Entity.Ftu1
 
 	@property
 	def Ftu2(self) -> float:
-		return self.Entity.Ftu2
+		return self._Entity.Ftu2
 
 	@property
 	def Fcu1(self) -> float:
-		return self.Entity.Fcu1
+		return self._Entity.Fcu1
 
 	@property
 	def Fcu2(self) -> float:
-		return self.Entity.Fcu2
+		return self._Entity.Fcu2
 
 	@property
 	def Fsu12(self) -> float:
-		return self.Entity.Fsu12
+		return self._Entity.Fsu12
 
 	@property
 	def Fsu13(self) -> float:
-		return self.Entity.Fsu13
+		return self._Entity.Fsu13
 
 	@property
 	def Fsu23(self) -> float:
-		return self.Entity.Fsu23
+		return self._Entity.Fsu23
 
 	@property
 	def GIc(self) -> float:
-		return self.Entity.GIc
+		return self._Entity.GIc
 
 	@property
 	def alpha1(self) -> float:
-		return self.Entity.alpha1
+		return self._Entity.alpha1
 
 	@property
 	def alpha2(self) -> float:
-		return self.Entity.alpha2
+		return self._Entity.alpha2
 
 	@property
 	def K1(self) -> float:
-		return self.Entity.K1
+		return self._Entity.K1
 
 	@property
 	def K2(self) -> float:
-		return self.Entity.K2
+		return self._Entity.K2
 
 	@property
 	def C(self) -> float:
-		return self.Entity.C
+		return self._Entity.C
 
 	@property
 	def etu1(self) -> float:
-		return self.Entity.etu1
+		return self._Entity.etu1
 
 	@property
 	def etu2(self) -> float:
-		return self.Entity.etu2
+		return self._Entity.etu2
 
 	@property
 	def ecu1(self) -> float:
-		return self.Entity.ecu1
+		return self._Entity.ecu1
 
 	@property
 	def ecu2(self) -> float:
-		return self.Entity.ecu2
+		return self._Entity.ecu2
 
 	@property
 	def ecuoh(self) -> float:
-		return self.Entity.ecuoh
+		return self._Entity.ecuoh
 
 	@property
 	def ecuai(self) -> float:
-		return self.Entity.ecuai
+		return self._Entity.ecuai
 
 	@property
 	def esu12(self) -> float:
-		return self.Entity.esu12
+		return self._Entity.esu12
 
 	@property
 	def Ftu3(self) -> float:
-		return self.Entity.Ftu3
+		return self._Entity.Ftu3
 
 	@property
 	def GIIc(self) -> float:
-		return self.Entity.GIIc
+		return self._Entity.GIIc
 
 	@property
 	def d0Tension(self) -> float:
-		return self.Entity.d0Tension
+		return self._Entity.d0Tension
 
 	@property
 	def cd(self) -> float:
-		return self.Entity.cd
+		return self._Entity.cd
 
 	@property
 	def d0Compression(self) -> float:
-		return self.Entity.d0Compression
+		return self._Entity.d0Compression
 
 	@property
 	def TLt(self) -> float:
-		return self.Entity.TLt
+		return self._Entity.TLt
 
 	@property
 	def TLc(self) -> float:
-		return self.Entity.TLc
+		return self._Entity.TLc
 
 	@property
 	def TTt(self) -> float:
-		return self.Entity.TTt
+		return self._Entity.TTt
 
 	@property
 	def TTc(self) -> float:
-		return self.Entity.TTc
+		return self._Entity.TTc
 
 	def AddCurvePoint(self, property: types.AllowablePropertyName, x: float, y: float) -> OrthotropicAllowableCurvePoint:
-		return OrthotropicAllowableCurvePoint(self.Entity.AddCurvePoint(_types.AllowablePropertyName(property.value), x, y))
+		return OrthotropicAllowableCurvePoint(self._Entity.AddCurvePoint(_types.AllowablePropertyName(property.value), x, y))
 
 	def DeleteCurvePoint(self, property: types.AllowablePropertyName, x: float) -> bool:
-		return self.Entity.DeleteCurvePoint(_types.AllowablePropertyName(property.value), x)
+		return self._Entity.DeleteCurvePoint(_types.AllowablePropertyName(property.value), x)
 
 	def GetCurvePoint(self, property: types.AllowablePropertyName, x: float) -> OrthotropicAllowableCurvePoint:
-		return OrthotropicAllowableCurvePoint(self.Entity.GetCurvePoint(_types.AllowablePropertyName(property.value), x))
+		return OrthotropicAllowableCurvePoint(self._Entity.GetCurvePoint(_types.AllowablePropertyName(property.value), x))
 
 
 class Orthotropic:
 	def __init__(self, orthotropic: _api.Orthotropic):
-		self.Entity = orthotropic
+		self._Entity = orthotropic
 
 	@property
 	def MaterialFamilyName(self) -> str:
-		return self.Entity.MaterialFamilyName
+		return self._Entity.MaterialFamilyName
 
 	@property
 	def CreationDate(self) -> DateTime:
-		return self.Entity.CreationDate
+		return self._Entity.CreationDate
 
 	@property
 	def ModificationDate(self) -> DateTime:
-		return self.Entity.ModificationDate
+		return self._Entity.ModificationDate
 
 	@property
 	def Name(self) -> str:
-		return self.Entity.Name
+		return self._Entity.Name
 
 	@property
 	def Form(self) -> str:
-		return self.Entity.Form
+		return self._Entity.Form
 
 	@property
 	def Specification(self) -> str:
-		return self.Entity.Specification
+		return self._Entity.Specification
 
 	@property
 	def Basis(self) -> str:
-		return self.Entity.Basis
+		return self._Entity.Basis
 
 	@property
 	def Wet(self) -> bool:
-		return self.Entity.Wet
+		return self._Entity.Wet
 
 	@property
 	def Thickness(self) -> float:
-		return self.Entity.Thickness
+		return self._Entity.Thickness
 
 	@property
 	def Density(self) -> float:
-		return self.Entity.Density
+		return self._Entity.Density
 
 	@property
 	def FiberVolume(self) -> float:
-		return self.Entity.FiberVolume
+		return self._Entity.FiberVolume
 
 	@property
 	def GlassTransition(self) -> float:
-		return self.Entity.GlassTransition
+		return self._Entity.GlassTransition
 
 	@property
 	def Manufacturer(self) -> str:
-		return self.Entity.Manufacturer
+		return self._Entity.Manufacturer
 
 	@property
 	def Processes(self) -> str:
-		return self.Entity.Processes
+		return self._Entity.Processes
 
 	@property
 	def MaterialDescription(self) -> str:
-		return self.Entity.MaterialDescription
+		return self._Entity.MaterialDescription
 
 	@property
 	def UserNote(self) -> str:
-		return self.Entity.UserNote
+		return self._Entity.UserNote
 
 	@property
 	def BendingCorrectionFactor(self) -> float:
-		return self.Entity.BendingCorrectionFactor
+		return self._Entity.BendingCorrectionFactor
 
 	@property
 	def FemMaterialId(self) -> int:
-		return self.Entity.FemMaterialId
+		return self._Entity.FemMaterialId
 
 	@property
 	def Cost(self) -> float:
-		return self.Entity.Cost
+		return self._Entity.Cost
 
 	@property
 	def BucklingStiffnessKnockdown(self) -> float:
-		return self.Entity.BucklingStiffnessKnockdown
+		return self._Entity.BucklingStiffnessKnockdown
 
 	def AddTemperatureProperty(self, temperature: float, et1: float = None, et2: float = None, vt12: float = None, ec1: float = None, ec2: float = None, vc12: float = None, g12: float = None, ftu1: float = None, ftu2: float = None, fcu1: float = None, fcu2: float = None, fsu12: float = None, alpha1: float = None, alpha2: float = None, etu1: float = None, etu2: float = None, ecu1: float = None, ecu2: float = None, esu12: float = None) -> OrthotropicTemperature:
-		return OrthotropicTemperature(self.Entity.AddTemperatureProperty(temperature, et1, et2, vt12, ec1, ec2, vc12, g12, ftu1, ftu2, fcu1, fcu2, fsu12, alpha1, alpha2, etu1, etu2, ecu1, ecu2, esu12))
+		return OrthotropicTemperature(self._Entity.AddTemperatureProperty(temperature, et1, et2, vt12, ec1, ec2, vc12, g12, ftu1, ftu2, fcu1, fcu2, fsu12, alpha1, alpha2, etu1, etu2, ecu1, ecu2, esu12))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
-		return self.Entity.DeleteTemperatureProperty(temperature)
+		return self._Entity.DeleteTemperatureProperty(temperature)
 
 	def GetTemperature(self, lookupTemperature: float) -> OrthotropicTemperature:
-		return OrthotropicTemperature(self.Entity.GetTemperature(lookupTemperature))
+		return OrthotropicTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def IsEffectiveLaminate(self) -> bool:
-		return self.Entity.IsEffectiveLaminate()
+		return self._Entity.IsEffectiveLaminate()
 
 	def HasLaminateAllowable(self, property: types.AllowablePropertyName) -> bool:
-		return self.Entity.HasLaminateAllowable(_types.AllowablePropertyName(property.value))
+		return self._Entity.HasLaminateAllowable(_types.AllowablePropertyName(property.value))
 
 	def AddLaminateAllowable(self, property: types.AllowablePropertyName, method: types.AllowableMethodName) -> OrthotropicLaminateAllowable:
-		return OrthotropicLaminateAllowable(self.Entity.AddLaminateAllowable(_types.AllowablePropertyName(property.value), _types.AllowableMethodName(method.value)))
+		return OrthotropicLaminateAllowable(self._Entity.AddLaminateAllowable(_types.AllowablePropertyName(property.value), _types.AllowableMethodName(method.value)))
 
 	def GetLaminateAllowable(self, lookupAllowableProperty: types.AllowablePropertyName) -> OrthotropicLaminateAllowable:
-		return OrthotropicLaminateAllowable(self.Entity.GetLaminateAllowable(_types.AllowablePropertyName(lookupAllowableProperty.value)))
+		return OrthotropicLaminateAllowable(self._Entity.GetLaminateAllowable(_types.AllowablePropertyName(lookupAllowableProperty.value)))
 
 	def AddEquationCorrectionFactor(self, propertyId: types.CorrectionProperty, correctionId: types.CorrectionId, equationId: types.CorrectionEquation) -> OrthotropicEquationCorrectionFactor:
-		return OrthotropicEquationCorrectionFactor(self.Entity.AddEquationCorrectionFactor(_types.CorrectionProperty(propertyId.value), _types.CorrectionId(correctionId.value), _types.CorrectionEquation(equationId.value)))
+		return OrthotropicEquationCorrectionFactor(self._Entity.AddEquationCorrectionFactor(_types.CorrectionProperty(propertyId.value), _types.CorrectionId(correctionId.value), _types.CorrectionEquation(equationId.value)))
 
 	def GetEquationCorrectionFactor(self, property: types.CorrectionProperty, correction: types.CorrectionId) -> OrthotropicEquationCorrectionFactor:
-		return OrthotropicEquationCorrectionFactor(self.Entity.GetEquationCorrectionFactor(_types.CorrectionProperty(property.value), _types.CorrectionId(correction.value)))
+		return OrthotropicEquationCorrectionFactor(self._Entity.GetEquationCorrectionFactor(_types.CorrectionProperty(property.value), _types.CorrectionId(correction.value)))
 
 	def GetTabularCorrectionFactor(self, property: types.CorrectionProperty, correction: types.CorrectionId) -> OrthotropicTabularCorrectionFactor:
-		return OrthotropicTabularCorrectionFactor(self.Entity.GetTabularCorrectionFactor(_types.CorrectionProperty(property.value), _types.CorrectionId(correction.value)))
+		return OrthotropicTabularCorrectionFactor(self._Entity.GetTabularCorrectionFactor(_types.CorrectionProperty(property.value), _types.CorrectionId(correction.value)))
 
 	def Save(self) -> None:
-		return self.Entity.Save()
+		return self._Entity.Save()
 
 
 class Vector2d:
 	def __init__(self, vector2d: _api.Vector2d):
-		self.Entity = vector2d
+		self._Entity = vector2d
 
 	@property
 	def X(self) -> float:
-		return self.Entity.X
+		return self._Entity.X
 
 	@property
 	def Y(self) -> float:
-		return self.Entity.Y
+		return self._Entity.Y
 
 	@overload
-	def Equals(self, other) -> bool:
-		pass
+	def Equals(self, other) -> bool: ...
 
 	@overload
-	def Equals(self, obj) -> bool:
-		pass
+	def Equals(self, obj) -> bool: ...
 
 	def GetHashCode(self) -> int:
-		return self.Entity.GetHashCode()
+		return self._Entity.GetHashCode()
 
 	def Equals(self, item1 = None) -> bool:
 		if isinstance(item1, Vector2d):
-			return self.Entity.Equals(item1)
+			return self._Entity.Equals(item1)
 
-		return self.Entity.Equals(item1)
+		return self._Entity.Equals(item1)
+
+		return self._Entity.Equals(item1)
 
 	def __eq__(self, other):
 		return self.Equals(other)
@@ -2458,27 +2460,30 @@ class Vector2d:
 
 class ElementSet(IdNameEntity):
 	def __init__(self, elementSet: _api.ElementSet):
-		self.Entity = elementSet
+		self._Entity = elementSet
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self.Entity.Elements)
+		return ElementCol(self._Entity.Elements)
 
 
 class FemProperty(IdNameEntity):
 	def __init__(self, femProperty: _api.FemProperty):
-		self.Entity = femProperty
+		self._Entity = femProperty
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self.Entity.Elements)
+		return ElementCol(self._Entity.Elements)
 
 
 class ElementSetCol(IdEntityCol[ElementSet]):
 	def __init__(self, elementSetCol: _api.ElementSetCol):
-		self.Entity = elementSetCol
-		self.CollectedClass = ElementSet
-		self.ElementSetColList = tuple([ElementSet(elementSetCol) for elementSetCol in self.Entity])
+		self._Entity = elementSetCol
+		self._CollectedClass = ElementSet
+
+	@property
+	def ElementSetColList(self) -> tuple[ElementSet]:
+		return tuple([ElementSet(elementSetCol) for elementSetCol in self._Entity])
 
 	def __getitem__(self, index: int):
 		return self.ElementSetColList[index]
@@ -2492,9 +2497,12 @@ class ElementSetCol(IdEntityCol[ElementSet]):
 
 class FemPropertyCol(IdEntityCol[FemProperty]):
 	def __init__(self, femPropertyCol: _api.FemPropertyCol):
-		self.Entity = femPropertyCol
-		self.CollectedClass = FemProperty
-		self.FemPropertyColList = tuple([FemProperty(femPropertyCol) for femPropertyCol in self.Entity])
+		self._Entity = femPropertyCol
+		self._CollectedClass = FemProperty
+
+	@property
+	def FemPropertyColList(self) -> tuple[FemProperty]:
+		return tuple([FemProperty(femPropertyCol) for femPropertyCol in self._Entity])
 
 	def __getitem__(self, index: int):
 		return self.FemPropertyColList[index]
@@ -2508,445 +2516,423 @@ class FemPropertyCol(IdEntityCol[FemProperty]):
 
 class FemDataSet:
 	def __init__(self, femDataSet: _api.FemDataSet):
-		self.Entity = femDataSet
+		self._Entity = femDataSet
 
 	@property
 	def FemProperties(self) -> FemPropertyCol:
-		return FemPropertyCol(self.Entity.FemProperties)
+		return FemPropertyCol(self._Entity.FemProperties)
 
 	@property
 	def ElementSets(self) -> ElementSetCol:
-		return ElementSetCol(self.Entity.ElementSets)
+		return ElementSetCol(self._Entity.ElementSets)
 
 
 class Ply(IdNameEntity):
 	def __init__(self, ply: _api.Ply):
-		self.Entity = ply
+		self._Entity = ply
 
 	@property
 	def InnerCurves(self) -> list[int]:
-		return [int32 for int32 in self.Entity.InnerCurves]
+		return [int32 for int32 in self._Entity.InnerCurves]
 
 	@property
 	def OuterCurves(self) -> list[int]:
-		return [int32 for int32 in self.Entity.OuterCurves]
+		return [int32 for int32 in self._Entity.OuterCurves]
 
 	@property
 	def FiberDirectionCurves(self) -> list[int]:
-		return [int32 for int32 in self.Entity.FiberDirectionCurves]
+		return [int32 for int32 in self._Entity.FiberDirectionCurves]
 
 	@property
 	def Area(self) -> float:
-		return self.Entity.Area
+		return self._Entity.Area
 
 	@property
 	def Description(self) -> str:
-		return self.Entity.Description
+		return self._Entity.Description
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self.Entity.Elements)
+		return ElementCol(self._Entity.Elements)
 
 	@property
 	def MaterialId(self) -> int:
-		return self.Entity.MaterialId
+		return self._Entity.MaterialId
 
 	@property
 	def Orientation(self) -> int:
-		return self.Entity.Orientation
+		return self._Entity.Orientation
 
 	@property
 	def Sequence(self) -> int:
-		return self.Entity.Sequence
+		return self._Entity.Sequence
 
 	@property
 	def StructureId(self) -> int:
-		return self.Entity.StructureId
+		return self._Entity.StructureId
 
 	@property
 	def Thickness(self) -> float:
-		return self.Entity.Thickness
+		return self._Entity.Thickness
 
 
 class Rundeck(IdEntity):
 	def __init__(self, rundeck: _api.Rundeck):
-		self.Entity = rundeck
+		self._Entity = rundeck
 
 	@property
 	def InputFilePath(self) -> str:
-		return self.Entity.InputFilePath
+		return self._Entity.InputFilePath
 
 	@property
 	def IsPrimary(self) -> bool:
-		return self.Entity.IsPrimary
+		return self._Entity.IsPrimary
 
 	@property
 	def ResultFilePath(self) -> str:
-		return self.Entity.ResultFilePath
+		return self._Entity.ResultFilePath
 
 	def SetInputFilePath(self, filepath: str) -> RundeckUpdateStatus:
-		return RundeckUpdateStatus[self.Entity.SetInputFilePath(filepath).ToString()]
+		return RundeckUpdateStatus[self._Entity.SetInputFilePath(filepath).ToString()]
 
 	def SetResultFilePath(self, filepath: str) -> RundeckUpdateStatus:
-		return RundeckUpdateStatus[self.Entity.SetResultFilePath(filepath).ToString()]
+		return RundeckUpdateStatus[self._Entity.SetResultFilePath(filepath).ToString()]
 
 
 class BeamLoads:
 	def __init__(self, beamLoads: _api.BeamLoads):
-		self.Entity = beamLoads
+		self._Entity = beamLoads
 
 	@property
 	def AxialForce(self) -> float:
-		return self.Entity.AxialForce
+		return self._Entity.AxialForce
 
 	@property
 	def MomentX(self) -> float:
-		return self.Entity.MomentX
+		return self._Entity.MomentX
 
 	@property
 	def MomentY(self) -> float:
-		return self.Entity.MomentY
+		return self._Entity.MomentY
 
 	@property
 	def ShearX(self) -> float:
-		return self.Entity.ShearX
+		return self._Entity.ShearX
 
 	@property
 	def ShearY(self) -> float:
-		return self.Entity.ShearY
+		return self._Entity.ShearY
 
 	@property
 	def Torque(self) -> float:
-		return self.Entity.Torque
+		return self._Entity.Torque
 
 
 class SectionCut(IdNameEntity):
 	def __init__(self, sectionCut: _api.SectionCut):
-		self.Entity = sectionCut
+		self._Entity = sectionCut
 
 	@property
 	def ReferencePoint(self) -> types.SectionCutPropertyLocation:
-		return types.SectionCutPropertyLocation[self.Entity.SectionCutPropertyLocation.ToString()]
+		return types.SectionCutPropertyLocation[self._Entity.SectionCutPropertyLocation.ToString()]
 
 	@property
 	def HorizontalVector(self) -> Vector3d:
-		return Vector3d(self.Entity.HorizontalVector)
+		return Vector3d(self._Entity.HorizontalVector)
 
 	@property
 	def NormalVector(self) -> Vector3d:
-		return Vector3d(self.Entity.NormalVector)
+		return Vector3d(self._Entity.NormalVector)
 
 	@property
 	def OriginVector(self) -> Vector3d:
-		return Vector3d(self.Entity.OriginVector)
+		return Vector3d(self._Entity.OriginVector)
 
 	@property
 	def VerticalVector(self) -> Vector3d:
-		return Vector3d(self.Entity.VerticalVector)
+		return Vector3d(self._Entity.VerticalVector)
 
 	@property
 	def MaxAngleBound(self) -> float:
-		return self.Entity.MaxAngleBound
+		return self._Entity.MaxAngleBound
 
 	@property
 	def MinAngleBound(self) -> float:
-		return self.Entity.MinAngleBound
+		return self._Entity.MinAngleBound
 
 	@property
 	def MinStiffnessEihh(self) -> float:
-		return self.Entity.MinStiffnessEihh
+		return self._Entity.MinStiffnessEihh
 
 	@property
 	def MinStiffnessEivv(self) -> float:
-		return self.Entity.MinStiffnessEivv
+		return self._Entity.MinStiffnessEivv
 
 	@property
 	def MinStiffnessGJ(self) -> float:
-		return self.Entity.MinStiffnessGJ
+		return self._Entity.MinStiffnessGJ
 
 	@property
 	def ZoneStiffnessDistribution(self) -> float:
-		return self.Entity.ZoneStiffnessDistribution
+		return self._Entity.ZoneStiffnessDistribution
 
 	@property
 	def CN_hmax(self) -> float:
-		return self.Entity.CN_hmax
+		return self._Entity.CN_hmax
 
 	@property
 	def CN_hmin(self) -> float:
-		return self.Entity.CN_hmin
+		return self._Entity.CN_hmin
 
 	@property
 	def CN_vmax(self) -> float:
-		return self.Entity.CN_vmax
+		return self._Entity.CN_vmax
 
 	@property
 	def CN_vmin(self) -> float:
-		return self.Entity.CN_vmin
+		return self._Entity.CN_vmin
 
 	@property
 	def CQ_hmax(self) -> float:
-		return self.Entity.CQ_hmax
+		return self._Entity.CQ_hmax
 
 	@property
 	def CQ_hmin(self) -> float:
-		return self.Entity.CQ_hmin
+		return self._Entity.CQ_hmin
 
 	@property
 	def CQ_vmax(self) -> float:
-		return self.Entity.CQ_vmax
+		return self._Entity.CQ_vmax
 
 	@property
 	def CQ_vmin(self) -> float:
-		return self.Entity.CQ_vmin
+		return self._Entity.CQ_vmin
 
 	@property
 	def CG(self) -> Vector2d:
-		return Vector2d(self.Entity.CG)
+		return Vector2d(self._Entity.CG)
 
 	@property
 	def CN(self) -> Vector2d:
-		return Vector2d(self.Entity.CN)
+		return Vector2d(self._Entity.CN)
 
 	@property
 	def CQ(self) -> Vector2d:
-		return Vector2d(self.Entity.CQ)
+		return Vector2d(self._Entity.CQ)
 
 	@property
 	def EnclosedArea(self) -> float:
-		return self.Entity.EnclosedArea
+		return self._Entity.EnclosedArea
 
 	@property
 	def NumberOfCells(self) -> int:
-		return self.Entity.NumberOfCells
+		return self._Entity.NumberOfCells
 
 	@property
 	def EIhh(self) -> float:
-		return self.Entity.EIhh
+		return self._Entity.EIhh
 
 	@property
 	def EIhv(self) -> float:
-		return self.Entity.EIhv
+		return self._Entity.EIhv
 
 	@property
 	def EIvv(self) -> float:
-		return self.Entity.EIvv
+		return self._Entity.EIvv
 
 	@property
 	def GJ(self) -> float:
-		return self.Entity.GJ
+		return self._Entity.GJ
 
 	@property
 	def EA(self) -> float:
-		return self.Entity.EA
+		return self._Entity.EA
 
 	@property
 	def EImax(self) -> float:
-		return self.Entity.EImax
+		return self._Entity.EImax
 
 	@property
 	def EImin(self) -> float:
-		return self.Entity.EImin
+		return self._Entity.EImin
 
 	@property
 	def PrincipalAngle(self) -> float:
-		return self.Entity.PrincipalAngle
+		return self._Entity.PrincipalAngle
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self.Entity.Elements)
+		return ElementCol(self._Entity.Elements)
 
 	@property
 	def PlateElements(self) -> ElementCol:
-		return ElementCol(self.Entity.PlateElements)
+		return ElementCol(self._Entity.PlateElements)
 
 	@property
 	def BeamElements(self) -> ElementCol:
-		return ElementCol(self.Entity.BeamElements)
+		return ElementCol(self._Entity.BeamElements)
 
 	def AlignToHorizontalPrincipalAxes(self) -> None:
-		return self.Entity.AlignToHorizontalPrincipalAxes()
+		return self._Entity.AlignToHorizontalPrincipalAxes()
 
 	def AlignToVerticalPrincipalAxes(self) -> None:
-		return self.Entity.AlignToVerticalPrincipalAxes()
+		return self._Entity.AlignToVerticalPrincipalAxes()
 
 	def SetHorizontalVector(self, vector: Vector3d) -> None:
-		return self.Entity.SetHorizontalVector(vector.Entity)
+		return self._Entity.SetHorizontalVector(vector._Entity)
 
 	def SetNormalVector(self, vector: Vector3d) -> None:
-		return self.Entity.SetNormalVector(vector.Entity)
+		return self._Entity.SetNormalVector(vector._Entity)
 
 	def SetOrigin(self, vector: Vector3d) -> None:
-		return self.Entity.SetOrigin(vector.Entity)
+		return self._Entity.SetOrigin(vector._Entity)
 
 	def GetBeamLoads(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> BeamLoads:
-		return BeamLoads(self.Entity.GetBeamLoads(loadCaseId, _types.LoadSubCaseFactor(factor.value)))
+		return BeamLoads(self._Entity.GetBeamLoads(loadCaseId, _types.LoadSubCaseFactor(factor.value)))
 
 	def InclinationAngle(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> float:
-		return self.Entity.InclinationAngle(loadCaseId, _types.LoadSubCaseFactor(factor.value))
+		return self._Entity.InclinationAngle(loadCaseId, _types.LoadSubCaseFactor(factor.value))
 
 	def HorizontalIntercept(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> float:
-		return self.Entity.HorizontalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value))
+		return self._Entity.HorizontalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value))
 
 	def VerticalIntercept(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> float:
-		return self.Entity.VerticalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value))
+		return self._Entity.VerticalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value))
 
 	def SetElements(self, elements: list[int]) -> bool:
-		elementsList = List[int]()
-		if elements is not None:
-			for thing in elements:
-				if thing is not None:
-					elementsList.Add(thing)
-		return self.Entity.SetElements(elementsList)
+		elementsList = MakeCSharpIntList(elements)
+		return self._Entity.SetElements(elementsList)
 
 
 class Set(ZoneJointContainer):
 	def __init__(self, set: _api.Set):
-		self.Entity = set
+		self._Entity = set
 
 	@property
 	def Joints(self) -> JointCol:
-		return JointCol(self.Entity.Joints)
+		return JointCol(self._Entity.Joints)
 
 	@property
 	def PanelSegments(self) -> PanelSegmentCol:
-		return PanelSegmentCol(self.Entity.PanelSegments)
+		return PanelSegmentCol(self._Entity.PanelSegments)
 
 	@property
 	def Zones(self) -> ZoneCol:
-		return ZoneCol(self.Entity.Zones)
+		return ZoneCol(self._Entity.Zones)
 
 	@overload
-	def AddJoint(self, joint: Joint) -> CollectionModificationStatus:
-		pass
+	def AddJoint(self, joint: Joint) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddPanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus:
-		pass
+	def AddPanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddZone(self, zone: Zone) -> CollectionModificationStatus:
-		pass
+	def AddZone(self, zone: Zone) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoints(self, jointIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def RemoveJoints(self, jointIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegments(self, segmentIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegments(self, segmentIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZones(self, zoneIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def RemoveZones(self, zoneIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddJoint(self, id: int) -> CollectionModificationStatus:
-		pass
+	def AddJoint(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoint(self, id: int) -> CollectionModificationStatus:
-		pass
+	def RemoveJoint(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoint(self, joint: Joint) -> CollectionModificationStatus:
-		pass
+	def RemoveJoint(self, joint: Joint) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoints(self, joints: JointCol) -> CollectionModificationStatus:
-		pass
+	def RemoveJoints(self, joints: JointCol) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddZone(self, id: int) -> CollectionModificationStatus:
-		pass
+	def AddZone(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZone(self, id: int) -> CollectionModificationStatus:
-		pass
+	def RemoveZone(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZone(self, zone: Zone) -> CollectionModificationStatus:
-		pass
+	def RemoveZone(self, zone: Zone) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZones(self, zones: ZoneCol) -> CollectionModificationStatus:
-		pass
+	def RemoveZones(self, zones: ZoneCol) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddPanelSegment(self, id: int) -> CollectionModificationStatus:
-		pass
+	def AddPanelSegment(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegment(self, id: int) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegment(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegments(self, segments: PanelSegmentCol) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegments(self, segments: PanelSegmentCol) -> CollectionModificationStatus: ...
 
 	def AddJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, Joint):
-			return CollectionModificationStatus[self.Entity.AddJoint(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddJoint(item1).ToString()]
 
 		if isinstance(item1, int):
 			return super().AddJoint(item1)
 
+		return self._Entity.AddJoint(item1)
+
 	def AddPanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, PanelSegment):
-			return CollectionModificationStatus[self.Entity.AddPanelSegment(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddPanelSegment(item1).ToString()]
 
 		if isinstance(item1, int):
 			return super().AddPanelSegment(item1)
 
+		return self._Entity.AddPanelSegment(item1)
+
 	def AddZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, Zone):
-			return CollectionModificationStatus[self.Entity.AddZone(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddZone(item1).ToString()]
 
 		if isinstance(item1, int):
 			return super().AddZone(item1)
 
+		return self._Entity.AddZone(item1)
+
 	def RemoveJoints(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple):
-			jointIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						jointIdsList.Add(thing)
+			jointIdsList = MakeCSharpIntList(item1)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
-			return CollectionModificationStatus[self.Entity.RemoveJoints(jointIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveJoints(jointIdsEnumerable).ToString()]
 
 		if isinstance(item1, JointCol):
 			return super().RemoveJoints(item1)
 
+		return self._Entity.RemoveJoints(jointIdsEnumerable)
+
 	def RemovePanelSegments(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple):
-			segmentIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						segmentIdsList.Add(thing)
+			segmentIdsList = MakeCSharpIntList(item1)
 			segmentIdsEnumerable = IEnumerable(segmentIdsList)
-			return CollectionModificationStatus[self.Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
 
 		if isinstance(item1, PanelSegmentCol):
 			return super().RemovePanelSegments(item1)
 
+		return self._Entity.RemovePanelSegments(segmentIdsEnumerable)
+
 	def RemoveZones(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple):
-			zoneIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						zoneIdsList.Add(thing)
+			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
-			return CollectionModificationStatus[self.Entity.RemoveZones(zoneIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveZones(zoneIdsEnumerable).ToString()]
 
 		if isinstance(item1, ZoneCol):
 			return super().RemoveZones(item1)
+
+		return self._Entity.RemoveZones(zoneIdsEnumerable)
 
 	def RemoveJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -2955,12 +2941,16 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, Joint):
 			return super().RemoveJoint(item1)
 
+		return self._Entity.RemoveJoint(item1)
+
 	def RemoveZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
 			return super().RemoveZone(item1)
 
 		if isinstance(item1, Zone):
 			return super().RemoveZone(item1)
+
+		return self._Entity.RemoveZone(item1)
 
 	def RemovePanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -2969,32 +2959,35 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, PanelSegment):
 			return super().RemovePanelSegment(item1)
 
+		return self._Entity.RemovePanelSegment(item1)
+
 
 class PlyCol(IdNameEntityCol[Ply]):
 	def __init__(self, plyCol: _api.PlyCol):
-		self.Entity = plyCol
-		self.CollectedClass = Ply
-		self.PlyColList = tuple([Ply(plyCol) for plyCol in self.Entity])
+		self._Entity = plyCol
+		self._CollectedClass = Ply
+
+	@property
+	def PlyColList(self) -> tuple[Ply]:
+		return tuple([Ply(plyCol) for plyCol in self._Entity])
 
 	def Delete(self, id: int) -> CollectionModificationStatus:
-		return CollectionModificationStatus[self.Entity.Delete(id).ToString()]
+		return CollectionModificationStatus[self._Entity.Delete(id).ToString()]
 
 	def DeleteAll(self) -> None:
-		return self.Entity.DeleteAll()
+		return self._Entity.DeleteAll()
 
 	def ExportToCSV(self, filepath: str) -> None:
-		return self.Entity.ExportToCSV(filepath)
+		return self._Entity.ExportToCSV(filepath)
 
 	def ImportCSV(self, filepath: str) -> None:
-		return self.Entity.ImportCSV(filepath)
+		return self._Entity.ImportCSV(filepath)
 
 	@overload
-	def Get(self, name: str) -> Ply:
-		pass
+	def Get(self, name: str) -> Ply: ...
 
 	@overload
-	def Get(self, id: int) -> Ply:
-		pass
+	def Get(self, id: int) -> Ply: ...
 
 	def Get(self, item1 = None) -> Ply:
 		if isinstance(item1, str):
@@ -3002,6 +2995,8 @@ class PlyCol(IdNameEntityCol[Ply]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.PlyColList[index]
@@ -3015,233 +3010,183 @@ class PlyCol(IdNameEntityCol[Ply]):
 
 class Structure(ZoneJointContainer):
 	def __init__(self, structure: _api.Structure):
-		self.Entity = structure
+		self._Entity = structure
 
 	@property
 	def Plies(self) -> PlyCol:
-		return PlyCol(self.Entity.Plies)
+		return PlyCol(self._Entity.Plies)
 
 	@property
 	def Joints(self) -> JointCol:
-		return JointCol(self.Entity.Joints)
+		return JointCol(self._Entity.Joints)
 
 	@property
 	def PanelSegments(self) -> PanelSegmentCol:
-		return PanelSegmentCol(self.Entity.PanelSegments)
+		return PanelSegmentCol(self._Entity.PanelSegments)
 
 	@property
 	def Zones(self) -> ZoneCol:
-		return ZoneCol(self.Entity.Zones)
+		return ZoneCol(self._Entity.Zones)
 
 	def ExportVCP(self, fileName: str) -> None:
-		return self.Entity.ExportVCP(fileName)
+		return self._Entity.ExportVCP(fileName)
 
 	def AddElements(self, elementIds: tuple[int]) -> CollectionModificationStatus:
-		elementIdsList = List[int]()
-		if elementIds is not None:
-			for thing in elementIds:
-				if thing is not None:
-					elementIdsList.Add(thing)
+		elementIdsList = MakeCSharpIntList(elementIds)
 		elementIdsEnumerable = IEnumerable(elementIdsList)
-		return CollectionModificationStatus[self.Entity.AddElements(elementIdsEnumerable).ToString()]
+		return CollectionModificationStatus[self._Entity.AddElements(elementIdsEnumerable).ToString()]
 
 	@overload
-	def AddJoint(self, joint: Joint) -> CollectionModificationStatus:
-		pass
+	def AddJoint(self, joint: Joint) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddPanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus:
-		pass
+	def AddPanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus: ...
 
 	def AddPfemProperties(self, pfemPropertyIds: tuple[int]) -> CollectionModificationStatus:
-		pfemPropertyIdsList = List[int]()
-		if pfemPropertyIds is not None:
-			for thing in pfemPropertyIds:
-				if thing is not None:
-					pfemPropertyIdsList.Add(thing)
+		pfemPropertyIdsList = MakeCSharpIntList(pfemPropertyIds)
 		pfemPropertyIdsEnumerable = IEnumerable(pfemPropertyIdsList)
-		return CollectionModificationStatus[self.Entity.AddPfemProperties(pfemPropertyIdsEnumerable).ToString()]
+		return CollectionModificationStatus[self._Entity.AddPfemProperties(pfemPropertyIdsEnumerable).ToString()]
 
 	@overload
-	def AddZone(self, zone: Zone) -> CollectionModificationStatus:
-		pass
+	def AddZone(self, zone: Zone) -> CollectionModificationStatus: ...
 
 	def CreateZone(self, elementIds: tuple[int], name: str = None) -> None:
-		elementIdsList = List[int]()
-		if elementIds is not None:
-			for thing in elementIds:
-				if thing is not None:
-					elementIdsList.Add(thing)
+		elementIdsList = MakeCSharpIntList(elementIds)
 		elementIdsEnumerable = IEnumerable(elementIdsList)
-		return self.Entity.CreateZone(elementIdsEnumerable, name)
+		return self._Entity.CreateZone(elementIdsEnumerable, name)
 
 	def CreatePanelSegment(self, discreteTechnique: types.DiscreteTechnique, discreteElementLkp: dict[types.DiscreteDefinitionType, list[int]], name: str = None) -> int:
-		return self.Entity.CreatePanelSegment(_types.DiscreteTechnique(discreteTechnique.value), discreteElementLkp.Entity, name)
+		return self._Entity.CreatePanelSegment(_types.DiscreteTechnique(discreteTechnique.value), discreteElementLkp._Entity, name)
 
 	@overload
-	def Remove(self, zoneIds: tuple[int], jointIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def Remove(self, zoneIds: tuple[int], jointIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def Remove(self, zoneIds: tuple[int], jointIds: tuple[int], panelSegmentIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def Remove(self, zoneIds: tuple[int], jointIds: tuple[int], panelSegmentIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoints(self, jointIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def RemoveJoints(self, jointIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegments(self, segmentIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegments(self, segmentIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZones(self, zoneIds: tuple[int]) -> CollectionModificationStatus:
-		pass
+	def RemoveZones(self, zoneIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddJoint(self, id: int) -> CollectionModificationStatus:
-		pass
+	def AddJoint(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoint(self, id: int) -> CollectionModificationStatus:
-		pass
+	def RemoveJoint(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoint(self, joint: Joint) -> CollectionModificationStatus:
-		pass
+	def RemoveJoint(self, joint: Joint) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveJoints(self, joints: JointCol) -> CollectionModificationStatus:
-		pass
+	def RemoveJoints(self, joints: JointCol) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddZone(self, id: int) -> CollectionModificationStatus:
-		pass
+	def AddZone(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZone(self, id: int) -> CollectionModificationStatus:
-		pass
+	def RemoveZone(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZone(self, zone: Zone) -> CollectionModificationStatus:
-		pass
+	def RemoveZone(self, zone: Zone) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemoveZones(self, zones: ZoneCol) -> CollectionModificationStatus:
-		pass
+	def RemoveZones(self, zones: ZoneCol) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddPanelSegment(self, id: int) -> CollectionModificationStatus:
-		pass
+	def AddPanelSegment(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegment(self, id: int) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegment(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus: ...
 
 	@overload
-	def RemovePanelSegments(self, segments: PanelSegmentCol) -> CollectionModificationStatus:
-		pass
+	def RemovePanelSegments(self, segments: PanelSegmentCol) -> CollectionModificationStatus: ...
 
 	def AddJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, Joint):
-			return CollectionModificationStatus[self.Entity.AddJoint(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddJoint(item1).ToString()]
 
 		if isinstance(item1, int):
 			return super().AddJoint(item1)
 
+		return self._Entity.AddJoint(item1)
+
 	def AddPanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, PanelSegment):
-			return CollectionModificationStatus[self.Entity.AddPanelSegment(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddPanelSegment(item1).ToString()]
 
 		if isinstance(item1, int):
 			return super().AddPanelSegment(item1)
 
+		return self._Entity.AddPanelSegment(item1)
+
 	def AddZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, Zone):
-			return CollectionModificationStatus[self.Entity.AddZone(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.AddZone(item1).ToString()]
 
 		if isinstance(item1, int):
 			return super().AddZone(item1)
 
-	def Remove(self, item1 = None, item2 = None, item3 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and isinstance(item2, tuple):
-			zoneIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						zoneIdsList.Add(thing)
-			zoneIdsEnumerable = IEnumerable(zoneIdsList)
-			jointIdsList = List[int]()
-			if item2 is not None:
-				for thing in item2:
-					if thing is not None:
-						jointIdsList.Add(thing)
-			jointIdsEnumerable = IEnumerable(jointIdsList)
-			return CollectionModificationStatus[self.Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable).ToString()]
+		return self._Entity.AddZone(item1)
 
+	def Remove(self, item1 = None, item2 = None, item3 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple) and isinstance(item2, tuple) and isinstance(item3, tuple):
-			zoneIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						zoneIdsList.Add(thing)
+			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
-			jointIdsList = List[int]()
-			if item2 is not None:
-				for thing in item2:
-					if thing is not None:
-						jointIdsList.Add(thing)
+			jointIdsList = MakeCSharpIntList(item2)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
-			panelSegmentIdsList = List[int]()
-			if item3 is not None:
-				for thing in item3:
-					if thing is not None:
-						panelSegmentIdsList.Add(thing)
+			panelSegmentIdsList = MakeCSharpIntList(item3)
 			panelSegmentIdsEnumerable = IEnumerable(panelSegmentIdsList)
-			return CollectionModificationStatus[self.Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable, panelSegmentIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable, panelSegmentIdsEnumerable).ToString()]
+
+		if isinstance(item1, tuple) and isinstance(item2, tuple):
+			zoneIdsList = MakeCSharpIntList(item1)
+			zoneIdsEnumerable = IEnumerable(zoneIdsList)
+			jointIdsList = MakeCSharpIntList(item2)
+			jointIdsEnumerable = IEnumerable(jointIdsList)
+			return CollectionModificationStatus[self._Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable).ToString()]
+
+		return self._Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable, panelSegmentIdsEnumerable)
 
 	def RemoveJoints(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple):
-			jointIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						jointIdsList.Add(thing)
+			jointIdsList = MakeCSharpIntList(item1)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
-			return CollectionModificationStatus[self.Entity.RemoveJoints(jointIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveJoints(jointIdsEnumerable).ToString()]
 
 		if isinstance(item1, JointCol):
 			return super().RemoveJoints(item1)
 
+		return self._Entity.RemoveJoints(jointIdsEnumerable)
+
 	def RemovePanelSegments(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple):
-			segmentIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						segmentIdsList.Add(thing)
+			segmentIdsList = MakeCSharpIntList(item1)
 			segmentIdsEnumerable = IEnumerable(segmentIdsList)
-			return CollectionModificationStatus[self.Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
 
 		if isinstance(item1, PanelSegmentCol):
 			return super().RemovePanelSegments(item1)
 
+		return self._Entity.RemovePanelSegments(segmentIdsEnumerable)
+
 	def RemoveZones(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, tuple):
-			zoneIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						zoneIdsList.Add(thing)
+			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
-			return CollectionModificationStatus[self.Entity.RemoveZones(zoneIdsEnumerable).ToString()]
+			return CollectionModificationStatus[self._Entity.RemoveZones(zoneIdsEnumerable).ToString()]
 
 		if isinstance(item1, ZoneCol):
 			return super().RemoveZones(item1)
+
+		return self._Entity.RemoveZones(zoneIdsEnumerable)
 
 	def RemoveJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -3250,12 +3195,16 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, Joint):
 			return super().RemoveJoint(item1)
 
+		return self._Entity.RemoveJoint(item1)
+
 	def RemoveZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
 			return super().RemoveZone(item1)
 
 		if isinstance(item1, Zone):
 			return super().RemoveZone(item1)
+
+		return self._Entity.RemoveZone(item1)
 
 	def RemovePanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -3264,20 +3213,23 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, PanelSegment):
 			return super().RemovePanelSegment(item1)
 
+		return self._Entity.RemovePanelSegment(item1)
+
 
 class AnalysisPropertyCol(IdNameEntityCol[AnalysisProperty]):
 	def __init__(self, analysisPropertyCol: _api.AnalysisPropertyCol):
-		self.Entity = analysisPropertyCol
-		self.CollectedClass = AnalysisProperty
-		self.AnalysisPropertyColList = tuple([AnalysisProperty(analysisPropertyCol) for analysisPropertyCol in self.Entity])
+		self._Entity = analysisPropertyCol
+		self._CollectedClass = AnalysisProperty
+
+	@property
+	def AnalysisPropertyColList(self) -> tuple[AnalysisProperty]:
+		return tuple([AnalysisProperty(analysisPropertyCol) for analysisPropertyCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> AnalysisProperty:
-		pass
+	def Get(self, name: str) -> AnalysisProperty: ...
 
 	@overload
-	def Get(self, id: int) -> AnalysisProperty:
-		pass
+	def Get(self, id: int) -> AnalysisProperty: ...
 
 	def Get(self, item1 = None) -> AnalysisProperty:
 		if isinstance(item1, str):
@@ -3285,6 +3237,8 @@ class AnalysisPropertyCol(IdNameEntityCol[AnalysisProperty]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.AnalysisPropertyColList[index]
@@ -3298,17 +3252,18 @@ class AnalysisPropertyCol(IdNameEntityCol[AnalysisProperty]):
 
 class DesignPropertyCol(IdNameEntityCol[DesignProperty]):
 	def __init__(self, designPropertyCol: _api.DesignPropertyCol):
-		self.Entity = designPropertyCol
-		self.CollectedClass = DesignProperty
-		self.DesignPropertyColList = tuple([DesignProperty(designPropertyCol) for designPropertyCol in self.Entity])
+		self._Entity = designPropertyCol
+		self._CollectedClass = DesignProperty
+
+	@property
+	def DesignPropertyColList(self) -> tuple[DesignProperty]:
+		return tuple([DesignProperty(designPropertyCol) for designPropertyCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> DesignProperty:
-		pass
+	def Get(self, name: str) -> DesignProperty: ...
 
 	@overload
-	def Get(self, id: int) -> DesignProperty:
-		pass
+	def Get(self, id: int) -> DesignProperty: ...
 
 	def Get(self, item1 = None) -> DesignProperty:
 		if isinstance(item1, str):
@@ -3316,6 +3271,8 @@ class DesignPropertyCol(IdNameEntityCol[DesignProperty]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.DesignPropertyColList[index]
@@ -3329,17 +3286,18 @@ class DesignPropertyCol(IdNameEntityCol[DesignProperty]):
 
 class LoadPropertyCol(IdNameEntityCol[LoadProperty]):
 	def __init__(self, loadPropertyCol: _api.LoadPropertyCol):
-		self.Entity = loadPropertyCol
-		self.CollectedClass = LoadProperty
-		self.LoadPropertyColList = tuple([LoadProperty(loadPropertyCol) for loadPropertyCol in self.Entity])
+		self._Entity = loadPropertyCol
+		self._CollectedClass = LoadProperty
+
+	@property
+	def LoadPropertyColList(self) -> tuple[LoadProperty]:
+		return tuple([LoadProperty(loadPropertyCol) for loadPropertyCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> LoadProperty:
-		pass
+	def Get(self, name: str) -> LoadProperty: ...
 
 	@overload
-	def Get(self, id: int) -> LoadProperty:
-		pass
+	def Get(self, id: int) -> LoadProperty: ...
 
 	def Get(self, item1 = None) -> LoadProperty:
 		if isinstance(item1, str):
@@ -3347,6 +3305,8 @@ class LoadPropertyCol(IdNameEntityCol[LoadProperty]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.LoadPropertyColList[index]
@@ -3360,17 +3320,18 @@ class LoadPropertyCol(IdNameEntityCol[LoadProperty]):
 
 class DesignLoadCol(IdNameEntityCol[DesignLoad]):
 	def __init__(self, designLoadCol: _api.DesignLoadCol):
-		self.Entity = designLoadCol
-		self.CollectedClass = DesignLoad
-		self.DesignLoadColList = tuple([DesignLoad(designLoadCol) for designLoadCol in self.Entity])
+		self._Entity = designLoadCol
+		self._CollectedClass = DesignLoad
+
+	@property
+	def DesignLoadColList(self) -> tuple[DesignLoad]:
+		return tuple([DesignLoad(designLoadCol) for designLoadCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> DesignLoad:
-		pass
+	def Get(self, name: str) -> DesignLoad: ...
 
 	@overload
-	def Get(self, id: int) -> DesignLoad:
-		pass
+	def Get(self, id: int) -> DesignLoad: ...
 
 	def Get(self, item1 = None) -> DesignLoad:
 		if isinstance(item1, str):
@@ -3378,6 +3339,8 @@ class DesignLoadCol(IdNameEntityCol[DesignLoad]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.DesignLoadColList[index]
@@ -3391,39 +3354,32 @@ class DesignLoadCol(IdNameEntityCol[DesignLoad]):
 
 class DiscreteFieldTableCol(IdNameEntityCol[DiscreteFieldTable]):
 	def __init__(self, discreteFieldTableCol: _api.DiscreteFieldTableCol):
-		self.Entity = discreteFieldTableCol
-		self.CollectedClass = DiscreteFieldTable
-		self.DiscreteFieldTableColList = tuple([DiscreteFieldTable(discreteFieldTableCol) for discreteFieldTableCol in self.Entity])
+		self._Entity = discreteFieldTableCol
+		self._CollectedClass = DiscreteFieldTable
+
+	@property
+	def DiscreteFieldTableColList(self) -> tuple[DiscreteFieldTable]:
+		return tuple([DiscreteFieldTable(discreteFieldTableCol) for discreteFieldTableCol in self._Entity])
 
 	def Create(self, name: str, entityType: types.DiscreteFieldPhysicalEntityType, dataType: types.DiscreteFieldDataType) -> int:
-		return self.Entity.Create(name, _types.DiscreteFieldPhysicalEntityType(entityType.value), _types.DiscreteFieldDataType(dataType.value))
+		return self._Entity.Create(name, _types.DiscreteFieldPhysicalEntityType(entityType.value), _types.DiscreteFieldDataType(dataType.value))
 
 	def CreateFromVCP(self, filepath: str) -> list[int]:
-		return list[int](self.Entity.CreateFromVCP(filepath))
+		return list[int](self._Entity.CreateFromVCP(filepath))
 
 	def Delete(self, id: int) -> CollectionModificationStatus:
-		return CollectionModificationStatus[self.Entity.Delete(id).ToString()]
+		return CollectionModificationStatus[self._Entity.Delete(id).ToString()]
 
 	def CreateByPointMapToElements(self, elementIds: list[int], discreteFieldIds: list[int], suffix: str = None, tolerance: float = None) -> None:
-		elementIdsList = List[int]()
-		if elementIds is not None:
-			for thing in elementIds:
-				if thing is not None:
-					elementIdsList.Add(thing)
-		discreteFieldIdsList = List[int]()
-		if discreteFieldIds is not None:
-			for thing in discreteFieldIds:
-				if thing is not None:
-					discreteFieldIdsList.Add(thing)
-		return self.Entity.CreateByPointMapToElements(elementIdsList, discreteFieldIdsList, suffix, tolerance)
+		elementIdsList = MakeCSharpIntList(elementIds)
+		discreteFieldIdsList = MakeCSharpIntList(discreteFieldIds)
+		return self._Entity.CreateByPointMapToElements(elementIdsList, discreteFieldIdsList, suffix, tolerance)
 
 	@overload
-	def Get(self, name: str) -> DiscreteFieldTable:
-		pass
+	def Get(self, name: str) -> DiscreteFieldTable: ...
 
 	@overload
-	def Get(self, id: int) -> DiscreteFieldTable:
-		pass
+	def Get(self, id: int) -> DiscreteFieldTable: ...
 
 	def Get(self, item1 = None) -> DiscreteFieldTable:
 		if isinstance(item1, str):
@@ -3431,6 +3387,8 @@ class DiscreteFieldTableCol(IdNameEntityCol[DiscreteFieldTable]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.DiscreteFieldTableColList[index]
@@ -3444,21 +3402,22 @@ class DiscreteFieldTableCol(IdNameEntityCol[DiscreteFieldTable]):
 
 class ZoneJointContainerCol(IdNameEntityCol, Generic[T]):
 	def __init__(self, zoneJointContainerCol: _api.ZoneJointContainerCol):
-		self.Entity = zoneJointContainerCol
-		self.CollectedClass = T
-		self.ZoneJointContainerColList = tuple([T(zoneJointContainerCol) for zoneJointContainerCol in self.Entity])
+		self._Entity = zoneJointContainerCol
+		self._CollectedClass = T
+
+	@property
+	def ZoneJointContainerColList(self) -> tuple[T]:
+		return tuple([T(zoneJointContainerCol) for zoneJointContainerCol in self._Entity])
 
 	@abstractmethod
 	def Create(self, name: str) -> bool:
-		return self.Entity.Create(name)
+		return self._Entity.Create(name)
 
 	@overload
-	def Get(self, name: str) -> T:
-		pass
+	def Get(self, name: str) -> T: ...
 
 	@overload
-	def Get(self, id: int) -> T:
-		pass
+	def Get(self, id: int) -> T: ...
 
 	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
@@ -3466,6 +3425,8 @@ class ZoneJointContainerCol(IdNameEntityCol, Generic[T]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.ZoneJointContainerColList[index]
@@ -3479,18 +3440,21 @@ class ZoneJointContainerCol(IdNameEntityCol, Generic[T]):
 
 class RundeckCol(IdEntityCol[Rundeck]):
 	def __init__(self, rundeckCol: _api.RundeckCol):
-		self.Entity = rundeckCol
-		self.CollectedClass = Rundeck
-		self.RundeckColList = tuple([Rundeck(rundeckCol) for rundeckCol in self.Entity])
+		self._Entity = rundeckCol
+		self._CollectedClass = Rundeck
+
+	@property
+	def RundeckColList(self) -> tuple[Rundeck]:
+		return tuple([Rundeck(rundeckCol) for rundeckCol in self._Entity])
 
 	def AddRundeck(self, inputPath: str, resultPath: str = None) -> RundeckCreationStatus:
-		return RundeckCreationStatus[self.Entity.AddRundeck(inputPath, resultPath).ToString()]
+		return RundeckCreationStatus[self._Entity.AddRundeck(inputPath, resultPath).ToString()]
 
 	def ReassignPrimary(self, id: int) -> RundeckUpdateStatus:
-		return RundeckUpdateStatus[self.Entity.ReassignPrimary(id).ToString()]
+		return RundeckUpdateStatus[self._Entity.ReassignPrimary(id).ToString()]
 
 	def RemoveRundeck(self, id: int) -> RundeckRemoveStatus:
-		return RundeckRemoveStatus[self.Entity.RemoveRundeck(id).ToString()]
+		return RundeckRemoveStatus[self._Entity.RemoveRundeck(id).ToString()]
 
 	def __getitem__(self, index: int):
 		return self.RundeckColList[index]
@@ -3504,23 +3468,24 @@ class RundeckCol(IdEntityCol[Rundeck]):
 
 class SectionCutCol(IdNameEntityCol[SectionCut]):
 	def __init__(self, sectionCutCol: _api.SectionCutCol):
-		self.Entity = sectionCutCol
-		self.CollectedClass = SectionCut
-		self.SectionCutColList = tuple([SectionCut(sectionCutCol) for sectionCutCol in self.Entity])
+		self._Entity = sectionCutCol
+		self._CollectedClass = SectionCut
+
+	@property
+	def SectionCutColList(self) -> tuple[SectionCut]:
+		return tuple([SectionCut(sectionCutCol) for sectionCutCol in self._Entity])
 
 	def Create(self, name: str, origin: Vector3d, normal: Vector3d, horizontal: Vector3d) -> None:
-		return self.Entity.Create(name, origin.Entity, normal.Entity, horizontal.Entity)
+		return self._Entity.Create(name, origin._Entity, normal._Entity, horizontal._Entity)
 
 	def Delete(self, id: int) -> CollectionModificationStatus:
-		return CollectionModificationStatus[self.Entity.Delete(id).ToString()]
+		return CollectionModificationStatus[self._Entity.Delete(id).ToString()]
 
 	@overload
-	def Get(self, name: str) -> SectionCut:
-		pass
+	def Get(self, name: str) -> SectionCut: ...
 
 	@overload
-	def Get(self, id: int) -> SectionCut:
-		pass
+	def Get(self, id: int) -> SectionCut: ...
 
 	def Get(self, item1 = None) -> SectionCut:
 		if isinstance(item1, str):
@@ -3528,6 +3493,8 @@ class SectionCutCol(IdNameEntityCol[SectionCut]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.SectionCutColList[index]
@@ -3541,20 +3508,21 @@ class SectionCutCol(IdNameEntityCol[SectionCut]):
 
 class SetCol(ZoneJointContainerCol[Set]):
 	def __init__(self, setCol: _api.SetCol):
-		self.Entity = setCol
-		self.CollectedClass = Set
-		self.SetColList = tuple([Set(setCol) for setCol in self.Entity])
+		self._Entity = setCol
+		self._CollectedClass = Set
+
+	@property
+	def SetColList(self) -> tuple[Set]:
+		return tuple([Set(setCol) for setCol in self._Entity])
 
 	def Create(self, name: str) -> bool:
-		return self.Entity.Create(name)
+		return self._Entity.Create(name)
 
 	@overload
-	def Get(self, name: str) -> Set:
-		pass
+	def Get(self, name: str) -> Set: ...
 
 	@overload
-	def Get(self, id: int) -> Set:
-		pass
+	def Get(self, id: int) -> Set: ...
 
 	def Get(self, item1 = None) -> Set:
 		if isinstance(item1, str):
@@ -3562,6 +3530,8 @@ class SetCol(ZoneJointContainerCol[Set]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.SetColList[index]
@@ -3575,35 +3545,36 @@ class SetCol(ZoneJointContainerCol[Set]):
 
 class StructureCol(ZoneJointContainerCol[Structure]):
 	def __init__(self, structureCol: _api.StructureCol):
-		self.Entity = structureCol
-		self.CollectedClass = Structure
-		self.StructureColList = tuple([Structure(structureCol) for structureCol in self.Entity])
+		self._Entity = structureCol
+		self._CollectedClass = Structure
+
+	@property
+	def StructureColList(self) -> tuple[Structure]:
+		return tuple([Structure(structureCol) for structureCol in self._Entity])
 
 	def Create(self, name: str) -> bool:
-		return self.Entity.Create(name)
+		return self._Entity.Create(name)
 
 	@overload
-	def DeleteStructure(self, structure: Structure) -> CollectionModificationStatus:
-		pass
+	def DeleteStructure(self, structure: Structure) -> CollectionModificationStatus: ...
 
 	@overload
-	def DeleteStructure(self, id: int) -> CollectionModificationStatus:
-		pass
+	def DeleteStructure(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
-	def Get(self, name: str) -> Structure:
-		pass
+	def Get(self, name: str) -> Structure: ...
 
 	@overload
-	def Get(self, id: int) -> Structure:
-		pass
+	def Get(self, id: int) -> Structure: ...
 
 	def DeleteStructure(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, Structure):
-			return CollectionModificationStatus[self.Entity.DeleteStructure(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.DeleteStructure(item1).ToString()]
 
 		if isinstance(item1, int):
-			return CollectionModificationStatus[self.Entity.DeleteStructure(item1).ToString()]
+			return CollectionModificationStatus[self._Entity.DeleteStructure(item1).ToString()]
+
+		return self._Entity.DeleteStructure(item1)
 
 	def Get(self, item1 = None) -> Structure:
 		if isinstance(item1, str):
@@ -3611,6 +3582,8 @@ class StructureCol(ZoneJointContainerCol[Structure]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.StructureColList[index]
@@ -3624,83 +3597,83 @@ class StructureCol(ZoneJointContainerCol[Structure]):
 
 class Project:
 	def __init__(self, project: _api.Project):
-		self.Entity = project
+		self._Entity = project
 
 	@property
 	def WorkingFolder(self) -> str:
-		return self.Entity.WorkingFolder
+		return self._Entity.WorkingFolder
 
 	@property
 	def FemDataSet(self) -> FemDataSet:
-		return FemDataSet(self.Entity.FemDataSet)
+		return FemDataSet(self._Entity.FemDataSet)
 
 	@property
 	def Beams(self) -> ZoneCol:
-		return ZoneCol(self.Entity.Beams)
+		return ZoneCol(self._Entity.Beams)
 
 	@property
 	def Id(self) -> int:
-		return self.Entity.Id
+		return self._Entity.Id
 
 	@property
 	def Joints(self) -> JointCol:
-		return JointCol(self.Entity.Joints)
+		return JointCol(self._Entity.Joints)
 
 	@property
 	def Name(self) -> str:
-		return self.Entity.Name
+		return self._Entity.Name
 
 	@property
 	def Panels(self) -> ZoneCol:
-		return ZoneCol(self.Entity.Panels)
+		return ZoneCol(self._Entity.Panels)
 
 	@property
 	def Rundecks(self) -> RundeckCol:
-		return RundeckCol(self.Entity.Rundecks)
+		return RundeckCol(self._Entity.Rundecks)
 
 	@property
 	def Sets(self) -> SetCol:
-		return SetCol(self.Entity.Sets)
+		return SetCol(self._Entity.Sets)
 
 	@property
 	def Structures(self) -> StructureCol:
-		return StructureCol(self.Entity.Structures)
+		return StructureCol(self._Entity.Structures)
 
 	@property
 	def Zones(self) -> ZoneCol:
-		return ZoneCol(self.Entity.Zones)
+		return ZoneCol(self._Entity.Zones)
 
 	@property
 	def PanelSegments(self) -> PanelSegmentCol:
-		return PanelSegmentCol(self.Entity.PanelSegments)
+		return PanelSegmentCol(self._Entity.PanelSegments)
 
 	@property
 	def SectionCuts(self) -> SectionCutCol:
-		return SectionCutCol(self.Entity.SectionCuts)
+		return SectionCutCol(self._Entity.SectionCuts)
 
 	@property
 	def DesignLoads(self) -> DesignLoadCol:
-		return DesignLoadCol(self.Entity.DesignLoads)
+		return DesignLoadCol(self._Entity.DesignLoads)
 
 	@property
 	def DiscreteFieldTables(self) -> DiscreteFieldTableCol:
-		return DiscreteFieldTableCol(self.Entity.DiscreteFieldTables)
+		return DiscreteFieldTableCol(self._Entity.DiscreteFieldTables)
 
 	@property
 	def AnalysisProperties(self) -> AnalysisPropertyCol:
-		return AnalysisPropertyCol(self.Entity.AnalysisProperties)
+		return AnalysisPropertyCol(self._Entity.AnalysisProperties)
 
 	@property
 	def DesignProperties(self) -> DesignPropertyCol:
-		return DesignPropertyCol(self.Entity.DesignProperties)
+		return DesignPropertyCol(self._Entity.DesignProperties)
 
 	@property
 	def LoadProperties(self) -> LoadPropertyCol:
-		return LoadPropertyCol(self.Entity.LoadProperties)
+		return LoadPropertyCol(self._Entity.LoadProperties)
 
 	@property
 	def FemFormat(self) -> types.ProjectModelFormat:
-		return types.ProjectModelFormat[self.Entity.ProjectModelFormat.ToString()]
+		return types.ProjectModelFormat[self._Entity.ProjectModelFormat.ToString()]
 
 	def Upload(self, uploadSetName: str, company: str, program: str, tags: list[str], notes: str, zoneIds: set[int], jointIds: set[int]) -> bool:
 		tagsList = List[str]()
@@ -3708,100 +3681,94 @@ class Project:
 			for thing in tags:
 				if thing is not None:
 					tagsList.Add(thing)
-		return self.Entity.Upload(uploadSetName, company, program, tagsList, notes, zoneIds.Entity, jointIds.Entity)
+		return self._Entity.Upload(uploadSetName, company, program, tagsList, notes, zoneIds._Entity, jointIds._Entity)
 
 	def GetDashboardCompanies(self) -> list[str]:
-		return list[str](self.Entity.GetDashboardCompanies())
+		return list[str](self._Entity.GetDashboardCompanies())
 
 	def GetDashboardPrograms(self, companyName: str) -> list[str]:
-		return list[str](self.Entity.GetDashboardPrograms(companyName))
+		return list[str](self._Entity.GetDashboardPrograms(companyName))
 
 	def GetDashboardTags(self, companyName: str) -> list[str]:
-		return list[str](self.Entity.GetDashboardTags(companyName))
+		return list[str](self._Entity.GetDashboardTags(companyName))
 
 	def Dispose(self) -> None:
-		return self.Entity.Dispose()
+		return self._Entity.Dispose()
 
 	def GetConceptName(self, zoneId: int) -> str:
-		return self.Entity.GetConceptName(zoneId)
+		return self._Entity.GetConceptName(zoneId)
 
 	def GetJointAnalysisResults(self, joints: list[Joint] = None, analysisResultType: AnalysisResultToReturn = AnalysisResultToReturn.Minimum) -> dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]]:
 		jointsList = List[_api.Joint]()
 		if joints is not None:
 			for thing in joints:
 				if thing is not None:
-					jointsList.Add(thing.Entity)
-		return dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]](self.Entity.GetJointAnalysisResults(joints if joints is None else jointsList, _api.AnalysisResultToReturn(analysisResultType.value)))
+					jointsList.Add(thing._Entity)
+		return dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]](self._Entity.GetJointAnalysisResults(joints if joints is None else jointsList, _api.AnalysisResultToReturn(analysisResultType.value)))
 
 	def GetObjectName(self, zoneId: int, objectId: int) -> str:
-		return self.Entity.GetObjectName(zoneId, objectId)
+		return self._Entity.GetObjectName(zoneId, objectId)
 
 	def GetZoneConceptAnalysisResults(self, zones: list[Zone] = None, analysisResultType: AnalysisResultToReturn = AnalysisResultToReturn.Minimum) -> dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]]:
 		zonesList = List[_api.Zone]()
 		if zones is not None:
 			for thing in zones:
 				if thing is not None:
-					zonesList.Add(thing.Entity)
-		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneConceptAnalysisResults(zones if zones is None else zonesList, _api.AnalysisResultToReturn(analysisResultType.value)))
+					zonesList.Add(thing._Entity)
+		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self._Entity.GetZoneConceptAnalysisResults(zones if zones is None else zonesList, _api.AnalysisResultToReturn(analysisResultType.value)))
 
 	def GetZoneObjectAnalysisResults(self, zones: list[Zone] = None, analysisResultType: AnalysisResultToReturn = AnalysisResultToReturn.Minimum) -> dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]]:
 		zonesList = List[_api.Zone]()
 		if zones is not None:
 			for thing in zones:
 				if thing is not None:
-					zonesList.Add(thing.Entity)
-		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self.Entity.GetZoneObjectAnalysisResults(zones if zones is None else zonesList, _api.AnalysisResultToReturn(analysisResultType.value)))
+					zonesList.Add(thing._Entity)
+		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self._Entity.GetZoneObjectAnalysisResults(zones if zones is None else zonesList, _api.AnalysisResultToReturn(analysisResultType.value)))
 
 	def ImportFem(self) -> None:
-		return self.Entity.ImportFem()
+		return self._Entity.ImportFem()
 
 	def SetFemFormat(self, femFormat: types.ProjectModelFormat) -> None:
-		return self.Entity.SetFemFormat(_types.ProjectModelFormat(femFormat.value))
+		return self._Entity.SetFemFormat(_types.ProjectModelFormat(femFormat.value))
 
 	def SetFemUnits(self, femForceId: DbForceUnit, femLengthId: DbLengthUnit, femMassId: DbMassUnit, femTemperatureId: DbTemperatureUnit) -> SetUnitsStatus:
-		return SetUnitsStatus[self.Entity.SetFemUnits(_api.DbForceUnit(femForceId.value), _api.DbLengthUnit(femLengthId.value), _api.DbMassUnit(femMassId.value), _api.DbTemperatureUnit(femTemperatureId.value)).ToString()]
+		return SetUnitsStatus[self._Entity.SetFemUnits(_api.DbForceUnit(femForceId.value), _api.DbLengthUnit(femLengthId.value), _api.DbMassUnit(femMassId.value), _api.DbTemperatureUnit(femTemperatureId.value)).ToString()]
 
 	def SizeJoints(self, joints: list[Joint] = None) -> tuple[bool, str, set[int]]:
 		jointsList = List[_api.Joint]()
 		if joints is not None:
 			for thing in joints:
 				if thing is not None:
-					jointsList.Add(thing.Entity)
-		result = self.Entity.SizeJoints(joints if joints is None else jointsList)
+					jointsList.Add(thing._Entity)
+		result = self._Entity.SizeJoints(joints if joints is None else jointsList)
 		return tuple([result.Item1, result.Item2, result.Item3])
 
 	@overload
-	def AnalyzeZones(self, zones: list[Zone] = None) -> tuple[bool, str]:
-		pass
+	def AnalyzeZones(self, zones: list[Zone] = None) -> tuple[bool, str]: ...
 
 	@overload
-	def AnalyzeZones(self, zoneIds: list[int]) -> tuple[bool, str]:
-		pass
+	def AnalyzeZones(self, zoneIds: list[int]) -> tuple[bool, str]: ...
 
 	@overload
-	def SizeZones(self, zones: list[Zone] = None) -> tuple[bool, str]:
-		pass
+	def SizeZones(self, zones: list[Zone] = None) -> tuple[bool, str]: ...
 
 	@overload
-	def SizeZones(self, zoneIds: list[int]) -> tuple[bool, str]:
-		pass
+	def SizeZones(self, zoneIds: list[int]) -> tuple[bool, str]: ...
 
 	def UnimportFemAsync(self) -> Task:
-		return Task(self.Entity.UnimportFemAsync())
+		return Task(self._Entity.UnimportFemAsync())
 
 	def ExportFem(self, destinationFolder: str) -> None:
-		return self.Entity.ExportFem(destinationFolder)
+		return self._Entity.ExportFem(destinationFolder)
 
 	def ImportCad(self, filePath: str) -> None:
-		return self.Entity.ImportCad(filePath)
+		return self._Entity.ImportCad(filePath)
 
 	@overload
-	def ExportCad(self, filePath: str) -> None:
-		pass
+	def ExportCad(self, filePath: str) -> None: ...
 
 	@overload
-	def ExportCad(self, cadIds: tuple[int], filePath: str) -> None:
-		pass
+	def ExportCad(self, cadIds: tuple[int], filePath: str) -> None: ...
 
 	def AnalyzeZones(self, item1 = None) -> tuple[bool, str]:
 		if isinstance(item1, list):
@@ -3809,18 +3776,16 @@ class Project:
 			if item1 is not None:
 				for thing in item1:
 					if thing is not None:
-						zonesList.Add(thing.Entity)
-			result = self.Entity.AnalyzeZones(item1 if item1 is None else zonesList)
+						zonesList.Add(thing._Entity)
+			result = self._Entity.AnalyzeZones(item1 if item1 is None else zonesList)
 			return tuple([result.Item1, result.Item2])
 
 		if isinstance(item1, list):
-			zoneIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						zoneIdsList.Add(thing)
-			result = self.Entity.AnalyzeZones(zoneIdsList)
+			zoneIdsList = MakeCSharpIntList(item1)
+			result = self._Entity.AnalyzeZones(zoneIdsList)
 			return tuple([result.Item1, result.Item2])
+
+		return self._Entity.AnalyzeZones(item1 if item1 is None else zonesList)
 
 	def SizeZones(self, item1 = None) -> tuple[bool, str]:
 		if isinstance(item1, list):
@@ -3828,51 +3793,48 @@ class Project:
 			if item1 is not None:
 				for thing in item1:
 					if thing is not None:
-						zonesList.Add(thing.Entity)
-			result = self.Entity.SizeZones(item1 if item1 is None else zonesList)
+						zonesList.Add(thing._Entity)
+			result = self._Entity.SizeZones(item1 if item1 is None else zonesList)
 			return tuple([result.Item1, result.Item2])
 
 		if isinstance(item1, list):
-			zoneIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						zoneIdsList.Add(thing)
-			result = self.Entity.SizeZones(zoneIdsList)
+			zoneIdsList = MakeCSharpIntList(item1)
+			result = self._Entity.SizeZones(zoneIdsList)
 			return tuple([result.Item1, result.Item2])
 
-	def ExportCad(self, item1 = None, item2 = None) -> None:
-		if isinstance(item1, str):
-			return self.Entity.ExportCad(item1)
+		return self._Entity.SizeZones(item1 if item1 is None else zonesList)
 
+	def ExportCad(self, item1 = None, item2 = None) -> None:
 		if isinstance(item1, tuple) and isinstance(item2, str):
-			cadIdsList = List[int]()
-			if item1 is not None:
-				for thing in item1:
-					if thing is not None:
-						cadIdsList.Add(thing)
+			cadIdsList = MakeCSharpIntList(item1)
 			cadIdsEnumerable = IEnumerable(cadIdsList)
-			return self.Entity.ExportCad(cadIdsEnumerable, item2)
+			return self._Entity.ExportCad(cadIdsEnumerable, item2)
+
+		if isinstance(item1, str):
+			return self._Entity.ExportCad(item1)
+
+		return self._Entity.ExportCad(cadIdsEnumerable, item2)
 
 
 class ProjectInfo(IdNameEntityRenameable):
 	def __init__(self, projectInfo: _api.ProjectInfo):
-		self.Entity = projectInfo
+		self._Entity = projectInfo
 
 
 class FailureModeCategoryCol(IdNameEntityCol[FailureModeCategory]):
 	def __init__(self, failureModeCategoryCol: _api.FailureModeCategoryCol):
-		self.Entity = failureModeCategoryCol
-		self.CollectedClass = FailureModeCategory
-		self.FailureModeCategoryColList = tuple([FailureModeCategory(failureModeCategoryCol) for failureModeCategoryCol in self.Entity])
+		self._Entity = failureModeCategoryCol
+		self._CollectedClass = FailureModeCategory
+
+	@property
+	def FailureModeCategoryColList(self) -> tuple[FailureModeCategory]:
+		return tuple([FailureModeCategory(failureModeCategoryCol) for failureModeCategoryCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> FailureModeCategory:
-		pass
+	def Get(self, name: str) -> FailureModeCategory: ...
 
 	@overload
-	def Get(self, id: int) -> FailureModeCategory:
-		pass
+	def Get(self, id: int) -> FailureModeCategory: ...
 
 	def Get(self, item1 = None) -> FailureModeCategory:
 		if isinstance(item1, str):
@@ -3880,6 +3842,8 @@ class FailureModeCategoryCol(IdNameEntityCol[FailureModeCategory]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.FailureModeCategoryColList[index]
@@ -3893,34 +3857,29 @@ class FailureModeCategoryCol(IdNameEntityCol[FailureModeCategory]):
 
 class FoamCol(Generic[T]):
 	def __init__(self, foamCol: _api.FoamCol):
-		self.Entity = foamCol
-		self.FoamColList = tuple([Foam(foamCol) for foamCol in self.Entity])
+		self._Entity = foamCol
+
+	@property
+	def FoamColList(self) -> tuple[Foam]:
+		return tuple([Foam(foamCol) for foamCol in self._Entity])
 
 	def Count(self) -> int:
-		return self.Entity.Count()
+		return self._Entity.Count()
 
 	def Get(self, materialName: str) -> Foam:
-		return Foam(self.Entity.Get(materialName))
+		return Foam(self._Entity.Get(materialName))
 
 	def Contains(self, materialName: str) -> bool:
-		return self.Entity.Contains(materialName)
-
-	def GetEnumerator(self) -> tuple[T]:
-		enumerator = self.Entity.GetEnumerator()
-		tup = ()
-		for item in enumerator:
-			tup += (item)
-
-		return tup
+		return self._Entity.Contains(materialName)
 
 	def Create(self, newMaterialName: str, materialFamilyName: str, density: float, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self.Entity.Create(newMaterialName, materialFamilyName, density, femId).ToString()]
+		return MaterialCreationStatus[self._Entity.Create(newMaterialName, materialFamilyName, density, femId).ToString()]
 
 	def Copy(self, fmToCopyName: str, newMaterialName: str, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self.Entity.Copy(fmToCopyName, newMaterialName, femId).ToString()]
+		return MaterialCreationStatus[self._Entity.Copy(fmToCopyName, newMaterialName, femId).ToString()]
 
 	def Delete(self, materialName: str) -> bool:
-		return self.Entity.Delete(materialName)
+		return self._Entity.Delete(materialName)
 
 	def __getitem__(self, index: int):
 		return self.FoamColList[index]
@@ -3934,34 +3893,29 @@ class FoamCol(Generic[T]):
 
 class HoneycombCol(Generic[T]):
 	def __init__(self, honeycombCol: _api.HoneycombCol):
-		self.Entity = honeycombCol
-		self.HoneycombColList = tuple([Honeycomb(honeycombCol) for honeycombCol in self.Entity])
+		self._Entity = honeycombCol
+
+	@property
+	def HoneycombColList(self) -> tuple[Honeycomb]:
+		return tuple([Honeycomb(honeycombCol) for honeycombCol in self._Entity])
 
 	def Count(self) -> int:
-		return self.Entity.Count()
+		return self._Entity.Count()
 
 	def Get(self, materialName: str) -> Honeycomb:
-		return Honeycomb(self.Entity.Get(materialName))
+		return Honeycomb(self._Entity.Get(materialName))
 
 	def Contains(self, materialName: str) -> bool:
-		return self.Entity.Contains(materialName)
-
-	def GetEnumerator(self) -> tuple[T]:
-		enumerator = self.Entity.GetEnumerator()
-		tup = ()
-		for item in enumerator:
-			tup += (item)
-
-		return tup
+		return self._Entity.Contains(materialName)
 
 	def Create(self, newMaterialName: str, materialFamilyName: str, density: float, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self.Entity.Create(newMaterialName, materialFamilyName, density, femId).ToString()]
+		return MaterialCreationStatus[self._Entity.Create(newMaterialName, materialFamilyName, density, femId).ToString()]
 
 	def Copy(self, honeyToCopyName: str, newMaterialName: str, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self.Entity.Copy(honeyToCopyName, newMaterialName, femId).ToString()]
+		return MaterialCreationStatus[self._Entity.Copy(honeyToCopyName, newMaterialName, femId).ToString()]
 
 	def Delete(self, materialName: str) -> bool:
-		return self.Entity.Delete(materialName)
+		return self._Entity.Delete(materialName)
 
 	def __getitem__(self, index: int):
 		return self.HoneycombColList[index]
@@ -3975,34 +3929,29 @@ class HoneycombCol(Generic[T]):
 
 class IsotropicCol(Generic[T]):
 	def __init__(self, isotropicCol: _api.IsotropicCol):
-		self.Entity = isotropicCol
-		self.IsotropicColList = tuple([Isotropic(isotropicCol) for isotropicCol in self.Entity])
+		self._Entity = isotropicCol
+
+	@property
+	def IsotropicColList(self) -> tuple[Isotropic]:
+		return tuple([Isotropic(isotropicCol) for isotropicCol in self._Entity])
 
 	def Count(self) -> int:
-		return self.Entity.Count()
+		return self._Entity.Count()
 
 	def Get(self, materialName: str) -> Isotropic:
-		return Isotropic(self.Entity.Get(materialName))
+		return Isotropic(self._Entity.Get(materialName))
 
 	def Contains(self, materialName: str) -> bool:
-		return self.Entity.Contains(materialName)
-
-	def GetEnumerator(self) -> tuple[T]:
-		enumerator = self.Entity.GetEnumerator()
-		tup = ()
-		for item in enumerator:
-			tup += (item)
-
-		return tup
+		return self._Entity.Contains(materialName)
 
 	def Create(self, newMaterialName: str, materialFamilyName: str, density: float, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self.Entity.Create(newMaterialName, materialFamilyName, density, femId).ToString()]
+		return MaterialCreationStatus[self._Entity.Create(newMaterialName, materialFamilyName, density, femId).ToString()]
 
 	def Copy(self, isoToCopyName: str, newMaterialName: str, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self.Entity.Copy(isoToCopyName, newMaterialName, femId).ToString()]
+		return MaterialCreationStatus[self._Entity.Copy(isoToCopyName, newMaterialName, femId).ToString()]
 
 	def Delete(self, materialName: str) -> bool:
-		return self.Entity.Delete(materialName)
+		return self._Entity.Delete(materialName)
 
 	def __getitem__(self, index: int):
 		return self.IsotropicColList[index]
@@ -4016,34 +3965,29 @@ class IsotropicCol(Generic[T]):
 
 class OrthotropicCol(Generic[T]):
 	def __init__(self, orthotropicCol: _api.OrthotropicCol):
-		self.Entity = orthotropicCol
-		self.OrthotropicColList = tuple([Orthotropic(orthotropicCol) for orthotropicCol in self.Entity])
+		self._Entity = orthotropicCol
+
+	@property
+	def OrthotropicColList(self) -> tuple[Orthotropic]:
+		return tuple([Orthotropic(orthotropicCol) for orthotropicCol in self._Entity])
 
 	def Count(self) -> int:
-		return self.Entity.Count()
+		return self._Entity.Count()
 
 	def Get(self, materialName: str) -> Orthotropic:
-		return Orthotropic(self.Entity.Get(materialName))
+		return Orthotropic(self._Entity.Get(materialName))
 
 	def Contains(self, materialName: str) -> bool:
-		return self.Entity.Contains(materialName)
-
-	def GetEnumerator(self) -> tuple[T]:
-		enumerator = self.Entity.GetEnumerator()
-		tup = ()
-		for item in enumerator:
-			tup += (item)
-
-		return tup
+		return self._Entity.Contains(materialName)
 
 	def Create(self, newMaterialName: str, materialFamilyName: str, thickness: float, density: float, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self.Entity.Create(newMaterialName, materialFamilyName, thickness, density, femId).ToString()]
+		return MaterialCreationStatus[self._Entity.Create(newMaterialName, materialFamilyName, thickness, density, femId).ToString()]
 
 	def Copy(self, orthoToCopyName: str, newMaterialName: str, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self.Entity.Copy(orthoToCopyName, newMaterialName, femId).ToString()]
+		return MaterialCreationStatus[self._Entity.Copy(orthoToCopyName, newMaterialName, femId).ToString()]
 
 	def Delete(self, materialName: str) -> bool:
-		return self.Entity.Delete(materialName)
+		return self._Entity.Delete(materialName)
 
 	def __getitem__(self, index: int):
 		return self.OrthotropicColList[index]
@@ -4057,17 +4001,18 @@ class OrthotropicCol(Generic[T]):
 
 class ProjectInfoCol(IdNameEntityCol[ProjectInfo]):
 	def __init__(self, projectInfoCol: _api.ProjectInfoCol):
-		self.Entity = projectInfoCol
-		self.CollectedClass = ProjectInfo
-		self.ProjectInfoColList = tuple([ProjectInfo(projectInfoCol) for projectInfoCol in self.Entity])
+		self._Entity = projectInfoCol
+		self._CollectedClass = ProjectInfo
+
+	@property
+	def ProjectInfoColList(self) -> tuple[ProjectInfo]:
+		return tuple([ProjectInfo(projectInfoCol) for projectInfoCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> ProjectInfo:
-		pass
+	def Get(self, name: str) -> ProjectInfo: ...
 
 	@overload
-	def Get(self, id: int) -> ProjectInfo:
-		pass
+	def Get(self, id: int) -> ProjectInfo: ...
 
 	def Get(self, item1 = None) -> ProjectInfo:
 		if isinstance(item1, str):
@@ -4075,6 +4020,8 @@ class ProjectInfoCol(IdNameEntityCol[ProjectInfo]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.ProjectInfoColList[index]
@@ -4088,214 +4035,211 @@ class ProjectInfoCol(IdNameEntityCol[ProjectInfo]):
 
 class Application:
 	def __init__(self, application: _api.Application):
-		self.Entity = application
+		self._Entity = application
 
 	@property
 	def DatabasePath(self) -> str:
-		return self.Entity.DatabasePath
+		return self._Entity.DatabasePath
 
 	@property
 	def ActiveProject(self) -> Project:
-		return Project(self.Entity.ActiveProject)
+		return Project(self._Entity.ActiveProject)
 
 	@property
 	def UiRunnerMode(self) -> bool:
-		return self.Entity.UiRunnerMode
+		return self._Entity.UiRunnerMode
 
 	@property
 	def Version(self) -> str:
-		return self.Entity.Version
+		return self._Entity.Version
 
 	@property
 	def FailureModeCategories(self) -> FailureModeCategoryCol:
-		return FailureModeCategoryCol(self.Entity.FailureModeCategories)
+		return FailureModeCategoryCol(self._Entity.FailureModeCategories)
 
 	@property
 	def FailureModes(self) -> FailureModeCol:
-		return FailureModeCol(self.Entity.FailureModes)
+		return FailureModeCol(self._Entity.FailureModes)
 
 	@property
 	def Foams(self) -> FoamCol:
-		return FoamCol(self.Entity.Foams)
+		return FoamCol(self._Entity.Foams)
 
 	@property
 	def Honeycombs(self) -> HoneycombCol:
-		return HoneycombCol(self.Entity.Honeycombs)
+		return HoneycombCol(self._Entity.Honeycombs)
 
 	@property
 	def Isotropics(self) -> IsotropicCol:
-		return IsotropicCol(self.Entity.Isotropics)
+		return IsotropicCol(self._Entity.Isotropics)
 
 	@property
 	def AnalysisProperties(self) -> AnalysisPropertyCol:
-		return AnalysisPropertyCol(self.Entity.AnalysisProperties)
+		return AnalysisPropertyCol(self._Entity.AnalysisProperties)
 
 	@property
 	def DesignProperties(self) -> DesignPropertyCol:
-		return DesignPropertyCol(self.Entity.DesignProperties)
+		return DesignPropertyCol(self._Entity.DesignProperties)
 
 	@property
 	def LoadProperties(self) -> LoadPropertyCol:
-		return LoadPropertyCol(self.Entity.LoadProperties)
+		return LoadPropertyCol(self._Entity.LoadProperties)
 
 	@property
 	def Orthotropics(self) -> OrthotropicCol:
-		return OrthotropicCol(self.Entity.Orthotropics)
+		return OrthotropicCol(self._Entity.Orthotropics)
 
 	@property
 	def ProjectInfos(self) -> ProjectInfoCol:
-		return ProjectInfoCol(self.Entity.ProjectInfos)
+		return ProjectInfoCol(self._Entity.ProjectInfos)
 
 	@property
 	def UserName(self) -> str:
-		return self.Entity.UserName
+		return self._Entity.UserName
 
 	def CloseDatabase(self, delay: int = 0) -> None:
-		return self.Entity.CloseDatabase(delay)
+		return self._Entity.CloseDatabase(delay)
 
 	def CopyProject(self, projectId: int, newName: str, copyDesignProperties: bool = True, copyAnalysisProperties: bool = True, copyLoadProperties: bool = True, copyWorkingFolder: bool = True) -> int:
-		return self.Entity.CopyProject(projectId, newName, copyDesignProperties, copyAnalysisProperties, copyLoadProperties, copyWorkingFolder)
+		return self._Entity.CopyProject(projectId, newName, copyDesignProperties, copyAnalysisProperties, copyLoadProperties, copyWorkingFolder)
 
 	def CreateAnalysisProperty(self, name: str, type: types.FamilyCategory) -> int:
-		return self.Entity.CreateAnalysisProperty(name, _types.FamilyCategory(type.value))
+		return self._Entity.CreateAnalysisProperty(name, _types.FamilyCategory(type.value))
 
 	def CreateFailureMode(self, failureModeCategoryId: int) -> int:
-		return self.Entity.CreateFailureMode(failureModeCategoryId)
+		return self._Entity.CreateFailureMode(failureModeCategoryId)
 
 	def CreateDatabaseFromTemplate(self, templateName: str, newPath: str) -> CreateDatabaseStatus:
-		return CreateDatabaseStatus[self.Entity.CreateDatabaseFromTemplate(templateName, newPath).ToString()]
+		return CreateDatabaseStatus[self._Entity.CreateDatabaseFromTemplate(templateName, newPath).ToString()]
 
 	def CreateProject(self, projectName: str) -> ProjectCreationStatus:
-		return ProjectCreationStatus[self.Entity.CreateProject(projectName).ToString()]
+		return ProjectCreationStatus[self._Entity.CreateProject(projectName).ToString()]
 
 	def DeleteAnalysisProperty(self, id: int) -> None:
-		return self.Entity.DeleteAnalysisProperty(id)
+		return self._Entity.DeleteAnalysisProperty(id)
 
 	def DeleteProject(self, projectName: str) -> ProjectDeletionStatus:
-		return ProjectDeletionStatus[self.Entity.DeleteProject(projectName).ToString()]
+		return ProjectDeletionStatus[self._Entity.DeleteProject(projectName).ToString()]
 
 	def Dispose(self) -> None:
-		return self.Entity.Dispose()
+		return self._Entity.Dispose()
 
 	def GetAnalyses(self) -> dict[int, AnalysisDefinition]:
-		return dict[int, AnalysisDefinition](self.Entity.GetAnalyses())
+		return dict[int, AnalysisDefinition](self._Entity.GetAnalyses())
 
 	def Login(self, userName: str, password: str = "") -> None:
-		return self.Entity.Login(userName, password)
+		return self._Entity.Login(userName, password)
 
 	def Migrate(self, databasePath: str) -> str:
-		return self.Entity.Migrate(databasePath)
+		return self._Entity.Migrate(databasePath)
 
 	def OpenDatabase(self, databasePath: str) -> None:
-		return self.Entity.OpenDatabase(databasePath)
+		return self._Entity.OpenDatabase(databasePath)
 
 	def SelectProject(self, projectName: str) -> Project:
-		return Project(self.Entity.SelectProject(projectName))
+		return Project(self._Entity.SelectProject(projectName))
 
 
 class JointDesignProperty(DesignProperty):
 	def __init__(self, jointDesignProperty: _api.JointDesignProperty):
-		self.Entity = jointDesignProperty
+		self._Entity = jointDesignProperty
 
 
 class ToolingConstraint(IdNameEntity):
 	def __init__(self, toolingConstraint: _api.ToolingConstraint):
-		self.Entity = toolingConstraint
+		self._Entity = toolingConstraint
 
 	@property
 	def ConstraintMax(self) -> float:
-		return self.Entity.ConstraintMax
+		return self._Entity.ConstraintMax
 
 	@property
 	def ConstraintMin(self) -> float:
-		return self.Entity.ConstraintMin
+		return self._Entity.ConstraintMin
 
 	@property
 	def ConstraintValue(self) -> float:
-		return self.Entity.ConstraintValue
+		return self._Entity.ConstraintValue
 
 	@property
 	def ToolingSelectionType(self) -> types.ToolingSelectionType:
-		return types.ToolingSelectionType[self.Entity.ToolingSelectionType.ToString()]
+		return types.ToolingSelectionType[self._Entity.ToolingSelectionType.ToString()]
 
 	def SetToAnyValue(self) -> None:
-		return self.Entity.SetToAnyValue()
+		return self._Entity.SetToAnyValue()
 
 	def SetToInequality(self, value: float) -> None:
-		return self.Entity.SetToInequality(value)
+		return self._Entity.SetToInequality(value)
 
 	def SetToRange(self, min: float, max: float) -> None:
-		return self.Entity.SetToRange(min, max)
+		return self._Entity.SetToRange(min, max)
 
 	def SetToValue(self, value: float) -> None:
-		return self.Entity.SetToValue(value)
+		return self._Entity.SetToValue(value)
 
 
 class DesignVariableMaterial:
 	def __init__(self, designVariableMaterial: _api.DesignVariableMaterial):
-		self.Entity = designVariableMaterial
+		self._Entity = designVariableMaterial
 
 	@property
 	def MaterialId(self) -> int:
-		return self.Entity.MaterialId
+		return self._Entity.MaterialId
 
 
 class DesignVariable(IdEntity):
 	def __init__(self, designVariable: _api.DesignVariable):
-		self.Entity = designVariable
+		self._Entity = designVariable
 
 	@property
 	def AllowMaterials(self) -> bool:
-		return self.Entity.AllowMaterials
+		return self._Entity.AllowMaterials
 
 	@property
 	def Max(self) -> float:
-		return self.Entity.Max
+		return self._Entity.Max
 
 	@property
 	def Min(self) -> float:
-		return self.Entity.Min
+		return self._Entity.Min
 
 	@property
 	def Name(self) -> str:
-		return self.Entity.Name
+		return self._Entity.Name
 
 	@property
 	def StepSize(self) -> float:
-		return self.Entity.StepSize
+		return self._Entity.StepSize
 
 	@property
 	def UseAnalysis(self) -> bool:
-		return self.Entity.UseAnalysis
+		return self._Entity.UseAnalysis
 
 	def AddMaterials(self, materialIds: list[int]) -> None:
-		materialIdsList = List[int]()
-		if materialIds is not None:
-			for thing in materialIds:
-				if thing is not None:
-					materialIdsList.Add(thing)
-		return self.Entity.AddMaterials(materialIdsList)
+		materialIdsList = MakeCSharpIntList(materialIds)
+		return self._Entity.AddMaterials(materialIdsList)
 
 	def GetMaterials(self) -> list[DesignVariableMaterial]:
-		return list[DesignVariableMaterial](self.Entity.GetMaterials())
+		return list[DesignVariableMaterial](self._Entity.GetMaterials())
 
 	def RemoveAllMaterials(self) -> None:
-		return self.Entity.RemoveAllMaterials()
+		return self._Entity.RemoveAllMaterials()
 
 
 class ToolingConstraintCol(IdNameEntityCol[ToolingConstraint]):
 	def __init__(self, toolingConstraintCol: _api.ToolingConstraintCol):
-		self.Entity = toolingConstraintCol
-		self.CollectedClass = ToolingConstraint
-		self.ToolingConstraintColList = tuple([ToolingConstraint(toolingConstraintCol) for toolingConstraintCol in self.Entity])
+		self._Entity = toolingConstraintCol
+		self._CollectedClass = ToolingConstraint
+
+	@property
+	def ToolingConstraintColList(self) -> tuple[ToolingConstraint]:
+		return tuple([ToolingConstraint(toolingConstraintCol) for toolingConstraintCol in self._Entity])
 
 	@overload
-	def Get(self, name: str) -> ToolingConstraint:
-		pass
+	def Get(self, name: str) -> ToolingConstraint: ...
 
 	@overload
-	def Get(self, id: int) -> ToolingConstraint:
-		pass
+	def Get(self, id: int) -> ToolingConstraint: ...
 
 	def Get(self, item1 = None) -> ToolingConstraint:
 		if isinstance(item1, str):
@@ -4303,6 +4247,8 @@ class ToolingConstraintCol(IdNameEntityCol[ToolingConstraint]):
 
 		if isinstance(item1, int):
 			return super().Get(item1)
+
+		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
 		return self.ToolingConstraintColList[index]
@@ -4316,9 +4262,12 @@ class ToolingConstraintCol(IdNameEntityCol[ToolingConstraint]):
 
 class DesignVariableCol(IdEntityCol[DesignVariable]):
 	def __init__(self, designVariableCol: _api.DesignVariableCol):
-		self.Entity = designVariableCol
-		self.CollectedClass = DesignVariable
-		self.DesignVariableColList = tuple([DesignVariable(designVariableCol) for designVariableCol in self.Entity])
+		self._Entity = designVariableCol
+		self._CollectedClass = DesignVariable
+
+	@property
+	def DesignVariableColList(self) -> tuple[DesignVariable]:
+		return tuple([DesignVariable(designVariableCol) for designVariableCol in self._Entity])
 
 	def __getitem__(self, index: int):
 		return self.DesignVariableColList[index]
@@ -4332,125 +4281,125 @@ class DesignVariableCol(IdEntityCol[DesignVariable]):
 
 class ZoneDesignProperty(DesignProperty):
 	def __init__(self, zoneDesignProperty: _api.ZoneDesignProperty):
-		self.Entity = zoneDesignProperty
+		self._Entity = zoneDesignProperty
 
 	@property
 	def ToolingConstraints(self) -> ToolingConstraintCol:
-		return ToolingConstraintCol(self.Entity.ToolingConstraints)
+		return ToolingConstraintCol(self._Entity.ToolingConstraints)
 
 	@property
 	def DesignVariables(self) -> DesignVariableCol:
-		return DesignVariableCol(self.Entity.DesignVariables)
+		return DesignVariableCol(self._Entity.DesignVariables)
 
 
 class Environment(ABC):
 	def __init__(self, environment: _api.Environment):
-		self.Entity = environment
+		self._Entity = environment
 
 	def SetLocation(self, location: str) -> None:
-		return self.Entity.SetLocation(location)
+		return self._Entity.SetLocation(location)
 
 	def Initialize(self) -> None:
-		return self.Entity.Initialize()
+		return self._Entity.Initialize()
 
 
 class FailureCriterionSetting(FailureSetting):
 	def __init__(self, failureCriterionSetting: _api.FailureCriterionSetting):
-		self.Entity = failureCriterionSetting
+		self._Entity = failureCriterionSetting
 
 
 class FailureModeSetting(FailureSetting):
 	def __init__(self, failureModeSetting: _api.FailureModeSetting):
-		self.Entity = failureModeSetting
+		self._Entity = failureModeSetting
 
 
 class HelperFunctions(ABC):
 	def __init__(self, helperFunctions: _api.HelperFunctions):
-		self.Entity = helperFunctions
+		self._Entity = helperFunctions
 
 	def NullableSingle(self, input: float) -> float:
-		return self.Entity.NullableSingle(input)
+		return self._Entity.NullableSingle(input)
 
 
 class TabularCorrectionFactorIndependentValue:
 	def __init__(self, tabularCorrectionFactorIndependentValue: _api.TabularCorrectionFactorIndependentValue):
-		self.Entity = tabularCorrectionFactorIndependentValue
+		self._Entity = tabularCorrectionFactorIndependentValue
 
 	@property
 	def BoolValue(self) -> bool:
-		return self.Entity.BoolValue
+		return self._Entity.BoolValue
 
 	@property
 	def DoubleValue(self) -> float:
-		return self.Entity.DoubleValue
+		return self._Entity.DoubleValue
 
 	@property
 	def IntValue(self) -> int:
-		return self.Entity.IntValue
+		return self._Entity.IntValue
 
 	@property
 	def ValueType(self) -> types.CorrectionValueType:
-		return types.CorrectionValueType[self.Entity.CorrectionValueType.ToString()]
+		return types.CorrectionValueType[self._Entity.CorrectionValueType.ToString()]
 
 
 class OrthotropicEffectiveLaminate:
 	def __init__(self, orthotropicEffectiveLaminate: _api.OrthotropicEffectiveLaminate):
-		self.Entity = orthotropicEffectiveLaminate
+		self._Entity = orthotropicEffectiveLaminate
 
 	@property
 	def Percent_tape_0(self) -> float:
-		return self.Entity.Percent_tape_0
+		return self._Entity.Percent_tape_0
 
 	@property
 	def Percent_tape_90(self) -> float:
-		return self.Entity.Percent_tape_90
+		return self._Entity.Percent_tape_90
 
 	@property
 	def Percent_tape_45(self) -> float:
-		return self.Entity.Percent_tape_45
+		return self._Entity.Percent_tape_45
 
 	@property
 	def Percent_fabric_0(self) -> float:
-		return self.Entity.Percent_fabric_0
+		return self._Entity.Percent_fabric_0
 
 	@property
 	def Percent_fabric_90(self) -> float:
-		return self.Entity.Percent_fabric_90
+		return self._Entity.Percent_fabric_90
 
 	@property
 	def Percent_fabric_45(self) -> float:
-		return self.Entity.Percent_fabric_45
+		return self._Entity.Percent_fabric_45
 
 	@property
 	def Tape_Orthotropic(self) -> str:
-		return self.Entity.Tape_Orthotropic
+		return self._Entity.Tape_Orthotropic
 
 	@property
 	def Fabric_Orthotropic(self) -> str:
-		return self.Entity.Fabric_Orthotropic
+		return self._Entity.Fabric_Orthotropic
 
 	@property
 	def Valid(self) -> bool:
-		return self.Entity.Valid
+		return self._Entity.Valid
 
 	@property
 	def Use_tape_allowables(self) -> bool:
-		return self.Entity.Use_tape_allowables
+		return self._Entity.Use_tape_allowables
 
 
 class Beam(Zone):
 	def __init__(self, beam: _api.Beam):
-		self.Entity = beam
+		self._Entity = beam
 
 	@property
 	def Length(self) -> float:
-		return self.Entity.Length
+		return self._Entity.Length
 
 
 class Panel(Zone):
 	def __init__(self, panel: _api.Panel):
-		self.Entity = panel
+		self._Entity = panel
 
 	@property
 	def Area(self) -> float:
-		return self.Entity.Area
+		return self._Entity.Area
