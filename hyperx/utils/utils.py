@@ -8,10 +8,9 @@ import csv
 from pathlib import Path
 from typing import Any
 
-from ..api import Db
+from ..api import Application
 
-
-def Open(hdbPath: os.PathLike) -> Db:
+def Open(hdbPath: os.PathLike) -> Application:
     '''Opens a HyperX database for script access.'''
     pass
 
