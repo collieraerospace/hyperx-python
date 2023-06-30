@@ -815,8 +815,6 @@ class Vector3d:
 		if isinstance(item1, Vector3d):
 			return self._Entity.Equals(item1._Entity)
 
-		return self._Entity.Equals(item1)
-
 		return self._Entity.Equals(item1._Entity)
 
 	def __eq__(self, other):
@@ -2420,8 +2418,6 @@ class Vector2d:
 	def Equals(self, item1 = None) -> bool:
 		if isinstance(item1, Vector2d):
 			return self._Entity.Equals(item1._Entity)
-
-		return self._Entity.Equals(item1)
 
 		return self._Entity.Equals(item1._Entity)
 
