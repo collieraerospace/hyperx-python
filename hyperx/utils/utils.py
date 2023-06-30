@@ -7,6 +7,7 @@ import subprocess
 import csv
 from pathlib import Path
 from typing import Any
+import errno
 
 from ..api import Application
 from ..library import _api
@@ -17,8 +18,7 @@ def Open(hdbPath: os.PathLike) -> Application:
         hdbPath = os.path.abspath(hdbPath)
     
     if not os.path.exists(hdbPath):
-        print(f'Could not find database at path {hdbPath}. Exiting script')
-        return
+        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), hdbPath)
 
     _api.Environment.Initialize()
     database = _api.Application()
