@@ -1534,6 +1534,50 @@ class FoamTemperature:
 	def C(self) -> float:
 		return self._Entity.C
 
+	@Temperature.setter
+	def Temperature(self, value: float) -> None:
+		self._Entity.Temperature = value
+
+	@Et.setter
+	def Et(self, value: float) -> None:
+		self._Entity.Et = value
+
+	@Ec.setter
+	def Ec(self, value: float) -> None:
+		self._Entity.Ec = value
+
+	@G.setter
+	def G(self, value: float) -> None:
+		self._Entity.G = value
+
+	@Ef.setter
+	def Ef(self, value: float) -> None:
+		self._Entity.Ef = value
+
+	@Ftu.setter
+	def Ftu(self, value: float) -> None:
+		self._Entity.Ftu = value
+
+	@Fcu.setter
+	def Fcu(self, value: float) -> None:
+		self._Entity.Fcu = value
+
+	@Fsu.setter
+	def Fsu(self, value: float) -> None:
+		self._Entity.Fsu = value
+
+	@Ffu.setter
+	def Ffu(self, value: float) -> None:
+		self._Entity.Ffu = value
+
+	@K.setter
+	def K(self, value: float) -> None:
+		self._Entity.K = value
+
+	@C.setter
+	def C(self, value: float) -> None:
+		self._Entity.C = value
+
 
 class Foam:
 	def __init__(self, foam: _api.Foam):
@@ -1598,6 +1642,58 @@ class Foam:
 	@property
 	def Manufacturer(self) -> str:
 		return self._Entity.Manufacturer
+
+	@MaterialFamilyName.setter
+	def MaterialFamilyName(self, value: str) -> None:
+		self._Entity.MaterialFamilyName = value
+
+	@Name.setter
+	def Name(self, value: str) -> None:
+		self._Entity.Name = value
+
+	@Wet.setter
+	def Wet(self, value: bool) -> None:
+		self._Entity.Wet = value
+
+	@Density.setter
+	def Density(self, value: float) -> None:
+		self._Entity.Density = value
+
+	@Form.setter
+	def Form(self, value: str) -> None:
+		self._Entity.Form = value
+
+	@Specification.setter
+	def Specification(self, value: str) -> None:
+		self._Entity.Specification = value
+
+	@MaterialDescription.setter
+	def MaterialDescription(self, value: str) -> None:
+		self._Entity.MaterialDescription = value
+
+	@UserNote.setter
+	def UserNote(self, value: str) -> None:
+		self._Entity.UserNote = value
+
+	@FemMaterialId.setter
+	def FemMaterialId(self, value: int) -> None:
+		self._Entity.FemMaterialId = value
+
+	@Cost.setter
+	def Cost(self, value: float) -> None:
+		self._Entity.Cost = value
+
+	@BucklingStiffnessKnockdown.setter
+	def BucklingStiffnessKnockdown(self, value: float) -> None:
+		self._Entity.BucklingStiffnessKnockdown = value
+
+	@Absorption.setter
+	def Absorption(self, value: float) -> None:
+		self._Entity.Absorption = value
+
+	@Manufacturer.setter
+	def Manufacturer(self, value: str) -> None:
+		self._Entity.Manufacturer = value
 
 	def AddTemperatureProperty(self, temperature: float, et: float = None, ec: float = None, g: float = None, ef: float = None, ftu: float = None, fcu: float = None, fsu: float = None, ffu: float = None, k: float = None, c: float = None) -> FoamTemperature:
 		return FoamTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, ef, ftu, fcu, fsu, ffu, k, c))
@@ -1684,6 +1780,74 @@ class HoneycombTemperature:
 	def C(self) -> float:
 		return self._Entity.C
 
+	@Temperature.setter
+	def Temperature(self, value: float) -> None:
+		self._Entity.Temperature = value
+
+	@Et.setter
+	def Et(self, value: float) -> None:
+		self._Entity.Et = value
+
+	@Ec.setter
+	def Ec(self, value: float) -> None:
+		self._Entity.Ec = value
+
+	@Gw.setter
+	def Gw(self, value: float) -> None:
+		self._Entity.Gw = value
+
+	@Gl.setter
+	def Gl(self, value: float) -> None:
+		self._Entity.Gl = value
+
+	@Ftu.setter
+	def Ftu(self, value: float) -> None:
+		self._Entity.Ftu = value
+
+	@Fcus.setter
+	def Fcus(self, value: float) -> None:
+		self._Entity.Fcus = value
+
+	@Fcub.setter
+	def Fcub(self, value: float) -> None:
+		self._Entity.Fcub = value
+
+	@Fcuc.setter
+	def Fcuc(self, value: float) -> None:
+		self._Entity.Fcuc = value
+
+	@Fsuw.setter
+	def Fsuw(self, value: float) -> None:
+		self._Entity.Fsuw = value
+
+	@Fsul.setter
+	def Fsul(self, value: float) -> None:
+		self._Entity.Fsul = value
+
+	@SScfl.setter
+	def SScfl(self, value: float) -> None:
+		self._Entity.SScfl = value
+
+	@SScfh.setter
+	def SScfh(self, value: float) -> None:
+		self._Entity.SScfh = value
+
+	@Kl.setter
+	def Kl(self, value: float) -> None:
+		self._Entity.Kl = value
+
+	@Kw.setter
+	def Kw(self, value: float) -> None:
+		self._Entity.Kw = value
+
+	@Kt.setter
+	def Kt(self, value: float) -> None:
+		self._Entity.Kt = value
+
+	@C.setter
+	def C(self, value: float) -> None:
+		self._Entity.C = value
+
 
 class Honeycomb:
 	def __init__(self, honeycomb: _api.Honeycomb):
@@ -1744,6 +1908,54 @@ class Honeycomb:
 	@property
 	def Manufacturer(self) -> str:
 		return self._Entity.Manufacturer
+
+	@MaterialFamilyName.setter
+	def MaterialFamilyName(self, value: str) -> None:
+		self._Entity.MaterialFamilyName = value
+
+	@Name.setter
+	def Name(self, value: str) -> None:
+		self._Entity.Name = value
+
+	@Wet.setter
+	def Wet(self, value: bool) -> None:
+		self._Entity.Wet = value
+
+	@Density.setter
+	def Density(self, value: float) -> None:
+		self._Entity.Density = value
+
+	@Form.setter
+	def Form(self, value: str) -> None:
+		self._Entity.Form = value
+
+	@Specification.setter
+	def Specification(self, value: str) -> None:
+		self._Entity.Specification = value
+
+	@MaterialDescription.setter
+	def MaterialDescription(self, value: str) -> None:
+		self._Entity.MaterialDescription = value
+
+	@UserNote.setter
+	def UserNote(self, value: str) -> None:
+		self._Entity.UserNote = value
+
+	@FemMaterialId.setter
+	def FemMaterialId(self, value: int) -> None:
+		self._Entity.FemMaterialId = value
+
+	@Cost.setter
+	def Cost(self, value: float) -> None:
+		self._Entity.Cost = value
+
+	@CellSize.setter
+	def CellSize(self, value: float) -> None:
+		self._Entity.CellSize = value
+
+	@Manufacturer.setter
+	def Manufacturer(self, value: str) -> None:
+		self._Entity.Manufacturer = value
 
 	def AddTemperatureProperty(self, temperature: float, et: float = None, ec: float = None, gw: float = None, gl: float = None, ftu: float = None, fcus: float = None, fcub: float = None, fcuc: float = None, fsuw: float = None, fsul: float = None, sScfl: float = None, sScfh: float = None, k1: float = None, k2: float = None, k3: float = None, c: float = None) -> HoneycombTemperature:
 		return HoneycombTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, gw, gl, ftu, fcus, fcub, fcuc, fsuw, fsul, sScfl, sScfh, k1, k2, k3, c))
@@ -1898,6 +2110,142 @@ class IsotropicTemperature:
 	def FcFatigue(self) -> float:
 		return self._Entity.FcFatigue
 
+	@Temperature.setter
+	def Temperature(self, value: float) -> None:
+		self._Entity.Temperature = value
+
+	@Et.setter
+	def Et(self, value: float) -> None:
+		self._Entity.Et = value
+
+	@Ec.setter
+	def Ec(self, value: float) -> None:
+		self._Entity.Ec = value
+
+	@G.setter
+	def G(self, value: float) -> None:
+		self._Entity.G = value
+
+	@n.setter
+	def n(self, value: float) -> None:
+		self._Entity.n = value
+
+	@F02.setter
+	def F02(self, value: float) -> None:
+		self._Entity.F02 = value
+
+	@FtuL.setter
+	def FtuL(self, value: float) -> None:
+		self._Entity.FtuL = value
+
+	@FtyL.setter
+	def FtyL(self, value: float) -> None:
+		self._Entity.FtyL = value
+
+	@FcyL.setter
+	def FcyL(self, value: float) -> None:
+		self._Entity.FcyL = value
+
+	@FtuLT.setter
+	def FtuLT(self, value: float) -> None:
+		self._Entity.FtuLT = value
+
+	@FtyLT.setter
+	def FtyLT(self, value: float) -> None:
+		self._Entity.FtyLT = value
+
+	@FcyLT.setter
+	def FcyLT(self, value: float) -> None:
+		self._Entity.FcyLT = value
+
+	@Fsu.setter
+	def Fsu(self, value: float) -> None:
+		self._Entity.Fsu = value
+
+	@Fbru15.setter
+	def Fbru15(self, value: float) -> None:
+		self._Entity.Fbru15 = value
+
+	@Fbry15.setter
+	def Fbry15(self, value: float) -> None:
+		self._Entity.Fbry15 = value
+
+	@Fbru20.setter
+	def Fbru20(self, value: float) -> None:
+		self._Entity.Fbru20 = value
+
+	@Fbry20.setter
+	def Fbry20(self, value: float) -> None:
+		self._Entity.Fbry20 = value
+
+	@alpha.setter
+	def alpha(self, value: float) -> None:
+		self._Entity.alpha = value
+
+	@K.setter
+	def K(self, value: float) -> None:
+		self._Entity.K = value
+
+	@C.setter
+	def C(self, value: float) -> None:
+		self._Entity.C = value
+
+	@etyL.setter
+	def etyL(self, value: float) -> None:
+		self._Entity.etyL = value
+
+	@ecyL.setter
+	def ecyL(self, value: float) -> None:
+		self._Entity.ecyL = value
+
+	@etyLT.setter
+	def etyLT(self, value: float) -> None:
+		self._Entity.etyLT = value
+
+	@ecyLT.setter
+	def ecyLT(self, value: float) -> None:
+		self._Entity.ecyLT = value
+
+	@esu.setter
+	def esu(self, value: float) -> None:
+		self._Entity.esu = value
+
+	@Fpadh.setter
+	def Fpadh(self, value: float) -> None:
+		self._Entity.Fpadh = value
+
+	@Fsadh.setter
+	def Fsadh(self, value: float) -> None:
+		self._Entity.Fsadh = value
+
+	@esadh.setter
+	def esadh(self, value: float) -> None:
+		self._Entity.esadh = value
+
+	@cd.setter
+	def cd(self, value: float) -> None:
+		self._Entity.cd = value
+
+	@Ffwt.setter
+	def Ffwt(self, value: float) -> None:
+		self._Entity.Ffwt = value
+
+	@Ffxz.setter
+	def Ffxz(self, value: float) -> None:
+		self._Entity.Ffxz = value
+
+	@Ffyz.setter
+	def Ffyz(self, value: float) -> None:
+		self._Entity.Ffyz = value
+
+	@FtFatigue.setter
+	def FtFatigue(self, value: float) -> None:
+		self._Entity.FtFatigue = value
+
+	@FcFatigue.setter
+	def FcFatigue(self, value: float) -> None:
+		self._Entity.FcFatigue = value
+
 
 class Isotropic:
 	def __init__(self, isotropic: _api.Isotropic):
@@ -1959,6 +2307,54 @@ class Isotropic:
 	def BucklingStiffnessKnockdown(self) -> float:
 		return self._Entity.BucklingStiffnessKnockdown
 
+	@MaterialFamilyName.setter
+	def MaterialFamilyName(self, value: str) -> None:
+		self._Entity.MaterialFamilyName = value
+
+	@Name.setter
+	def Name(self, value: str) -> None:
+		self._Entity.Name = value
+
+	@Form.setter
+	def Form(self, value: str) -> None:
+		self._Entity.Form = value
+
+	@Specification.setter
+	def Specification(self, value: str) -> None:
+		self._Entity.Specification = value
+
+	@Temper.setter
+	def Temper(self, value: str) -> None:
+		self._Entity.Temper = value
+
+	@Basis.setter
+	def Basis(self, value: str) -> None:
+		self._Entity.Basis = value
+
+	@Density.setter
+	def Density(self, value: float) -> None:
+		self._Entity.Density = value
+
+	@MaterialDescription.setter
+	def MaterialDescription(self, value: str) -> None:
+		self._Entity.MaterialDescription = value
+
+	@UserNote.setter
+	def UserNote(self, value: str) -> None:
+		self._Entity.UserNote = value
+
+	@FemMaterialId.setter
+	def FemMaterialId(self, value: int) -> None:
+		self._Entity.FemMaterialId = value
+
+	@Cost.setter
+	def Cost(self, value: float) -> None:
+		self._Entity.Cost = value
+
+	@BucklingStiffnessKnockdown.setter
+	def BucklingStiffnessKnockdown(self, value: float) -> None:
+		self._Entity.BucklingStiffnessKnockdown = value
+
 	def AddTemperatureProperty(self, temperature: float, et: float = None, ec: float = None, g: float = None, n: float = None, f02: float = None, ftuL: float = None, ftyL: float = None, fcyL: float = None, ftuLT: float = None, ftyLT: float = None, fcyLT: float = None, fsu: float = None, fbru15: float = None, fbry15: float = None, fbru20: float = None, fbry20: float = None, alpha: float = None, k: float = None, c: float = None, etyL: float = None, ecyL: float = None, etyLT: float = None, ecyLT: float = None, esu: float = None, fpadh: float = None, fsadh: float = None, esadh: float = None, cd: float = None, ffwt: float = None, ffxz: float = None, ffyz: float = None, ftFatigue: float = None, fcFatigue: float = None) -> IsotropicTemperature:
 		return IsotropicTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, n, f02, ftuL, ftyL, fcyL, ftuLT, ftyLT, fcyLT, fsu, fbru15, fbry15, fbru20, fbry20, alpha, k, c, etyL, ecyL, etyLT, ecyLT, esu, fpadh, fsadh, esadh, cd, ffwt, ffxz, ffyz, ftFatigue, fcFatigue))
 
@@ -2008,6 +2404,10 @@ class OrthotropicCorrectionFactorValue:
 	@property
 	def Value(self) -> float:
 		return self._Entity.Value
+
+	@Value.setter
+	def Value(self, value: float) -> None:
+		self._Entity.Value = value
 
 
 class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
@@ -2092,6 +2492,22 @@ class OrthotropicAllowableCurvePoint:
 	def Y(self) -> float:
 		return self._Entity.Y
 
+	@Property_ID.setter
+	def Property_ID(self, value: types.AllowablePropertyName) -> None:
+		self._Entity.Property_ID = _types.AllowablePropertyName(value.value)
+
+	@Temperature.setter
+	def Temperature(self, value: float) -> None:
+		self._Entity.Temperature = value
+
+	@X.setter
+	def X(self, value: float) -> None:
+		self._Entity.X = value
+
+	@Y.setter
+	def Y(self, value: float) -> None:
+		self._Entity.Y = value
+
 
 class OrthotropicLaminateAllowable:
 	def __init__(self, orthotropicLaminateAllowable: _api.OrthotropicLaminateAllowable):
@@ -2104,6 +2520,14 @@ class OrthotropicLaminateAllowable:
 	@property
 	def Method_ID(self) -> types.AllowableMethodName:
 		return types.AllowableMethodName[self._Entity.AllowableMethodName.ToString()]
+
+	@Property_ID.setter
+	def Property_ID(self, value: types.AllowablePropertyName) -> None:
+		self._Entity.Property_ID = _types.AllowablePropertyName(value.value)
+
+	@Method_ID.setter
+	def Method_ID(self, value: types.AllowableMethodName) -> None:
+		self._Entity.Method_ID = _types.AllowableMethodName(value.value)
 
 
 class OrthotropicTemperature:
@@ -2266,6 +2690,162 @@ class OrthotropicTemperature:
 	def TTc(self) -> float:
 		return self._Entity.TTc
 
+	@Temperature.setter
+	def Temperature(self, value: float) -> None:
+		self._Entity.Temperature = value
+
+	@Et1.setter
+	def Et1(self, value: float) -> None:
+		self._Entity.Et1 = value
+
+	@Et2.setter
+	def Et2(self, value: float) -> None:
+		self._Entity.Et2 = value
+
+	@vt12.setter
+	def vt12(self, value: float) -> None:
+		self._Entity.vt12 = value
+
+	@Ec1.setter
+	def Ec1(self, value: float) -> None:
+		self._Entity.Ec1 = value
+
+	@Ec2.setter
+	def Ec2(self, value: float) -> None:
+		self._Entity.Ec2 = value
+
+	@vc12.setter
+	def vc12(self, value: float) -> None:
+		self._Entity.vc12 = value
+
+	@G12.setter
+	def G12(self, value: float) -> None:
+		self._Entity.G12 = value
+
+	@G13.setter
+	def G13(self, value: float) -> None:
+		self._Entity.G13 = value
+
+	@G23.setter
+	def G23(self, value: float) -> None:
+		self._Entity.G23 = value
+
+	@Ftu1.setter
+	def Ftu1(self, value: float) -> None:
+		self._Entity.Ftu1 = value
+
+	@Ftu2.setter
+	def Ftu2(self, value: float) -> None:
+		self._Entity.Ftu2 = value
+
+	@Fcu1.setter
+	def Fcu1(self, value: float) -> None:
+		self._Entity.Fcu1 = value
+
+	@Fcu2.setter
+	def Fcu2(self, value: float) -> None:
+		self._Entity.Fcu2 = value
+
+	@Fsu12.setter
+	def Fsu12(self, value: float) -> None:
+		self._Entity.Fsu12 = value
+
+	@Fsu13.setter
+	def Fsu13(self, value: float) -> None:
+		self._Entity.Fsu13 = value
+
+	@Fsu23.setter
+	def Fsu23(self, value: float) -> None:
+		self._Entity.Fsu23 = value
+
+	@GIc.setter
+	def GIc(self, value: float) -> None:
+		self._Entity.GIc = value
+
+	@alpha1.setter
+	def alpha1(self, value: float) -> None:
+		self._Entity.alpha1 = value
+
+	@alpha2.setter
+	def alpha2(self, value: float) -> None:
+		self._Entity.alpha2 = value
+
+	@K1.setter
+	def K1(self, value: float) -> None:
+		self._Entity.K1 = value
+
+	@K2.setter
+	def K2(self, value: float) -> None:
+		self._Entity.K2 = value
+
+	@C.setter
+	def C(self, value: float) -> None:
+		self._Entity.C = value
+
+	@etu1.setter
+	def etu1(self, value: float) -> None:
+		self._Entity.etu1 = value
+
+	@etu2.setter
+	def etu2(self, value: float) -> None:
+		self._Entity.etu2 = value
+
+	@ecu1.setter
+	def ecu1(self, value: float) -> None:
+		self._Entity.ecu1 = value
+
+	@ecu2.setter
+	def ecu2(self, value: float) -> None:
+		self._Entity.ecu2 = value
+
+	@ecuoh.setter
+	def ecuoh(self, value: float) -> None:
+		self._Entity.ecuoh = value
+
+	@ecuai.setter
+	def ecuai(self, value: float) -> None:
+		self._Entity.ecuai = value
+
+	@esu12.setter
+	def esu12(self, value: float) -> None:
+		self._Entity.esu12 = value
+
+	@Ftu3.setter
+	def Ftu3(self, value: float) -> None:
+		self._Entity.Ftu3 = value
+
+	@GIIc.setter
+	def GIIc(self, value: float) -> None:
+		self._Entity.GIIc = value
+
+	@d0Tension.setter
+	def d0Tension(self, value: float) -> None:
+		self._Entity.d0Tension = value
+
+	@cd.setter
+	def cd(self, value: float) -> None:
+		self._Entity.cd = value
+
+	@d0Compression.setter
+	def d0Compression(self, value: float) -> None:
+		self._Entity.d0Compression = value
+
+	@TLt.setter
+	def TLt(self, value: float) -> None:
+		self._Entity.TLt = value
+
+	@TLc.setter
+	def TLc(self, value: float) -> None:
+		self._Entity.TLc = value
+
+	@TTt.setter
+	def TTt(self, value: float) -> None:
+		self._Entity.TTt = value
+
+	@TTc.setter
+	def TTc(self, value: float) -> None:
+		self._Entity.TTc = value
+
 	def AddCurvePoint(self, property: types.AllowablePropertyName, x: float, y: float) -> OrthotropicAllowableCurvePoint:
 		return OrthotropicAllowableCurvePoint(self._Entity.AddCurvePoint(_types.AllowablePropertyName(property.value), x, y))
 
@@ -2359,6 +2939,78 @@ class Orthotropic:
 	@property
 	def BucklingStiffnessKnockdown(self) -> float:
 		return self._Entity.BucklingStiffnessKnockdown
+
+	@MaterialFamilyName.setter
+	def MaterialFamilyName(self, value: str) -> None:
+		self._Entity.MaterialFamilyName = value
+
+	@Name.setter
+	def Name(self, value: str) -> None:
+		self._Entity.Name = value
+
+	@Form.setter
+	def Form(self, value: str) -> None:
+		self._Entity.Form = value
+
+	@Specification.setter
+	def Specification(self, value: str) -> None:
+		self._Entity.Specification = value
+
+	@Basis.setter
+	def Basis(self, value: str) -> None:
+		self._Entity.Basis = value
+
+	@Wet.setter
+	def Wet(self, value: bool) -> None:
+		self._Entity.Wet = value
+
+	@Thickness.setter
+	def Thickness(self, value: float) -> None:
+		self._Entity.Thickness = value
+
+	@Density.setter
+	def Density(self, value: float) -> None:
+		self._Entity.Density = value
+
+	@FiberVolume.setter
+	def FiberVolume(self, value: float) -> None:
+		self._Entity.FiberVolume = value
+
+	@GlassTransition.setter
+	def GlassTransition(self, value: float) -> None:
+		self._Entity.GlassTransition = value
+
+	@Manufacturer.setter
+	def Manufacturer(self, value: str) -> None:
+		self._Entity.Manufacturer = value
+
+	@Processes.setter
+	def Processes(self, value: str) -> None:
+		self._Entity.Processes = value
+
+	@MaterialDescription.setter
+	def MaterialDescription(self, value: str) -> None:
+		self._Entity.MaterialDescription = value
+
+	@UserNote.setter
+	def UserNote(self, value: str) -> None:
+		self._Entity.UserNote = value
+
+	@BendingCorrectionFactor.setter
+	def BendingCorrectionFactor(self, value: float) -> None:
+		self._Entity.BendingCorrectionFactor = value
+
+	@FemMaterialId.setter
+	def FemMaterialId(self, value: int) -> None:
+		self._Entity.FemMaterialId = value
+
+	@Cost.setter
+	def Cost(self, value: float) -> None:
+		self._Entity.Cost = value
+
+	@BucklingStiffnessKnockdown.setter
+	def BucklingStiffnessKnockdown(self, value: float) -> None:
+		self._Entity.BucklingStiffnessKnockdown = value
 
 	def AddTemperatureProperty(self, temperature: float, et1: float = None, et2: float = None, vt12: float = None, ec1: float = None, ec2: float = None, vc12: float = None, g12: float = None, ftu1: float = None, ftu2: float = None, fcu1: float = None, fcu2: float = None, fsu12: float = None, alpha1: float = None, alpha2: float = None, etu1: float = None, etu2: float = None, ecu1: float = None, ecu2: float = None, esu12: float = None) -> OrthotropicTemperature:
 		return OrthotropicTemperature(self._Entity.AddTemperatureProperty(temperature, et1, et2, vt12, ec1, ec2, vc12, g12, ftu1, ftu2, fcu1, fcu2, fsu12, alpha1, alpha2, etu1, etu2, ecu1, ecu2, esu12))
@@ -2741,6 +3393,66 @@ class SectionCut(IdNameEntity):
 	@property
 	def BeamElements(self) -> ElementCol:
 		return ElementCol(self._Entity.BeamElements)
+
+	@ReferencePoint.setter
+	def ReferencePoint(self, value: types.SectionCutPropertyLocation) -> None:
+		self._Entity.ReferencePoint = _types.SectionCutPropertyLocation(value.value)
+
+	@MaxAngleBound.setter
+	def MaxAngleBound(self, value: float) -> None:
+		self._Entity.MaxAngleBound = value
+
+	@MinAngleBound.setter
+	def MinAngleBound(self, value: float) -> None:
+		self._Entity.MinAngleBound = value
+
+	@MinStiffnessEihh.setter
+	def MinStiffnessEihh(self, value: float) -> None:
+		self._Entity.MinStiffnessEihh = value
+
+	@MinStiffnessEivv.setter
+	def MinStiffnessEivv(self, value: float) -> None:
+		self._Entity.MinStiffnessEivv = value
+
+	@MinStiffnessGJ.setter
+	def MinStiffnessGJ(self, value: float) -> None:
+		self._Entity.MinStiffnessGJ = value
+
+	@ZoneStiffnessDistribution.setter
+	def ZoneStiffnessDistribution(self, value: float) -> None:
+		self._Entity.ZoneStiffnessDistribution = value
+
+	@CN_hmax.setter
+	def CN_hmax(self, value: float) -> None:
+		self._Entity.CN_hmax = value
+
+	@CN_hmin.setter
+	def CN_hmin(self, value: float) -> None:
+		self._Entity.CN_hmin = value
+
+	@CN_vmax.setter
+	def CN_vmax(self, value: float) -> None:
+		self._Entity.CN_vmax = value
+
+	@CN_vmin.setter
+	def CN_vmin(self, value: float) -> None:
+		self._Entity.CN_vmin = value
+
+	@CQ_hmax.setter
+	def CQ_hmax(self, value: float) -> None:
+		self._Entity.CQ_hmax = value
+
+	@CQ_hmin.setter
+	def CQ_hmin(self, value: float) -> None:
+		self._Entity.CQ_hmin = value
+
+	@CQ_vmax.setter
+	def CQ_vmax(self, value: float) -> None:
+		self._Entity.CQ_vmax = value
+
+	@CQ_vmin.setter
+	def CQ_vmin(self, value: float) -> None:
+		self._Entity.CQ_vmin = value
 
 	def AlignToHorizontalPrincipalAxes(self) -> None:
 		return self._Entity.AlignToHorizontalPrincipalAxes()
@@ -4067,6 +4779,10 @@ class Application:
 	def UserName(self) -> str:
 		return self._Entity.UserName
 
+	@UserName.setter
+	def UserName(self, value: str) -> None:
+		self._Entity.UserName = value
+
 	def CloseDatabase(self, delay: int = 0) -> None:
 		return self._Entity.CloseDatabase(delay)
 
@@ -4184,6 +4900,22 @@ class DesignVariable(IdEntity):
 	@property
 	def UseAnalysis(self) -> bool:
 		return self._Entity.UseAnalysis
+
+	@Max.setter
+	def Max(self, value: float) -> None:
+		self._Entity.Max = value
+
+	@Min.setter
+	def Min(self, value: float) -> None:
+		self._Entity.Min = value
+
+	@StepSize.setter
+	def StepSize(self, value: float) -> None:
+		self._Entity.StepSize = value
+
+	@UseAnalysis.setter
+	def UseAnalysis(self, value: bool) -> None:
+		self._Entity.UseAnalysis = value
 
 	def AddMaterials(self, materialIds: list[int]) -> None:
 		materialIdsList = MakeCSharpIntList(materialIds)
