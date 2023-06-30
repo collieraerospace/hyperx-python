@@ -23,7 +23,7 @@ def Open(hdbPath: os.PathLike) -> Application:
     _api.Environment.Initialize()
     database = _api.Application()
     database.OpenDatabase(hdbPath)
-    return database
+    return Application(database)
 
 
 def OpenWithDefault(filepath: str):
