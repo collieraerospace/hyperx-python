@@ -4,8 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hyperx"
-version = "0.0.3"
+version = "0.1.0"
 authors = [
+  { name="Kelly Ann Smith", email="kellyann.smith@collieraerospace.com" }
   { name="Noah Prezant", email="noah.prezant@collieraerospace.com" },
 ]
 description = "HyperX scripting for Python"
