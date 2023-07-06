@@ -200,7 +200,7 @@ class JointAnalysisResult(AnalysisResult):
 
 	@property
 	def ObjectId(self) -> types.JointObject:
-		return types.JointObject[self._Entity.JointObject.ToString()]
+		return types.JointObject[self._Entity.ObjectId.ToString()]
 
 
 class ZoneAnalysisConceptResult(AnalysisResult):
@@ -209,7 +209,7 @@ class ZoneAnalysisConceptResult(AnalysisResult):
 
 	@property
 	def ConceptId(self) -> types.FamilyConceptUID:
-		return types.FamilyConceptUID[self._Entity.FamilyConceptUID.ToString()]
+		return types.FamilyConceptUID[self._Entity.ConceptId.ToString()]
 
 
 class ZoneAnalysisObjectResult(AnalysisResult):
@@ -218,7 +218,7 @@ class ZoneAnalysisObjectResult(AnalysisResult):
 
 	@property
 	def ObjectId(self) -> types.FamilyObjectUID:
-		return types.FamilyObjectUID[self._Entity.FamilyObjectUID.ToString()]
+		return types.FamilyObjectUID[self._Entity.ObjectId.ToString()]
 
 
 class AssignableProperty(IdNameEntity):
@@ -262,7 +262,7 @@ class FailureSetting(IdNameEntity):
 
 	@property
 	def DataType(self) -> types.UserConstantDataType:
-		return types.UserConstantDataType[self._Entity.UserConstantDataType.ToString()]
+		return types.UserConstantDataType[self._Entity.DataType.ToString()]
 
 	@property
 	def DefaultValue(self) -> str:
@@ -276,7 +276,7 @@ class FailureSetting(IdNameEntity):
 	def EnumValues(self) -> dict[int, str]:
 		enumValuesDict = {}
 		for kvp in self._Entity.EnumValues:
-			enumValuesDict[int[kvp.Key.ToString()]] = str(kvp.Value)
+			enumValuesDict[int(kvp.Key)] = str(kvp.Value)
 
 		return enumValuesDict
 
@@ -662,7 +662,7 @@ class DesignLoadSubcase(IdNameEntity):
 
 	@property
 	def SolutionType(self) -> types.FeaSolutionType:
-		return types.FeaSolutionType[self._Entity.FeaSolutionType.ToString()]
+		return types.FeaSolutionType[self._Entity.SolutionType.ToString()]
 
 
 class DesignLoadSubcaseMultiplier(IdNameEntity):
@@ -832,7 +832,7 @@ class DiscreteFieldTable(IdNameEntityRenameable):
 	def Columns(self) -> dict[int, str]:
 		columnsDict = {}
 		for kvp in self._Entity.Columns:
-			columnsDict[int[kvp.Key.ToString()]] = str(kvp.Value)
+			columnsDict[int(kvp.Key)] = str(kvp.Value)
 
 		return columnsDict
 
@@ -842,15 +842,15 @@ class DiscreteFieldTable(IdNameEntityRenameable):
 
 	@property
 	def DataType(self) -> types.DiscreteFieldDataType:
-		return types.DiscreteFieldDataType[self._Entity.DiscreteFieldDataType.ToString()]
+		return types.DiscreteFieldDataType[self._Entity.DataType.ToString()]
 
 	@property
 	def PhysicalEntityType(self) -> types.DiscreteFieldPhysicalEntityType:
-		return types.DiscreteFieldPhysicalEntityType[self._Entity.DiscreteFieldPhysicalEntityType.ToString()]
+		return types.DiscreteFieldPhysicalEntityType[self._Entity.PhysicalEntityType.ToString()]
 
 	@property
 	def PointIds(self) -> list[Vector3d]:
-		return [Vector3d[vector3d.ToString()] for vector3d in self._Entity.PointIds]
+		return [Vector3d(vector3d) for vector3d in self._Entity.PointIds]
 
 	@property
 	def RowCount(self) -> int:
@@ -2378,7 +2378,7 @@ class OrthotropicCorrectionFactorBase(ABC):
 
 	@property
 	def PropertyId(self) -> types.CorrectionProperty:
-		return types.CorrectionProperty[self._Entity.CorrectionProperty.ToString()]
+		return types.CorrectionProperty[self._Entity.PropertyId.ToString()]
 
 
 class OrthotropicCorrectionFactorValue:
@@ -2387,19 +2387,19 @@ class OrthotropicCorrectionFactorValue:
 
 	@property
 	def Property(self) -> types.CorrectionProperty:
-		return types.CorrectionProperty[self._Entity.CorrectionProperty.ToString()]
+		return types.CorrectionProperty[self._Entity.Property.ToString()]
 
 	@property
 	def Correction(self) -> types.CorrectionId:
-		return types.CorrectionId[self._Entity.CorrectionId.ToString()]
+		return types.CorrectionId[self._Entity.Correction.ToString()]
 
 	@property
 	def Equation(self) -> types.CorrectionEquation:
-		return types.CorrectionEquation[self._Entity.CorrectionEquation.ToString()]
+		return types.CorrectionEquation[self._Entity.Equation.ToString()]
 
 	@property
 	def EquationParameter(self) -> types.EquationParameterId:
-		return types.EquationParameterId[self._Entity.EquationParameterId.ToString()]
+		return types.EquationParameterId[self._Entity.EquationParameter.ToString()]
 
 	@property
 	def Value(self) -> float:
@@ -2416,7 +2416,7 @@ class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
 
 	@property
 	def Equation(self) -> types.CorrectionEquation:
-		return types.CorrectionEquation[self._Entity.CorrectionEquation.ToString()]
+		return types.CorrectionEquation[self._Entity.Equation.ToString()]
 
 	def AddCorrectionFactorValue(self, equationParameterName: types.EquationParameterId, valueToAdd: float) -> OrthotropicCorrectionFactorValue:
 		return OrthotropicCorrectionFactorValue(self._Entity.AddCorrectionFactorValue(_types.EquationParameterId(equationParameterName.value), valueToAdd))
@@ -2439,7 +2439,7 @@ class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
 	def CorrectionFactorRows(self) -> dict[int, TabularCorrectionFactorRow]:
 		correctionFactorRowsDict = {}
 		for kvp in self._Entity.CorrectionFactorRows:
-			correctionFactorRowsDict[int[kvp.Key.ToString()]] = TabularCorrectionFactorRow(kvp.Value)
+			correctionFactorRowsDict[int(kvp.Key)] = TabularCorrectionFactorRow(kvp.Value)
 
 		return correctionFactorRowsDict
 
@@ -2478,7 +2478,7 @@ class OrthotropicAllowableCurvePoint:
 
 	@property
 	def Property_ID(self) -> types.AllowablePropertyName:
-		return types.AllowablePropertyName[self._Entity.AllowablePropertyName.ToString()]
+		return types.AllowablePropertyName[self._Entity.Property_ID.ToString()]
 
 	@property
 	def Temperature(self) -> float:
@@ -2515,11 +2515,11 @@ class OrthotropicLaminateAllowable:
 
 	@property
 	def Property_ID(self) -> types.AllowablePropertyName:
-		return types.AllowablePropertyName[self._Entity.AllowablePropertyName.ToString()]
+		return types.AllowablePropertyName[self._Entity.Property_ID.ToString()]
 
 	@property
 	def Method_ID(self) -> types.AllowableMethodName:
-		return types.AllowableMethodName[self._Entity.AllowableMethodName.ToString()]
+		return types.AllowableMethodName[self._Entity.Method_ID.ToString()]
 
 	@Property_ID.setter
 	def Property_ID(self, value: types.AllowablePropertyName) -> None:
@@ -3256,7 +3256,7 @@ class SectionCut(IdNameEntity):
 
 	@property
 	def ReferencePoint(self) -> types.SectionCutPropertyLocation:
-		return types.SectionCutPropertyLocation[self._Entity.SectionCutPropertyLocation.ToString()]
+		return types.SectionCutPropertyLocation[self._Entity.ReferencePoint.ToString()]
 
 	@property
 	def HorizontalVector(self) -> Vector3d:
@@ -4355,7 +4355,7 @@ class Project:
 
 	@property
 	def FemFormat(self) -> types.ProjectModelFormat:
-		return types.ProjectModelFormat[self._Entity.ProjectModelFormat.ToString()]
+		return types.ProjectModelFormat[self._Entity.FemFormat.ToString()]
 
 	def Upload(self, uploadSetName: str, company: str, program: str, tags: list[str], notes: str, zoneIds: set[int], jointIds: set[int]) -> bool:
 		tagsList = List[str]()
@@ -5041,7 +5041,7 @@ class TabularCorrectionFactorIndependentValue:
 
 	@property
 	def ValueType(self) -> types.CorrectionValueType:
-		return types.CorrectionValueType[self._Entity.CorrectionValueType.ToString()]
+		return types.CorrectionValueType[self._Entity.ValueType.ToString()]
 
 
 class OrthotropicEffectiveLaminate:
