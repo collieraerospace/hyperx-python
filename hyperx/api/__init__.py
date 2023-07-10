@@ -4864,15 +4864,6 @@ class ToolingConstraint(IdNameEntity):
 		return self._Entity.SetToValue(value)
 
 
-class DesignVariableMaterial:
-	def __init__(self, designVariableMaterial: _api.DesignVariableMaterial):
-		self._Entity = designVariableMaterial
-
-	@property
-	def MaterialId(self) -> int:
-		return self._Entity.MaterialId
-
-
 class DesignVariable(IdEntity):
 	def __init__(self, designVariable: _api.DesignVariable):
 		self._Entity = designVariable
@@ -4921,11 +4912,19 @@ class DesignVariable(IdEntity):
 		materialIdsList = MakeCSharpIntList(materialIds)
 		return self._Entity.AddMaterials(materialIdsList)
 
-	def GetMaterials(self) -> list[DesignVariableMaterial]:
-		return list[DesignVariableMaterial](self._Entity.GetMaterials())
+	def GetSizingMaterials(self) -> list[int]:
+		return list[int](self._Entity.GetSizingMaterials())
 
-	def RemoveAllMaterials(self) -> None:
-		return self._Entity.RemoveAllMaterials()
+	def GetAnalysisMaterial(self) -> int:
+		return self._Entity.GetAnalysisMaterial()
+
+	def RemoveSizingMaterials(self, materialIds: tuple[int] = None) -> None:
+		materialIdsList = MakeCSharpIntList(materialIds)
+		materialIdsEnumerable = IEnumerable(materialIdsList)
+		return self._Entity.RemoveSizingMaterials(materialIds if materialIds is None else materialIdsEnumerable)
+
+	def RemoveAnalysisMaterial(self) -> None:
+		return self._Entity.RemoveAnalysisMaterial()
 
 
 class ToolingConstraintCol(IdNameEntityCol[ToolingConstraint]):
