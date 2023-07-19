@@ -3,7 +3,7 @@ from ..library import _api, _types
 from ..api import types
 from typing import TypeVar, Generic, overload
 from enum import Enum
-from System.Collections.Generic import List, IEnumerable
+from System.Collections.Generic import List, IEnumerable, Dictionary
 from System.Threading.Tasks import Task
 from System import Guid, DateTime
 
@@ -1651,6 +1651,9 @@ class Foam:
 	def Manufacturer(self) -> str:
 		return self._Entity.Manufacturer
 
+	def FoamTemperatureProperties(self) -> list[FoamTemperature]:
+		return [FoamTemperature(foamTemperature) for foamTemperature in self._Entity.FoamTemperatureProperties]
+
 	@MaterialFamilyName.setter
 	def MaterialFamilyName(self, value: str) -> None:
 		self._Entity.MaterialFamilyName = value
@@ -1916,6 +1919,9 @@ class Honeycomb:
 	@property
 	def Manufacturer(self) -> str:
 		return self._Entity.Manufacturer
+
+	def HoneycombTemperatureProperties(self) -> list[HoneycombTemperature]:
+		return [HoneycombTemperature(honeycombTemperature) for honeycombTemperature in self._Entity.HoneycombTemperatureProperties]
 
 	@MaterialFamilyName.setter
 	def MaterialFamilyName(self, value: str) -> None:
@@ -2315,6 +2321,9 @@ class Isotropic:
 	def BucklingStiffnessKnockdown(self) -> float:
 		return self._Entity.BucklingStiffnessKnockdown
 
+	def IsotropicTemperatureProperties(self) -> list[IsotropicTemperature]:
+		return [IsotropicTemperature(isotropicTemperature) for isotropicTemperature in self._Entity.IsotropicTemperatureProperties]
+
 	@MaterialFamilyName.setter
 	def MaterialFamilyName(self, value: str) -> None:
 		self._Entity.MaterialFamilyName = value
@@ -2426,8 +2435,36 @@ class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
 	def Equation(self) -> types.CorrectionEquation:
 		return types.CorrectionEquation[self._Entity.Equation.ToString()]
 
+	def OrthotropicCorrectionValues(self) -> dict[types.EquationParameterId, OrthotropicCorrectionFactorValue]:
+		orthotropicCorrectionValuesDict = {}
+		for kvp in self._Entity.OrthotropicCorrectionValues:
+			orthotropicCorrectionValuesDict[types.EquationParameterId[kvp.Key.ToString()]] = OrthotropicCorrectionFactorValue(kvp.Value)
+
+		return orthotropicCorrectionValuesDict
+
 	def AddCorrectionFactorValue(self, equationParameterName: types.EquationParameterId, valueToAdd: float) -> OrthotropicCorrectionFactorValue:
 		return OrthotropicCorrectionFactorValue(self._Entity.AddCorrectionFactorValue(_types.EquationParameterId(equationParameterName.value), valueToAdd))
+
+
+class TabularCorrectionFactorIndependentValue:
+	def __init__(self, tabularCorrectionFactorIndependentValue: _api.TabularCorrectionFactorIndependentValue):
+		self._Entity = tabularCorrectionFactorIndependentValue
+
+	@property
+	def BoolValue(self) -> bool:
+		return self._Entity.BoolValue
+
+	@property
+	def DoubleValue(self) -> float:
+		return self._Entity.DoubleValue
+
+	@property
+	def IntValue(self) -> int:
+		return self._Entity.IntValue
+
+	@property
+	def ValueType(self) -> types.CorrectionValueType:
+		return types.CorrectionValueType[self._Entity.ValueType.ToString()]
 
 
 class TabularCorrectionFactorRow:
@@ -2437,6 +2474,9 @@ class TabularCorrectionFactorRow:
 	@property
 	def DependentValue(self) -> float:
 		return self._Entity.DependentValue
+
+	def IndependentValues(self) -> dict[types.CorrectionIndependentDefinition, TabularCorrectionFactorIndependentValue]:
+		return dict[types.CorrectionIndependentDefinition, TabularCorrectionFactorIndependentValue](self._Entity.IndependentValues)
 
 
 class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
@@ -2515,6 +2555,51 @@ class OrthotropicAllowableCurvePoint:
 	@Y.setter
 	def Y(self, value: float) -> None:
 		self._Entity.Y = value
+
+
+class OrthotropicEffectiveLaminate:
+	def __init__(self, orthotropicEffectiveLaminate: _api.OrthotropicEffectiveLaminate):
+		self._Entity = orthotropicEffectiveLaminate
+
+	@property
+	def Percent_tape_0(self) -> float:
+		return self._Entity.Percent_tape_0
+
+	@property
+	def Percent_tape_90(self) -> float:
+		return self._Entity.Percent_tape_90
+
+	@property
+	def Percent_tape_45(self) -> float:
+		return self._Entity.Percent_tape_45
+
+	@property
+	def Percent_fabric_0(self) -> float:
+		return self._Entity.Percent_fabric_0
+
+	@property
+	def Percent_fabric_90(self) -> float:
+		return self._Entity.Percent_fabric_90
+
+	@property
+	def Percent_fabric_45(self) -> float:
+		return self._Entity.Percent_fabric_45
+
+	@property
+	def Tape_Orthotropic(self) -> str:
+		return self._Entity.Tape_Orthotropic
+
+	@property
+	def Fabric_Orthotropic(self) -> str:
+		return self._Entity.Fabric_Orthotropic
+
+	@property
+	def Valid(self) -> bool:
+		return self._Entity.Valid
+
+	@property
+	def Use_tape_allowables(self) -> bool:
+		return self._Entity.Use_tape_allowables
 
 
 class OrthotropicLaminateAllowable:
@@ -2697,6 +2782,9 @@ class OrthotropicTemperature:
 	@property
 	def TTc(self) -> float:
 		return self._Entity.TTc
+
+	def OrthotropicAllowableCurvePoints(self) -> list[OrthotropicAllowableCurvePoint]:
+		return [OrthotropicAllowableCurvePoint(orthotropicAllowableCurvePoint) for orthotropicAllowableCurvePoint in self._Entity.OrthotropicAllowableCurvePoints]
 
 	@Temperature.setter
 	def Temperature(self, value: float) -> None:
@@ -2948,6 +3036,29 @@ class Orthotropic:
 	def BucklingStiffnessKnockdown(self) -> float:
 		return self._Entity.BucklingStiffnessKnockdown
 
+	def OrthotropicTemperatureProperties(self) -> list[OrthotropicTemperature]:
+		return [OrthotropicTemperature(orthotropicTemperature) for orthotropicTemperature in self._Entity.OrthotropicTemperatureProperties]
+
+	def OrthotropicLaminateAllowables(self) -> list[OrthotropicLaminateAllowable]:
+		return [OrthotropicLaminateAllowable(orthotropicLaminateAllowable) for orthotropicLaminateAllowable in self._Entity.OrthotropicLaminateAllowables]
+
+	def OrthotropicEffectiveLaminate(self) -> OrthotropicEffectiveLaminate:
+		return OrthotropicEffectiveLaminate(self._Entity.OrthotropicEffectiveLaminate)
+
+	def OrthotropicEquationCorrectionFactors(self) -> dict[tuple[types.CorrectionProperty, types.CorrectionId], OrthotropicEquationCorrectionFactor]:
+		orthotropicEquationCorrectionFactorsDict = {}
+		for kvp in self._Entity.OrthotropicEquationCorrectionFactors:
+			orthotropicEquationCorrectionFactorsDict[tuple[types.CorrectionProperty, types.CorrectionId](kvp.Key)] = OrthotropicEquationCorrectionFactor(kvp.Value)
+
+		return orthotropicEquationCorrectionFactorsDict
+
+	def OrthotropicTabularCorrectionFactors(self) -> dict[tuple[types.CorrectionProperty, types.CorrectionId], OrthotropicTabularCorrectionFactor]:
+		orthotropicTabularCorrectionFactorsDict = {}
+		for kvp in self._Entity.OrthotropicTabularCorrectionFactors:
+			orthotropicTabularCorrectionFactorsDict[tuple[types.CorrectionProperty, types.CorrectionId](kvp.Key)] = OrthotropicTabularCorrectionFactor(kvp.Value)
+
+		return orthotropicTabularCorrectionFactorsDict
+
 	@MaterialFamilyName.setter
 	def MaterialFamilyName(self, value: str) -> None:
 		self._Entity.MaterialFamilyName = value
@@ -3104,6 +3215,9 @@ class FemProperty(IdNameEntity):
 	@property
 	def Elements(self) -> ElementCol:
 		return ElementCol(self._Entity.Elements)
+
+	def FemType(self) -> types.FemType:
+		return types.FemType[self._Entity.FemType.ToString()]
 
 
 class ElementSetCol(IdEntityCol[ElementSet]):
@@ -3746,7 +3860,10 @@ class Structure(ZoneJointContainer):
 		return self._Entity.CreateZone(elementIdsEnumerable, name)
 
 	def CreatePanelSegment(self, discreteTechnique: types.DiscreteTechnique, discreteElementLkp: dict[types.DiscreteDefinitionType, list[int]], name: str = None) -> int:
-		return self._Entity.CreatePanelSegment(_types.DiscreteTechnique(discreteTechnique.value), discreteElementLkp._Entity, name)
+		discreteElementLkpDict = Dictionary[_types.DiscreteDefinitionType, List[int]]()
+		for kvp in discreteElementLkp:
+			discreteElementLkpDict.Add(_types.DiscreteDefinitionType(kvp.value), MakeCSharpIntList(discreteElementLkp[kvp]))
+		return self._Entity.CreatePanelSegment(_types.DiscreteTechnique(discreteTechnique.value), discreteElementLkpDict, name)
 
 	@overload
 	def Remove(self, zoneIds: tuple[int], jointIds: tuple[int]) -> CollectionModificationStatus: ...
@@ -5032,72 +5149,6 @@ class HelperFunctions(ABC):
 
 	def NullableSingle(self, input: float) -> float:
 		return self._Entity.NullableSingle(input)
-
-
-class TabularCorrectionFactorIndependentValue:
-	def __init__(self, tabularCorrectionFactorIndependentValue: _api.TabularCorrectionFactorIndependentValue):
-		self._Entity = tabularCorrectionFactorIndependentValue
-
-	@property
-	def BoolValue(self) -> bool:
-		return self._Entity.BoolValue
-
-	@property
-	def DoubleValue(self) -> float:
-		return self._Entity.DoubleValue
-
-	@property
-	def IntValue(self) -> int:
-		return self._Entity.IntValue
-
-	@property
-	def ValueType(self) -> types.CorrectionValueType:
-		return types.CorrectionValueType[self._Entity.ValueType.ToString()]
-
-
-class OrthotropicEffectiveLaminate:
-	def __init__(self, orthotropicEffectiveLaminate: _api.OrthotropicEffectiveLaminate):
-		self._Entity = orthotropicEffectiveLaminate
-
-	@property
-	def Percent_tape_0(self) -> float:
-		return self._Entity.Percent_tape_0
-
-	@property
-	def Percent_tape_90(self) -> float:
-		return self._Entity.Percent_tape_90
-
-	@property
-	def Percent_tape_45(self) -> float:
-		return self._Entity.Percent_tape_45
-
-	@property
-	def Percent_fabric_0(self) -> float:
-		return self._Entity.Percent_fabric_0
-
-	@property
-	def Percent_fabric_90(self) -> float:
-		return self._Entity.Percent_fabric_90
-
-	@property
-	def Percent_fabric_45(self) -> float:
-		return self._Entity.Percent_fabric_45
-
-	@property
-	def Tape_Orthotropic(self) -> str:
-		return self._Entity.Tape_Orthotropic
-
-	@property
-	def Fabric_Orthotropic(self) -> str:
-		return self._Entity.Fabric_Orthotropic
-
-	@property
-	def Valid(self) -> bool:
-		return self._Entity.Valid
-
-	@property
-	def Use_tape_allowables(self) -> bool:
-		return self._Entity.Use_tape_allowables
 
 
 class Beam(Zone):
