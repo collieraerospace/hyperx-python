@@ -1651,6 +1651,7 @@ class Foam:
 	def Manufacturer(self) -> str:
 		return self._Entity.Manufacturer
 
+	@property
 	def FoamTemperatureProperties(self) -> list[FoamTemperature]:
 		return [FoamTemperature(foamTemperature) for foamTemperature in self._Entity.FoamTemperatureProperties]
 
@@ -1920,6 +1921,7 @@ class Honeycomb:
 	def Manufacturer(self) -> str:
 		return self._Entity.Manufacturer
 
+	@property
 	def HoneycombTemperatureProperties(self) -> list[HoneycombTemperature]:
 		return [HoneycombTemperature(honeycombTemperature) for honeycombTemperature in self._Entity.HoneycombTemperatureProperties]
 
@@ -2321,6 +2323,7 @@ class Isotropic:
 	def BucklingStiffnessKnockdown(self) -> float:
 		return self._Entity.BucklingStiffnessKnockdown
 
+	@property
 	def IsotropicTemperatureProperties(self) -> list[IsotropicTemperature]:
 		return [IsotropicTemperature(isotropicTemperature) for isotropicTemperature in self._Entity.IsotropicTemperatureProperties]
 
@@ -2435,6 +2438,7 @@ class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
 	def Equation(self) -> types.CorrectionEquation:
 		return types.CorrectionEquation[self._Entity.Equation.ToString()]
 
+	@property
 	def OrthotropicCorrectionValues(self) -> dict[types.EquationParameterId, OrthotropicCorrectionFactorValue]:
 		orthotropicCorrectionValuesDict = {}
 		for kvp in self._Entity.OrthotropicCorrectionValues:
@@ -2475,6 +2479,7 @@ class TabularCorrectionFactorRow:
 	def DependentValue(self) -> float:
 		return self._Entity.DependentValue
 
+	@property
 	def IndependentValues(self) -> dict[types.CorrectionIndependentDefinition, TabularCorrectionFactorIndependentValue]:
 		return dict[types.CorrectionIndependentDefinition, TabularCorrectionFactorIndependentValue](self._Entity.IndependentValues)
 
@@ -2783,6 +2788,7 @@ class OrthotropicTemperature:
 	def TTc(self) -> float:
 		return self._Entity.TTc
 
+	@property
 	def OrthotropicAllowableCurvePoints(self) -> list[OrthotropicAllowableCurvePoint]:
 		return [OrthotropicAllowableCurvePoint(orthotropicAllowableCurvePoint) for orthotropicAllowableCurvePoint in self._Entity.OrthotropicAllowableCurvePoints]
 
@@ -3036,15 +3042,19 @@ class Orthotropic:
 	def BucklingStiffnessKnockdown(self) -> float:
 		return self._Entity.BucklingStiffnessKnockdown
 
+	@property
 	def OrthotropicTemperatureProperties(self) -> list[OrthotropicTemperature]:
 		return [OrthotropicTemperature(orthotropicTemperature) for orthotropicTemperature in self._Entity.OrthotropicTemperatureProperties]
 
+	@property
 	def OrthotropicLaminateAllowables(self) -> list[OrthotropicLaminateAllowable]:
 		return [OrthotropicLaminateAllowable(orthotropicLaminateAllowable) for orthotropicLaminateAllowable in self._Entity.OrthotropicLaminateAllowables]
 
+	@property
 	def OrthotropicEffectiveLaminate(self) -> OrthotropicEffectiveLaminate:
 		return OrthotropicEffectiveLaminate(self._Entity.OrthotropicEffectiveLaminate)
 
+	@property
 	def OrthotropicEquationCorrectionFactors(self) -> dict[tuple[types.CorrectionProperty, types.CorrectionId], OrthotropicEquationCorrectionFactor]:
 		orthotropicEquationCorrectionFactorsDict = {}
 		for kvp in self._Entity.OrthotropicEquationCorrectionFactors:
@@ -3052,6 +3062,7 @@ class Orthotropic:
 
 		return orthotropicEquationCorrectionFactorsDict
 
+	@property
 	def OrthotropicTabularCorrectionFactors(self) -> dict[tuple[types.CorrectionProperty, types.CorrectionId], OrthotropicTabularCorrectionFactor]:
 		orthotropicTabularCorrectionFactorsDict = {}
 		for kvp in self._Entity.OrthotropicTabularCorrectionFactors:
@@ -3216,6 +3227,7 @@ class FemProperty(IdNameEntity):
 	def Elements(self) -> ElementCol:
 		return ElementCol(self._Entity.Elements)
 
+	@property
 	def FemType(self) -> types.FemType:
 		return types.FemType[self._Entity.FemType.ToString()]
 
