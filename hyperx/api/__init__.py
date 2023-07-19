@@ -305,6 +305,10 @@ class IdEntityCol(Generic[T], ABC):
 	def IdEntityColList(self) -> tuple[IdEntity]:
 		return tuple([IdEntity(idEntityCol) for idEntityCol in self._Entity])
 
+	@property
+	def Ids(self) -> tuple[int]:
+		return tuple([int(int32) for int32 in self._Entity.Ids])
+
 	def Contains(self, id: int) -> bool:
 		return self._Entity.Contains(id)
 
@@ -333,6 +337,10 @@ class IdNameEntityCol(IdEntityCol, Generic[T]):
 	def IdNameEntityColList(self) -> tuple[T]:
 		return tuple([T(idNameEntityCol) for idNameEntityCol in self._Entity])
 
+	@property
+	def Names(self) -> tuple[str]:
+		return tuple([str(string) for string in self._Entity.Names])
+
 	@overload
 	def Get(self, name: str) -> T: ...
 
@@ -344,7 +352,7 @@ class IdNameEntityCol(IdEntityCol, Generic[T]):
 			return self._Entity.Get(item1)
 
 		if isinstance(item1, int):
-			return T(super().Get(item1))
+			return super().Get(item1)
 
 		return self._Entity.Get(item1)
 
@@ -824,9 +832,9 @@ class Vector3d:
 		return not self.Equals(other)
 
 
-class DiscreteFieldTable(IdNameEntityRenameable):
-	def __init__(self, discreteFieldTable: _api.DiscreteFieldTable):
-		self._Entity = discreteFieldTable
+class DiscreteField(IdNameEntityRenameable):
+	def __init__(self, discreteField: _api.DiscreteField):
+		self._Entity = discreteField
 
 	@property
 	def Columns(self) -> dict[int, str]:
@@ -1193,10 +1201,10 @@ class EntityWithAssignablePropertiesCol(IdNameEntityCol, Generic[T]):
 
 	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
-			return T(super().Get(item1))
+			return super().Get(item1)
 
 		if isinstance(item1, int):
-			return T(super().Get(item1))
+			return super().Get(item1)
 
 		return self._Entity.Get(item1)
 
@@ -4034,14 +4042,14 @@ class DesignLoadCol(IdNameEntityCol[DesignLoad]):
 		return len(self.DesignLoadColList)
 
 
-class DiscreteFieldTableCol(IdNameEntityCol[DiscreteFieldTable]):
-	def __init__(self, discreteFieldTableCol: _api.DiscreteFieldTableCol):
-		self._Entity = discreteFieldTableCol
-		self._CollectedClass = DiscreteFieldTable
+class DiscreteFieldCol(IdNameEntityCol[DiscreteField]):
+	def __init__(self, discreteFieldCol: _api.DiscreteFieldCol):
+		self._Entity = discreteFieldCol
+		self._CollectedClass = DiscreteField
 
 	@property
-	def DiscreteFieldTableColList(self) -> tuple[DiscreteFieldTable]:
-		return tuple([DiscreteFieldTable(discreteFieldTableCol) for discreteFieldTableCol in self._Entity])
+	def DiscreteFieldColList(self) -> tuple[DiscreteField]:
+		return tuple([DiscreteField(discreteFieldCol) for discreteFieldCol in self._Entity])
 
 	def Create(self, name: str, entityType: types.DiscreteFieldPhysicalEntityType, dataType: types.DiscreteFieldDataType) -> int:
 		return self._Entity.Create(name, _types.DiscreteFieldPhysicalEntityType(entityType.value), _types.DiscreteFieldDataType(dataType.value))
@@ -4058,28 +4066,28 @@ class DiscreteFieldTableCol(IdNameEntityCol[DiscreteFieldTable]):
 		return self._Entity.CreateByPointMapToElements(elementIdsList, discreteFieldIdsList, suffix, tolerance)
 
 	@overload
-	def Get(self, name: str) -> DiscreteFieldTable: ...
+	def Get(self, name: str) -> DiscreteField: ...
 
 	@overload
-	def Get(self, id: int) -> DiscreteFieldTable: ...
+	def Get(self, id: int) -> DiscreteField: ...
 
-	def Get(self, item1 = None) -> DiscreteFieldTable:
+	def Get(self, item1 = None) -> DiscreteField:
 		if isinstance(item1, str):
-			return DiscreteFieldTable(super().Get(item1))
+			return DiscreteField(super().Get(item1))
 
 		if isinstance(item1, int):
-			return DiscreteFieldTable(super().Get(item1))
+			return DiscreteField(super().Get(item1))
 
 		return self._Entity.Get(item1)
 
 	def __getitem__(self, index: int):
-		return self.DiscreteFieldTableColList[index]
+		return self.DiscreteFieldColList[index]
 
 	def __iter__(self):
-		yield from self.DiscreteFieldTableColList
+		yield from self.DiscreteFieldColList
 
 	def __len__(self):
-		return len(self.DiscreteFieldTableColList)
+		return len(self.DiscreteFieldColList)
 
 
 class ZoneJointContainerCol(IdNameEntityCol, Generic[T]):
@@ -4103,10 +4111,10 @@ class ZoneJointContainerCol(IdNameEntityCol, Generic[T]):
 
 	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
-			return T(super().Get(item1))
+			return super().Get(item1)
 
 		if isinstance(item1, int):
-			return T(super().Get(item1))
+			return super().Get(item1)
 
 		return self._Entity.Get(item1)
 
@@ -4338,8 +4346,8 @@ class Project:
 		return DesignLoadCol(self._Entity.DesignLoads)
 
 	@property
-	def DiscreteFieldTables(self) -> DiscreteFieldTableCol:
-		return DiscreteFieldTableCol(self._Entity.DiscreteFieldTables)
+	def DiscreteFieldTables(self) -> DiscreteFieldCol:
+		return DiscreteFieldCol(self._Entity.DiscreteFieldTables)
 
 	@property
 	def AnalysisProperties(self) -> AnalysisPropertyCol:
@@ -4718,6 +4726,10 @@ class ProjectInfoCol(IdNameEntityCol[ProjectInfo]):
 class Application:
 	def __init__(self, application: _api.Application):
 		self._Entity = application
+
+	@property
+	def CompilationDate(self) -> str:
+		return self._Entity.CompilationDate
 
 	@property
 	def DatabasePath(self) -> str:
