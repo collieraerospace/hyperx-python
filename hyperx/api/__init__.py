@@ -861,6 +861,9 @@ class Vector3d:
 	def __init__(self, vector3d: _api.Vector3d):
 		self._Entity = vector3d
 
+	def Create_Vector3d(x: float, y: float, z: float):
+		return Vector3d(_api.Vector3d(x, y, z))
+
 	@property
 	def X(self) -> float:
 		return self._Entity.X
@@ -3376,6 +3379,9 @@ class Vector2d:
 	'''
 	def __init__(self, vector2d: _api.Vector2d):
 		self._Entity = vector2d
+
+	def Create_Vector2d(x: float, y: float):
+		return Vector2d(_api.Vector2d(x, y))
 
 	@property
 	def X(self) -> float:
