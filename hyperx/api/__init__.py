@@ -21,11 +21,17 @@ def MakeCSharpIntList(ints: list[int]) -> List[int]:
 	return intsList
 
 class AnalysisResultToReturn(Enum):
+	'''
+	Used to specify which analysis result to return.
+	'''
 	Limit = 1
 	Ultimate = 2
 	Minimum = 3
 
 class CollectionModificationStatus(Enum):
+	'''
+	Indicates that whether a collection was manipulated successfully.
+	'''
 	Success = 1
 	DuplicateIdFailure = 2
 	EntityMissingAddFailure = 3
@@ -38,6 +44,10 @@ class CreateDatabaseStatus(Enum):
 	ImproperExtension = 3
 
 class MaterialCreationStatus(Enum):
+	'''
+	Indicates that whether a Material was created successfully. 
+            If not, this indicates why the material was not created.
+	'''
 	Success = 1
 	DuplicateNameFailure = 2
 	DuplicateFemIdFailure = 3
@@ -69,11 +79,19 @@ class DbTemperatureUnit(Enum):
 	Kelvin = 4
 
 class ProjectCreationStatus(Enum):
+	'''
+	Indicates that whether a Material was created successfully. 
+            If not, this indicates why the material was not created.
+	'''
 	Success = 1
 	Failure = 2
 	DuplicateNameFailure = 3
 
 class ProjectDeletionStatus(Enum):
+	'''
+	Indicates that whether a Material was created successfully. 
+            If not, this indicates why the material was not created.
+	'''
 	Success = 1
 	Failure = 2
 	ProjectDoesNotExistFailure = 3
@@ -118,11 +136,17 @@ class ZoneIdUpdateStatus(Enum):
 	DuplicateIdFailure = 2
 
 class UnitSystem(Enum):
+	'''
+	Unit system specified when starting a scripting Application.
+	'''
 	English = 1
 	SI = 2
 
 
 class IdEntity(ABC):
+	'''
+	Represents an entity with an ID.
+	'''
 	def __init__(self, idEntity: _api.IdEntity):
 		self._Entity = idEntity
 
@@ -132,6 +156,9 @@ class IdEntity(ABC):
 
 
 class IdNameEntity(IdEntity):
+	'''
+	Represents an entity with an ID and Name.
+	'''
 	def __init__(self, idNameEntity: _api.IdNameEntity):
 		self._Entity = idNameEntity
 
@@ -153,6 +180,9 @@ class AnalysisDefinition(IdNameEntity):
 
 
 class Margin:
+	'''
+	Represents a Margin result.
+	'''
 	def __init__(self, margin: _api.Margin):
 		self._Entity = margin
 
@@ -174,11 +204,17 @@ class Margin:
 
 
 class AnalysisResult(ABC):
+	'''
+	Contains result information for an analysis
+	'''
 	def __init__(self, analysisResult: _api.AnalysisResult):
 		self._Entity = analysisResult
 
 	@property
 	def LimitUltimate(self) -> types.LimitUltimate:
+		'''
+		Limit vs Ultimate loads.
+		'''
 		return types.LimitUltimate[self._Entity.LimitUltimate.ToString()]
 
 	@property
@@ -187,6 +223,9 @@ class AnalysisResult(ABC):
 
 	@property
 	def Margin(self) -> Margin:
+		'''
+		Represents a Margin result.
+		'''
 		return Margin(self._Entity.Margin)
 
 	@property
@@ -200,6 +239,9 @@ class JointAnalysisResult(AnalysisResult):
 
 	@property
 	def ObjectId(self) -> types.JointObject:
+		'''
+		Enum identifying the possible entities within a joint
+		'''
 		return types.JointObject[self._Entity.ObjectId.ToString()]
 
 
@@ -209,6 +251,9 @@ class ZoneAnalysisConceptResult(AnalysisResult):
 
 	@property
 	def ConceptId(self) -> types.FamilyConceptUID:
+		'''
+		Values match UID of family_concept_definition table.
+		'''
 		return types.FamilyConceptUID[self._Entity.ConceptId.ToString()]
 
 
@@ -218,6 +263,9 @@ class ZoneAnalysisObjectResult(AnalysisResult):
 
 	@property
 	def ObjectId(self) -> types.FamilyObjectUID:
+		'''
+		Values match UID of family_object_definition table.
+		'''
 		return types.FamilyObjectUID[self._Entity.ObjectId.ToString()]
 
 
@@ -232,6 +280,9 @@ class AssignablePropertyWithFamilyCategory(AssignableProperty):
 
 	@property
 	def FamilyCategory(self) -> types.FamilyCategory:
+		'''
+		Representative of the family_category table
+		'''
 		return types.FamilyCategory[self._Entity.FamilyCategory.ToString()]
 
 
@@ -245,6 +296,9 @@ class FailureObjectGroup(IdNameEntity):
 
 	@property
 	def LimitUltimate(self) -> types.LimitUltimate:
+		'''
+		Limit vs Ultimate loads.
+		'''
 		return types.LimitUltimate[self._Entity.LimitUltimate.ToString()]
 
 	@property
@@ -253,6 +307,9 @@ class FailureObjectGroup(IdNameEntity):
 
 
 class FailureSetting(IdNameEntity):
+	'''
+	Setting for a Failure Mode or a Failure Criteria.
+	'''
 	def __init__(self, failureSetting: _api.FailureSetting):
 		self._Entity = failureSetting
 
@@ -708,6 +765,9 @@ class DesignLoadSubcaseTemperature(IdNameEntity):
 
 	@property
 	def TemperatureChoiceType(self) -> types.TemperatureChoiceType:
+		'''
+		Load Case Setting selection for analysis and initial temperature.
+		'''
 		return types.TemperatureChoiceType[self._Entity.TemperatureChoiceType.ToString()]
 
 	@property
@@ -795,6 +855,9 @@ class DesignLoad(IdNameEntity):
 
 
 class Vector3d:
+	'''
+	Represents a readonly 3D vector.
+	'''
 	def __init__(self, vector3d: _api.Vector3d):
 		self._Entity = vector3d
 
@@ -833,6 +896,9 @@ class Vector3d:
 
 
 class DiscreteField(IdNameEntityRenameable):
+	'''
+	Represents a table of discrete field data.
+	'''
 	def __init__(self, discreteField: _api.DiscreteField):
 		self._Entity = discreteField
 
@@ -850,10 +916,16 @@ class DiscreteField(IdNameEntityRenameable):
 
 	@property
 	def DataType(self) -> types.DiscreteFieldDataType:
+		'''
+		Defines the type of data stored in a Discrete Field. Such as Vector, Scalar, String.
+		'''
 		return types.DiscreteFieldDataType[self._Entity.DataType.ToString()]
 
 	@property
 	def PhysicalEntityType(self) -> types.DiscreteFieldPhysicalEntityType:
+		'''
+		Defines the type of physical entity that a Discrete Field applies to, such as zone, element, joint, etc.
+		'''
 		return types.DiscreteFieldPhysicalEntityType[self._Entity.PhysicalEntityType.ToString()]
 
 	@property
@@ -902,6 +974,9 @@ class DiscreteField(IdNameEntityRenameable):
 	def SetStringValue(self, pointId: Vector3d, columnId: int, value: str) -> None: ...
 
 	def DeleteAllRows(self) -> None:
+		'''
+		Delete all rows for this discrete field.
+		'''
 		return self._Entity.DeleteAllRows()
 
 	def DeleteColumn(self, columnId: int) -> None:
@@ -914,6 +989,9 @@ class DiscreteField(IdNameEntityRenameable):
 		return self._Entity.DeleteRow(entityId)
 
 	def DeleteRowsAndColumns(self) -> None:
+		'''
+		Delete all rows and columns for this discrete field.
+		'''
 		return self._Entity.DeleteRowsAndColumns()
 
 	def ReadNumericCell(self, item1 = None, item2 = None) -> float:
@@ -1048,6 +1126,9 @@ class AnalysisResultCol(Generic[T]):
 
 
 class ZoneJointEntity(EntityWithAssignableProperties):
+	'''
+	Abstract base for a Zone or Joint.
+	'''
 	def __init__(self, zoneJointEntity: _api.ZoneJointEntity):
 		self._Entity = zoneJointEntity
 
@@ -1079,6 +1160,9 @@ class Joint(ZoneJointEntity):
 
 
 class ZoneBase(ZoneJointEntity):
+	'''
+	Abstract for regular Zones and Panel Segments.
+	'''
 	def __init__(self, zoneBase: _api.ZoneBase):
 		self._Entity = zoneBase
 
@@ -1168,6 +1252,9 @@ class PanelSegment(ZoneBase):
 
 
 class Zone(ZoneBase):
+	'''
+	Abstract for regular Zones (not Panel Segments).
+	'''
 	def __init__(self, zone: _api.Zone):
 		self._Entity = zone
 
@@ -1321,6 +1408,9 @@ class ZoneCol(EntityWithAssignablePropertiesCol[Zone]):
 
 
 class ZoneJointContainer(IdNameEntityRenameable):
+	'''
+	Represents an entity that contains a collection of Zones and Joints.
+	'''
 	def __init__(self, zoneJointContainer: _api.ZoneJointContainer):
 		self._Entity = zoneJointContainer
 
@@ -1495,6 +1585,9 @@ class ZoneJointContainer(IdNameEntityRenameable):
 
 
 class FoamTemperature:
+	'''
+	Foam material temperature dependent properties.
+	'''
 	def __init__(self, foamTemperature: _api.FoamTemperature):
 		self._Entity = foamTemperature
 
@@ -1588,6 +1681,9 @@ class FoamTemperature:
 
 
 class Foam:
+	'''
+	Foam material.
+	'''
 	def __init__(self, foam: _api.Foam):
 		self._Entity = foam
 
@@ -1717,10 +1813,16 @@ class Foam:
 		return FoamTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def Save(self) -> None:
+		'''
+		Save any changes to this foam material to the database.
+		'''
 		return self._Entity.Save()
 
 
 class HoneycombTemperature:
+	'''
+	Honeycomb material temperature dependent properties.
+	'''
 	def __init__(self, honeycombTemperature: _api.HoneycombTemperature):
 		self._Entity = honeycombTemperature
 
@@ -1862,6 +1964,9 @@ class HoneycombTemperature:
 
 
 class Honeycomb:
+	'''
+	Honeycomb material.
+	'''
 	def __init__(self, honeycomb: _api.Honeycomb):
 		self._Entity = honeycomb
 
@@ -1983,10 +2088,16 @@ class Honeycomb:
 		return HoneycombTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def Save(self) -> None:
+		'''
+		Save any changes to this honeycomb material to the database.
+		'''
 		return self._Entity.Save()
 
 
 class IsotropicTemperature:
+	'''
+	Isotropic material temperature dependent properties.
+	'''
 	def __init__(self, isotropicTemperature: _api.IsotropicTemperature):
 		self._Entity = isotropicTemperature
 
@@ -2264,6 +2375,9 @@ class IsotropicTemperature:
 
 
 class Isotropic:
+	'''
+	Isotropic material.
+	'''
 	def __init__(self, isotropic: _api.Isotropic):
 		self._Entity = isotropic
 
@@ -2385,40 +2499,67 @@ class Isotropic:
 		return IsotropicTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def Save(self) -> None:
+		'''
+		Save any changes to this isotropic material to the database.
+		'''
 		return self._Entity.Save()
 
 
 class OrthotropicCorrectionFactorBase(ABC):
+	'''
+	Orthotropic material correction factor.
+	'''
 	def __init__(self, orthotropicCorrectionFactorBase: _api.OrthotropicCorrectionFactorBase):
 		self._Entity = orthotropicCorrectionFactorBase
 
 	@property
 	def CorrectionId(self) -> types.CorrectionId:
+		'''
+		Correction ID for a correction factor. (Columns in HyperX)
+		'''
 		return types.CorrectionId[self._Entity.CorrectionId.ToString()]
 
 	@property
 	def PropertyId(self) -> types.CorrectionProperty:
+		'''
+		Property name for a correction factor. (Rows in HyperX)
+		'''
 		return types.CorrectionProperty[self._Entity.PropertyId.ToString()]
 
 
 class OrthotropicCorrectionFactorValue:
+	'''
+	Orthotropic material correction factor value.
+	'''
 	def __init__(self, orthotropicCorrectionFactorValue: _api.OrthotropicCorrectionFactorValue):
 		self._Entity = orthotropicCorrectionFactorValue
 
 	@property
 	def Property(self) -> types.CorrectionProperty:
+		'''
+		Property name for a correction factor. (Rows in HyperX)
+		'''
 		return types.CorrectionProperty[self._Entity.Property.ToString()]
 
 	@property
 	def Correction(self) -> types.CorrectionId:
+		'''
+		Correction ID for a correction factor. (Columns in HyperX)
+		'''
 		return types.CorrectionId[self._Entity.Correction.ToString()]
 
 	@property
 	def Equation(self) -> types.CorrectionEquation:
+		'''
+		Equation for a correction factor.
+		'''
 		return types.CorrectionEquation[self._Entity.Equation.ToString()]
 
 	@property
 	def EquationParameter(self) -> types.EquationParameterId:
+		'''
+		Correction factor parameter names.
+		'''
 		return types.EquationParameterId[self._Entity.EquationParameter.ToString()]
 
 	@property
@@ -2431,11 +2572,17 @@ class OrthotropicCorrectionFactorValue:
 
 
 class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
+	'''
+	Represents an equation-based orthotropic material correction factor.
+	'''
 	def __init__(self, orthotropicEquationCorrectionFactor: _api.OrthotropicEquationCorrectionFactor):
 		self._Entity = orthotropicEquationCorrectionFactor
 
 	@property
 	def Equation(self) -> types.CorrectionEquation:
+		'''
+		Equation for a correction factor.
+		'''
 		return types.CorrectionEquation[self._Entity.Equation.ToString()]
 
 	@property
@@ -2451,6 +2598,9 @@ class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
 
 
 class TabularCorrectionFactorIndependentValue:
+	'''
+	Contains an independent value for a tabular correction factor row.
+	'''
 	def __init__(self, tabularCorrectionFactorIndependentValue: _api.TabularCorrectionFactorIndependentValue):
 		self._Entity = tabularCorrectionFactorIndependentValue
 
@@ -2468,10 +2618,16 @@ class TabularCorrectionFactorIndependentValue:
 
 	@property
 	def ValueType(self) -> types.CorrectionValueType:
+		'''
+		Defines the type of the independent values on a tabular correction factor row.
+		'''
 		return types.CorrectionValueType[self._Entity.ValueType.ToString()]
 
 
 class TabularCorrectionFactorRow:
+	'''
+	Row data for a tabular correction factor.
+	'''
 	def __init__(self, tabularCorrectionFactorRow: _api.TabularCorrectionFactorRow):
 		self._Entity = tabularCorrectionFactorRow
 
@@ -2485,6 +2641,9 @@ class TabularCorrectionFactorRow:
 
 
 class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
+	'''
+	Tabular correction factor.
+	'''
 	def __init__(self, orthotropicTabularCorrectionFactor: _api.OrthotropicTabularCorrectionFactor):
 		self._Entity = orthotropicTabularCorrectionFactor
 
@@ -2526,11 +2685,17 @@ class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
 
 
 class OrthotropicAllowableCurvePoint:
+	'''
+	Represents a point on a laminate allowable curve.
+	'''
 	def __init__(self, orthotropicAllowableCurvePoint: _api.OrthotropicAllowableCurvePoint):
 		self._Entity = orthotropicAllowableCurvePoint
 
 	@property
 	def Property_ID(self) -> types.AllowablePropertyName:
+		'''
+		Property name for a laminate allowable.
+		'''
 		return types.AllowablePropertyName[self._Entity.Property_ID.ToString()]
 
 	@property
@@ -2563,6 +2728,10 @@ class OrthotropicAllowableCurvePoint:
 
 
 class OrthotropicEffectiveLaminate:
+	'''
+	Orthotropic material effective laminate properties. Read-only from the API.
+            Check if material is an effective laminate with orthotropic.IsEffectiveLaminate.
+	'''
 	def __init__(self, orthotropicEffectiveLaminate: _api.OrthotropicEffectiveLaminate):
 		self._Entity = orthotropicEffectiveLaminate
 
@@ -2608,15 +2777,24 @@ class OrthotropicEffectiveLaminate:
 
 
 class OrthotropicLaminateAllowable:
+	'''
+	Orthotropic material laminate allowable properties.
+	'''
 	def __init__(self, orthotropicLaminateAllowable: _api.OrthotropicLaminateAllowable):
 		self._Entity = orthotropicLaminateAllowable
 
 	@property
 	def Property_ID(self) -> types.AllowablePropertyName:
+		'''
+		Property name for a laminate allowable.
+		'''
 		return types.AllowablePropertyName[self._Entity.Property_ID.ToString()]
 
 	@property
 	def Method_ID(self) -> types.AllowableMethodName:
+		'''
+		Method name for a laminate allowable.
+		'''
 		return types.AllowableMethodName[self._Entity.Method_ID.ToString()]
 
 	@Property_ID.setter
@@ -2629,6 +2807,9 @@ class OrthotropicLaminateAllowable:
 
 
 class OrthotropicTemperature:
+	'''
+	Orthotropic material temperature dependent properties.
+	'''
 	def __init__(self, orthotropicTemperature: _api.OrthotropicTemperature):
 		self._Entity = orthotropicTemperature
 
@@ -2959,6 +3140,9 @@ class OrthotropicTemperature:
 
 
 class Orthotropic:
+	'''
+	Orthotropic material.
+	'''
 	def __init__(self, orthotropic: _api.Orthotropic):
 		self._Entity = orthotropic
 
@@ -3052,6 +3236,10 @@ class Orthotropic:
 
 	@property
 	def OrthotropicEffectiveLaminate(self) -> OrthotropicEffectiveLaminate:
+		'''
+		Orthotropic material effective laminate properties. Read-only from the API.
+            Check if material is an effective laminate with orthotropic.IsEffectiveLaminate.
+		'''
 		return OrthotropicEffectiveLaminate(self._Entity.OrthotropicEffectiveLaminate)
 
 	@property
@@ -3152,6 +3340,9 @@ class Orthotropic:
 		return OrthotropicTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def IsEffectiveLaminate(self) -> bool:
+		'''
+		Returns true if this material is an effective laminate.
+		'''
 		return self._Entity.IsEffectiveLaminate()
 
 	def HasLaminateAllowable(self, property: types.AllowablePropertyName) -> bool:
@@ -3173,10 +3364,16 @@ class Orthotropic:
 		return OrthotropicTabularCorrectionFactor(self._Entity.GetTabularCorrectionFactor(_types.CorrectionProperty(property.value), _types.CorrectionId(correction.value)))
 
 	def Save(self) -> None:
+		'''
+		Save any changes to this orthotropic material to the database.
+		'''
 		return self._Entity.Save()
 
 
 class Vector2d:
+	'''
+	Represents a readonly 2D vector.
+	'''
 	def __init__(self, vector2d: _api.Vector2d):
 		self._Entity = vector2d
 
@@ -3211,6 +3408,9 @@ class Vector2d:
 
 
 class ElementSet(IdNameEntity):
+	'''
+	A set of elements defined in the input file.
+	'''
 	def __init__(self, elementSet: _api.ElementSet):
 		self._Entity = elementSet
 
@@ -3220,6 +3420,9 @@ class ElementSet(IdNameEntity):
 
 
 class FemProperty(IdNameEntity):
+	'''
+	A property description.
+	'''
 	def __init__(self, femProperty: _api.FemProperty):
 		self._Entity = femProperty
 
@@ -3390,22 +3593,37 @@ class SectionCut(IdNameEntity):
 
 	@property
 	def ReferencePoint(self) -> types.SectionCutPropertyLocation:
+		'''
+		Centroid vs Origin
+		'''
 		return types.SectionCutPropertyLocation[self._Entity.ReferencePoint.ToString()]
 
 	@property
 	def HorizontalVector(self) -> Vector3d:
+		'''
+		Represents a readonly 3D vector.
+		'''
 		return Vector3d(self._Entity.HorizontalVector)
 
 	@property
 	def NormalVector(self) -> Vector3d:
+		'''
+		Represents a readonly 3D vector.
+		'''
 		return Vector3d(self._Entity.NormalVector)
 
 	@property
 	def OriginVector(self) -> Vector3d:
+		'''
+		Represents a readonly 3D vector.
+		'''
 		return Vector3d(self._Entity.OriginVector)
 
 	@property
 	def VerticalVector(self) -> Vector3d:
+		'''
+		Represents a readonly 3D vector.
+		'''
 		return Vector3d(self._Entity.VerticalVector)
 
 	@property
@@ -3466,14 +3684,23 @@ class SectionCut(IdNameEntity):
 
 	@property
 	def CG(self) -> Vector2d:
+		'''
+		Represents a readonly 2D vector.
+		'''
 		return Vector2d(self._Entity.CG)
 
 	@property
 	def CN(self) -> Vector2d:
+		'''
+		Represents a readonly 2D vector.
+		'''
 		return Vector2d(self._Entity.CN)
 
 	@property
 	def CQ(self) -> Vector2d:
+		'''
+		Represents a readonly 2D vector.
+		'''
 		return Vector2d(self._Entity.CQ)
 
 	@property
@@ -3589,9 +3816,15 @@ class SectionCut(IdNameEntity):
 		self._Entity.CQ_vmin = value
 
 	def AlignToHorizontalPrincipalAxes(self) -> None:
+		'''
+		Set this Section Cut's horizontal vector to be equal to its principal axis horizontal vector.
+		'''
 		return self._Entity.AlignToHorizontalPrincipalAxes()
 
 	def AlignToVerticalPrincipalAxes(self) -> None:
+		'''
+		Set this Section Cut's horizontal vector to be equal to its principal axis vertical vector.
+		'''
 		return self._Entity.AlignToVerticalPrincipalAxes()
 
 	def SetHorizontalVector(self, vector: Vector3d) -> None:
@@ -3791,6 +4024,9 @@ class PlyCol(IdNameEntityCol[Ply]):
 		return CollectionModificationStatus[self._Entity.Delete(id).ToString()]
 
 	def DeleteAll(self) -> None:
+		'''
+		Delete all plies in the collection.
+		'''
 		return self._Entity.DeleteAll()
 
 	def ExportToCSV(self, filepath: str) -> None:
@@ -4415,6 +4651,9 @@ class StructureCol(ZoneJointContainerCol[Structure]):
 
 
 class Project:
+	'''
+	Represents a HyperX project within a database.
+	'''
 	def __init__(self, project: _api.Project):
 		self._Entity = project
 
@@ -4503,6 +4742,10 @@ class Project:
 		return self._Entity.Upload(uploadSetName, company, program, tagsList, notes, zoneIds._Entity, jointIds._Entity)
 
 	def GetDashboardCompanies(self) -> list[str]:
+		'''
+		This method fetches an array of Dashboard company names that are available to the user who is currently logged in. The URL and authentication token are taken from the last
+            Dashboard login made through HyperX.
+		'''
 		return list[str](self._Entity.GetDashboardCompanies())
 
 	def GetDashboardPrograms(self, companyName: str) -> list[str]:
@@ -4853,6 +5096,14 @@ class ProjectInfoCol(IdNameEntityCol[ProjectInfo]):
 
 
 class Application:
+	'''
+	HyperX scripting application.
+            This API is not guaranteed to be thread-safe.
+            Calls into a single application instance or its descendents are not safe to be called concurrently.
+            
+            However, it is safe enough for integration testing to have multiple
+            application instances with a single process.
+	'''
 	def __init__(self, application: _api.Application):
 		self._Entity = application
 
@@ -4866,6 +5117,9 @@ class Application:
 
 	@property
 	def ActiveProject(self) -> Project:
+		'''
+		Represents a HyperX project within a database.
+		'''
 		return Project(self._Entity.ActiveProject)
 
 	@property
@@ -4886,14 +5140,23 @@ class Application:
 
 	@property
 	def Foams(self) -> FoamCol:
+		'''
+		Contains a set of all foam materials in a database.
+		'''
 		return FoamCol(self._Entity.Foams)
 
 	@property
 	def Honeycombs(self) -> HoneycombCol:
+		'''
+		Contains a set of all honeycomb materials in a database.
+		'''
 		return HoneycombCol(self._Entity.Honeycombs)
 
 	@property
 	def Isotropics(self) -> IsotropicCol:
+		'''
+		Contains a set of all isotropic materials in a database.
+		'''
 		return IsotropicCol(self._Entity.Isotropics)
 
 	@property
@@ -4910,10 +5173,16 @@ class Application:
 
 	@property
 	def Orthotropics(self) -> OrthotropicCol:
+		'''
+		Contains a set of all orthotropic materials in a database.
+		'''
 		return OrthotropicCol(self._Entity.Orthotropics)
 
 	@property
 	def ProjectInfos(self) -> ProjectInfoCol:
+		'''
+		Contains a set of all projects in a database.
+		'''
 		return ProjectInfoCol(self._Entity.ProjectInfos)
 
 	@property
@@ -4949,9 +5218,16 @@ class Application:
 		return ProjectDeletionStatus[self._Entity.DeleteProject(projectName).ToString()]
 
 	def Dispose(self) -> None:
+		'''
+		Dispose of the application. Should be explicitly called after the application
+            is no longer needed unless the application is wrapped with a using clause.
+		'''
 		return self._Entity.Dispose()
 
 	def GetAnalyses(self) -> dict[int, AnalysisDefinition]:
+		'''
+		Get all Analysis Defintions in the database.
+		'''
 		return dict[int, AnalysisDefinition](self._Entity.GetAnalyses())
 
 	def Login(self, userName: str, password: str = "") -> None:
@@ -4973,6 +5249,9 @@ class JointDesignProperty(DesignProperty):
 
 
 class ToolingConstraint(IdNameEntity):
+	'''
+	Tooling constraints are a feature of Design Properties for Zones.
+	'''
 	def __init__(self, toolingConstraint: _api.ToolingConstraint):
 		self._Entity = toolingConstraint
 
@@ -4990,6 +5269,9 @@ class ToolingConstraint(IdNameEntity):
 
 	@property
 	def ToolingSelectionType(self) -> types.ToolingSelectionType:
+		'''
+		Defines which selection a given tooling constraint is currently set to.
+		'''
 		return types.ToolingSelectionType[self._Entity.ToolingSelectionType.ToString()]
 
 	def SetToAnyValue(self) -> None:
@@ -5006,6 +5288,10 @@ class ToolingConstraint(IdNameEntity):
 
 
 class DesignVariable(IdEntity):
+	'''
+	Holds design variable data.
+            Min, max, steps, materials.
+	'''
 	def __init__(self, designVariable: _api.DesignVariable):
 		self._Entity = designVariable
 
@@ -5054,9 +5340,15 @@ class DesignVariable(IdEntity):
 		return self._Entity.AddMaterials(materialIdsList)
 
 	def GetSizingMaterials(self) -> list[int]:
+		'''
+		Get a list of materials used for sizing, if they exist.
+		'''
 		return list[int](self._Entity.GetSizingMaterials())
 
 	def GetAnalysisMaterial(self) -> int:
+		'''
+		Get the material used for analysis, if it exists.
+		'''
 		return self._Entity.GetAnalysisMaterial()
 
 	def RemoveSizingMaterials(self, materialIds: tuple[int] = None) -> None:
@@ -5065,6 +5357,9 @@ class DesignVariable(IdEntity):
 		return self._Entity.RemoveSizingMaterials(materialIds if materialIds is None else materialIdsEnumerable)
 
 	def RemoveAnalysisMaterial(self) -> None:
+		'''
+		Remove the analysis material assigned to this variable.
+		'''
 		return self._Entity.RemoveAnalysisMaterial()
 
 
@@ -5135,6 +5430,9 @@ class ZoneDesignProperty(DesignProperty):
 
 
 class Environment(ABC):
+	'''
+	Represents HyperX's execution environment (where HyperX is installed).
+	'''
 	def __init__(self, environment: _api.Environment):
 		self._Entity = environment
 
@@ -5142,15 +5440,24 @@ class Environment(ABC):
 		return self._Entity.SetLocation(location)
 
 	def Initialize(self) -> None:
+		'''
+		Initialize the HyperX scripting environment.
+		'''
 		return self._Entity.Initialize()
 
 
 class FailureCriterionSetting(FailureSetting):
+	'''
+	Setting for a Failure Criteria.
+	'''
 	def __init__(self, failureCriterionSetting: _api.FailureCriterionSetting):
 		self._Entity = failureCriterionSetting
 
 
 class FailureModeSetting(FailureSetting):
+	'''
+	Setting for a Failure Mode.
+	'''
 	def __init__(self, failureModeSetting: _api.FailureModeSetting):
 		self._Entity = failureModeSetting
 
