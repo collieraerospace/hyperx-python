@@ -2530,6 +2530,43 @@ class OrthotropicCorrectionFactorBase(ABC):
 		return types.CorrectionProperty[self._Entity.PropertyId.ToString()]
 
 
+class OrthotropicCorrectionFactorPoint:
+	def __init__(self, orthotropicCorrectionFactorPoint: _api.OrthotropicCorrectionFactorPoint):
+		self._Entity = orthotropicCorrectionFactorPoint
+
+	def Create_OrthotropicCorrectionFactorPoint(property: types.CorrectionProperty, id: types.CorrectionId):
+		return OrthotropicCorrectionFactorPoint(_api.OrthotropicCorrectionFactorPoint(_types.CorrectionProperty(property.value), _types.CorrectionId(id.value)))
+
+	@property
+	def CorrectionProperty(self) -> types.CorrectionProperty:
+		'''
+		Property name for a correction factor. (Rows in HyperX)
+		'''
+		return types.CorrectionProperty[self._Entity.CorrectionProperty.ToString()]
+
+	@property
+	def CorrectionId(self) -> types.CorrectionId:
+		'''
+		Correction ID for a correction factor. (Columns in HyperX)
+		'''
+		return types.CorrectionId[self._Entity.CorrectionId.ToString()]
+
+	@overload
+	def Equals(self, other) -> bool: ...
+
+	@overload
+	def Equals(self, obj) -> bool: ...
+
+	def GetHashCode(self) -> int:
+		return self._Entity.GetHashCode()
+
+	def Equals(self, item1 = None) -> bool:
+		if isinstance(item1, OrthotropicCorrectionFactorPoint):
+			return self._Entity.Equals(item1._Entity)
+
+		return self._Entity.Equals(item1._Entity)
+
+
 class OrthotropicCorrectionFactorValue:
 	'''
 	Orthotropic material correction factor value.
@@ -3246,18 +3283,18 @@ class Orthotropic:
 		return OrthotropicEffectiveLaminate(self._Entity.OrthotropicEffectiveLaminate)
 
 	@property
-	def OrthotropicEquationCorrectionFactors(self) -> dict[tuple[types.CorrectionProperty, types.CorrectionId], OrthotropicEquationCorrectionFactor]:
+	def OrthotropicEquationCorrectionFactors(self) -> dict[OrthotropicCorrectionFactorPoint, OrthotropicEquationCorrectionFactor]:
 		orthotropicEquationCorrectionFactorsDict = {}
 		for kvp in self._Entity.OrthotropicEquationCorrectionFactors:
-			orthotropicEquationCorrectionFactorsDict[tuple[types.CorrectionProperty, types.CorrectionId](kvp.Key)] = OrthotropicEquationCorrectionFactor(kvp.Value)
+			orthotropicEquationCorrectionFactorsDict[OrthotropicCorrectionFactorPoint(kvp.Key)] = OrthotropicEquationCorrectionFactor(kvp.Value)
 
 		return orthotropicEquationCorrectionFactorsDict
 
 	@property
-	def OrthotropicTabularCorrectionFactors(self) -> dict[tuple[types.CorrectionProperty, types.CorrectionId], OrthotropicTabularCorrectionFactor]:
+	def OrthotropicTabularCorrectionFactors(self) -> dict[OrthotropicCorrectionFactorPoint, OrthotropicTabularCorrectionFactor]:
 		orthotropicTabularCorrectionFactorsDict = {}
 		for kvp in self._Entity.OrthotropicTabularCorrectionFactors:
-			orthotropicTabularCorrectionFactorsDict[tuple[types.CorrectionProperty, types.CorrectionId](kvp.Key)] = OrthotropicTabularCorrectionFactor(kvp.Value)
+			orthotropicTabularCorrectionFactorsDict[OrthotropicCorrectionFactorPoint(kvp.Key)] = OrthotropicTabularCorrectionFactor(kvp.Value)
 
 		return orthotropicTabularCorrectionFactorsDict
 
