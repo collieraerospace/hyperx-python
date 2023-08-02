@@ -641,7 +641,7 @@ class AnalysisProperty(AssignablePropertyWithFamilyCategory):
 		if isinstance(item1, int):
 			return self._Entity.AddFailureMode(item1)
 
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			idsList = MakeCSharpIntList(item1)
 			idsEnumerable = IEnumerable(idsList)
 			return self._Entity.AddFailureMode(idsEnumerable)
@@ -652,7 +652,7 @@ class AnalysisProperty(AssignablePropertyWithFamilyCategory):
 		if isinstance(item1, int):
 			return self._Entity.RemoveFailureMode(item1)
 
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			idsList = MakeCSharpIntList(item1)
 			idsEnumerable = IEnumerable(idsList)
 			return self._Entity.RemoveFailureMode(idsEnumerable)
@@ -1467,7 +1467,13 @@ class ZoneJointContainer(IdNameEntityRenameable):
 	def AddZone(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
+	def AddZones(self, ids: tuple[int]) -> CollectionModificationStatus: ...
+
+	@overload
 	def AddZone(self, zone: Zone) -> CollectionModificationStatus: ...
+
+	@overload
+	def AddZones(self, zones: tuple[Zone]) -> CollectionModificationStatus: ...
 
 	@overload
 	def RemoveZone(self, id: int) -> CollectionModificationStatus: ...
@@ -1518,7 +1524,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		return self._Entity.RemoveJoint(item1)
 
 	def RemoveJoints(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			jointIdsList = MakeCSharpIntList(item1)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveJoints(jointIdsEnumerable).ToString()]
@@ -1526,7 +1532,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, JointCol):
 			return CollectionModificationStatus[self._Entity.RemoveJoints(item1._Entity).ToString()]
 
-		return self._Entity.RemoveJoints(jointIdsEnumerable)
+		return self._Entity.RemoveJoints(item1)
 
 	def AddZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -1536,6 +1542,23 @@ class ZoneJointContainer(IdNameEntityRenameable):
 			return CollectionModificationStatus[self._Entity.AddZone(item1._Entity).ToString()]
 
 		return self._Entity.AddZone(item1)
+
+	def AddZones(self, item1 = None) -> CollectionModificationStatus:
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+			idsList = MakeCSharpIntList(item1)
+			idsEnumerable = IEnumerable(idsList)
+			return CollectionModificationStatus[self._Entity.AddZones(idsEnumerable).ToString()]
+
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], Zone):
+			zonesList = List[_api.Zone]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						zonesList.Add(thing._Entity)
+			zonesEnumerable = IEnumerable(zonesList)
+			return CollectionModificationStatus[self._Entity.AddZones(zonesEnumerable).ToString()]
+
+		return self._Entity.AddZones(item1)
 
 	def RemoveZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -1547,7 +1570,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		return self._Entity.RemoveZone(item1)
 
 	def RemoveZones(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveZones(zoneIdsEnumerable).ToString()]
@@ -1555,7 +1578,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, ZoneCol):
 			return CollectionModificationStatus[self._Entity.RemoveZones(item1._Entity).ToString()]
 
-		return self._Entity.RemoveZones(zoneIdsEnumerable)
+		return self._Entity.RemoveZones(item1)
 
 	def AddPanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -1576,7 +1599,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		return self._Entity.RemovePanelSegment(item1)
 
 	def RemovePanelSegments(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			segmentIdsList = MakeCSharpIntList(item1)
 			segmentIdsEnumerable = IEnumerable(segmentIdsList)
 			return CollectionModificationStatus[self._Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
@@ -1584,7 +1607,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, PanelSegmentCol):
 			return CollectionModificationStatus[self._Entity.RemovePanelSegments(item1._Entity).ToString()]
 
-		return self._Entity.RemovePanelSegments(segmentIdsEnumerable)
+		return self._Entity.RemovePanelSegments(item1)
 
 
 class FoamTemperature:
@@ -3919,7 +3942,7 @@ class Set(ZoneJointContainer):
 	def AddPanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus: ...
 
 	@overload
-	def AddZone(self, zone: Zone) -> CollectionModificationStatus: ...
+	def AddZones(self, zones: tuple[Zone]) -> CollectionModificationStatus: ...
 
 	@overload
 	def RemoveJoints(self, jointIds: tuple[int]) -> CollectionModificationStatus: ...
@@ -3944,6 +3967,12 @@ class Set(ZoneJointContainer):
 
 	@overload
 	def AddZone(self, id: int) -> CollectionModificationStatus: ...
+
+	@overload
+	def AddZones(self, ids: tuple[int]) -> CollectionModificationStatus: ...
+
+	@overload
+	def AddZone(self, zone: Zone) -> CollectionModificationStatus: ...
 
 	@overload
 	def RemoveZone(self, id: int) -> CollectionModificationStatus: ...
@@ -3984,17 +4013,23 @@ class Set(ZoneJointContainer):
 
 		return self._Entity.AddPanelSegment(item1._Entity)
 
-	def AddZone(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, Zone):
-			return CollectionModificationStatus[self._Entity.AddZone(item1._Entity).ToString()]
+	def AddZones(self, item1 = None) -> CollectionModificationStatus:
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], Zone):
+			zonesList = List[_api.Zone]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						zonesList.Add(thing._Entity)
+			zonesEnumerable = IEnumerable(zonesList)
+			return CollectionModificationStatus[self._Entity.AddZones(zonesEnumerable).ToString()]
 
-		if isinstance(item1, int):
-			return CollectionModificationStatus(super().AddZone(item1))
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+			return CollectionModificationStatus(super().AddZones(item1))
 
-		return self._Entity.AddZone(item1._Entity)
+		return self._Entity.AddZones(item1)
 
 	def RemoveJoints(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			jointIdsList = MakeCSharpIntList(item1)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveJoints(jointIdsEnumerable).ToString()]
@@ -4002,10 +4037,10 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, JointCol):
 			return CollectionModificationStatus(super().RemoveJoints(item1))
 
-		return self._Entity.RemoveJoints(jointIdsEnumerable)
+		return self._Entity.RemoveJoints(item1)
 
 	def RemovePanelSegments(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			segmentIdsList = MakeCSharpIntList(item1)
 			segmentIdsEnumerable = IEnumerable(segmentIdsList)
 			return CollectionModificationStatus[self._Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
@@ -4013,10 +4048,10 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, PanelSegmentCol):
 			return CollectionModificationStatus(super().RemovePanelSegments(item1))
 
-		return self._Entity.RemovePanelSegments(segmentIdsEnumerable)
+		return self._Entity.RemovePanelSegments(item1)
 
 	def RemoveZones(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveZones(zoneIdsEnumerable).ToString()]
@@ -4024,7 +4059,7 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, ZoneCol):
 			return CollectionModificationStatus(super().RemoveZones(item1))
 
-		return self._Entity.RemoveZones(zoneIdsEnumerable)
+		return self._Entity.RemoveZones(item1)
 
 	def RemoveJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -4034,6 +4069,15 @@ class Set(ZoneJointContainer):
 			return CollectionModificationStatus(super().RemoveJoint(item1))
 
 		return self._Entity.RemoveJoint(item1)
+
+	def AddZone(self, item1 = None) -> CollectionModificationStatus:
+		if isinstance(item1, int):
+			return CollectionModificationStatus(super().AddZone(item1))
+
+		if isinstance(item1, Zone):
+			return CollectionModificationStatus(super().AddZone(item1))
+
+		return self._Entity.AddZone(item1)
 
 	def RemoveZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -4143,7 +4187,7 @@ class Structure(ZoneJointContainer):
 		return CollectionModificationStatus[self._Entity.AddPfemProperties(pfemPropertyIdsEnumerable).ToString()]
 
 	@overload
-	def AddZone(self, zone: Zone) -> CollectionModificationStatus: ...
+	def AddZones(self, zones: tuple[Zone]) -> CollectionModificationStatus: ...
 
 	def CreateZone(self, elementIds: tuple[int], name: str = None) -> None:
 		elementIdsList = MakeCSharpIntList(elementIds)
@@ -4187,6 +4231,12 @@ class Structure(ZoneJointContainer):
 	def AddZone(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
+	def AddZones(self, ids: tuple[int]) -> CollectionModificationStatus: ...
+
+	@overload
+	def AddZone(self, zone: Zone) -> CollectionModificationStatus: ...
+
+	@overload
 	def RemoveZone(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
@@ -4225,17 +4275,23 @@ class Structure(ZoneJointContainer):
 
 		return self._Entity.AddPanelSegment(item1._Entity)
 
-	def AddZone(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, Zone):
-			return CollectionModificationStatus[self._Entity.AddZone(item1._Entity).ToString()]
+	def AddZones(self, item1 = None) -> CollectionModificationStatus:
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], Zone):
+			zonesList = List[_api.Zone]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						zonesList.Add(thing._Entity)
+			zonesEnumerable = IEnumerable(zonesList)
+			return CollectionModificationStatus[self._Entity.AddZones(zonesEnumerable).ToString()]
 
-		if isinstance(item1, int):
-			return CollectionModificationStatus(super().AddZone(item1))
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+			return CollectionModificationStatus(super().AddZones(item1))
 
-		return self._Entity.AddZone(item1._Entity)
+		return self._Entity.AddZones(item1)
 
 	def Remove(self, item1 = None, item2 = None, item3 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and isinstance(item2, tuple) and isinstance(item3, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int) and isinstance(item2, tuple) and len(item2) > 0 and isinstance(item2[0], int) and isinstance(item3, tuple) and len(item3) > 0 and isinstance(item3[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			jointIdsList = MakeCSharpIntList(item2)
@@ -4244,17 +4300,17 @@ class Structure(ZoneJointContainer):
 			panelSegmentIdsEnumerable = IEnumerable(panelSegmentIdsList)
 			return CollectionModificationStatus[self._Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable, panelSegmentIdsEnumerable).ToString()]
 
-		if isinstance(item1, tuple) and isinstance(item2, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int) and isinstance(item2, tuple) and len(item2) > 0 and isinstance(item2[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			jointIdsList = MakeCSharpIntList(item2)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
 			return CollectionModificationStatus[self._Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable).ToString()]
 
-		return self._Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable, panelSegmentIdsEnumerable)
+		return self._Entity.Remove(item1, item2, item3)
 
 	def RemoveJoints(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			jointIdsList = MakeCSharpIntList(item1)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveJoints(jointIdsEnumerable).ToString()]
@@ -4262,10 +4318,10 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, JointCol):
 			return CollectionModificationStatus(super().RemoveJoints(item1))
 
-		return self._Entity.RemoveJoints(jointIdsEnumerable)
+		return self._Entity.RemoveJoints(item1)
 
 	def RemovePanelSegments(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			segmentIdsList = MakeCSharpIntList(item1)
 			segmentIdsEnumerable = IEnumerable(segmentIdsList)
 			return CollectionModificationStatus[self._Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
@@ -4273,10 +4329,10 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, PanelSegmentCol):
 			return CollectionModificationStatus(super().RemovePanelSegments(item1))
 
-		return self._Entity.RemovePanelSegments(segmentIdsEnumerable)
+		return self._Entity.RemovePanelSegments(item1)
 
 	def RemoveZones(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveZones(zoneIdsEnumerable).ToString()]
@@ -4284,7 +4340,7 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, ZoneCol):
 			return CollectionModificationStatus(super().RemoveZones(item1))
 
-		return self._Entity.RemoveZones(zoneIdsEnumerable)
+		return self._Entity.RemoveZones(item1)
 
 	def RemoveJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -4294,6 +4350,15 @@ class Structure(ZoneJointContainer):
 			return CollectionModificationStatus(super().RemoveJoint(item1))
 
 		return self._Entity.RemoveJoint(item1)
+
+	def AddZone(self, item1 = None) -> CollectionModificationStatus:
+		if isinstance(item1, int):
+			return CollectionModificationStatus(super().AddZone(item1))
+
+		if isinstance(item1, Zone):
+			return CollectionModificationStatus(super().AddZone(item1))
+
+		return self._Entity.AddZone(item1)
 
 	def RemoveZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -4876,7 +4941,7 @@ class Project:
 	def ExportCad(self, cadIds: tuple[int], filePath: str) -> None: ...
 
 	def AnalyzeZones(self, item1 = None) -> tuple[bool, str]:
-		if isinstance(item1, list):
+		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], Zone):
 			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
@@ -4885,15 +4950,15 @@ class Project:
 			result = self._Entity.AnalyzeZones(item1 if item1 is None else zonesList)
 			return tuple([result.Item1, result.Item2])
 
-		if isinstance(item1, list):
+		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			result = self._Entity.AnalyzeZones(zoneIdsList)
 			return tuple([result.Item1, result.Item2])
 
-		return self._Entity.AnalyzeZones(item1 if item1 is None else zonesList)
+		return self._Entity.AnalyzeZones(item1)
 
 	def SizeZones(self, item1 = None) -> tuple[bool, str]:
-		if isinstance(item1, list):
+		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], Zone):
 			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
@@ -4902,15 +4967,15 @@ class Project:
 			result = self._Entity.SizeZones(item1 if item1 is None else zonesList)
 			return tuple([result.Item1, result.Item2])
 
-		if isinstance(item1, list):
+		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			result = self._Entity.SizeZones(zoneIdsList)
 			return tuple([result.Item1, result.Item2])
 
-		return self._Entity.SizeZones(item1 if item1 is None else zonesList)
+		return self._Entity.SizeZones(item1)
 
 	def ExportCad(self, item1 = None, item2 = None) -> None:
-		if isinstance(item1, tuple) and isinstance(item2, str):
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int) and isinstance(item2, str):
 			cadIdsList = MakeCSharpIntList(item1)
 			cadIdsEnumerable = IEnumerable(cadIdsList)
 			return self._Entity.ExportCad(cadIdsEnumerable, item2)
@@ -4918,7 +4983,7 @@ class Project:
 		if isinstance(item1, str):
 			return self._Entity.ExportCad(item1)
 
-		return self._Entity.ExportCad(cadIdsEnumerable, item2)
+		return self._Entity.ExportCad(item1, item2)
 
 
 class ProjectInfo(IdNameEntityRenameable):
