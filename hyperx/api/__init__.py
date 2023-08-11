@@ -3,7 +3,7 @@ from ..library import _api, _types
 from ..api import types
 from typing import TypeVar, Generic, overload
 from enum import Enum
-from System.Collections.Generic import List, IEnumerable, Dictionary
+from System.Collections.Generic import List, IEnumerable, Dictionary, HashSet
 from System.Threading.Tasks import Task
 from System import Guid, DateTime
 
@@ -4847,7 +4847,17 @@ class Project:
 			for thing in tags:
 				if thing is not None:
 					tagsList.Add(thing)
-		return self._Entity.Upload(uploadSetName, company, program, tagsList, notes, zoneIds._Entity, jointIds._Entity)
+		zoneIdsSet = HashSet[int]()
+		if zoneIds is not None:
+			for thing in zoneIds:
+				if thing is not None:
+					zoneIdsSet.Add(thing)
+		jointIdsSet = HashSet[int]()
+		if jointIds is not None:
+			for thing in jointIds:
+				if thing is not None:
+					jointIdsSet.Add(thing)
+		return self._Entity.Upload(uploadSetName, company, program, tagsList, notes, zoneIdsSet, jointIdsSet)
 
 	def GetDashboardCompanies(self) -> list[str]:
 		'''
