@@ -14,6 +14,7 @@ from ..library import _api
 
 def Open(hdbPath: os.PathLike) -> Application:
     '''Opens a HyperX database for script access.'''
+    hdbPath = os.fspath(hdbPath)
     if not os.path.isabs(hdbPath):
         hdbPath = os.path.abspath(hdbPath)
     
