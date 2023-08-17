@@ -7,7 +7,7 @@ import os
 import subprocess
 import csv
 from pathlib import Path
-from typing import Any, Generator
+from typing import Generator
 import errno
 
 from ..api import Application
@@ -29,7 +29,7 @@ def Open(hdbPath: os.PathLike) -> Application:
 
 
 @contextmanager
-def OpenManagedDatabase(hdbPath: os.PathLike) -> Generator[Application, Any, None]:
+def OpenManagedDatabase(hdbPath: os.PathLike) -> Generator[Application, None, None]:
     '''Opens a HyperX database for script access in with statement context managers.'''
     app = Open(hdbPath)
     try:
