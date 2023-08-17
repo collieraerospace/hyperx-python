@@ -7,7 +7,7 @@ import os
 import subprocess
 import csv
 from pathlib import Path
-from typing import Generator
+from typing import Any, Generator
 import errno
 
 from ..api import Application
