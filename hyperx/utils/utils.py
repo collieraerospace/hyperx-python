@@ -2,11 +2,12 @@
 Utility methods.
 """
 
+from contextlib import contextmanager
 import os
 import subprocess
 import csv
 from pathlib import Path
-from typing import Any
+from typing import Any, Generator
 import errno
 
 from ..api import Application
@@ -25,6 +26,16 @@ def Open(hdbPath: os.PathLike) -> Application:
     database = _api.Application()
     database.OpenDatabase(hdbPath)
     return Application(database)
+
+
+@contextmanager
+def OpenManagedDatabase(hdbPath: os.PathLike) -> Generator[Application, None, None]:
+    '''Opens a HyperX database for script access in with statement context managers.'''
+    app = Open(hdbPath)
+    try:
+        yield app
+    finally:
+        app.CloseDatabase()
 
 
 def OpenWithDefault(filepath: str):

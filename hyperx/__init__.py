@@ -26,4 +26,4 @@ variable `HyperXInstall`
 from .library import _api, _types
 
 from .api import *
-from .utils import Open
+from .utils import Open, OpenManagedDatabase
