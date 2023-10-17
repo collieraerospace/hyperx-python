@@ -3,3 +3,5 @@ dist/
 
 setup*twine.bat
 .vscode/
+
+.vs/
