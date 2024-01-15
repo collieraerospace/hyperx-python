@@ -2,9 +2,9 @@
 Utilities for finding HyperX files.
 """
 
+from __future__ import annotations
 import os
 import winreg
-
 
 def _TryGetEnvInstallFolder() -> str | None:
     '''Looks for the HyperX installation folder in the environment variables.'''

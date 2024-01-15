@@ -1,4 +1,16 @@
+from __future__ import annotations
+from ...library import _api, _types
+
+from typing import TypeVar, Generic, overload
 from enum import Enum
+from System.Collections.Generic import List, IEnumerable, Dictionary, HashSet
+from System.Threading.Tasks import Task
+from System import Guid, DateTime
+
+from abc import ABC, abstractmethod
+
+T = TypeVar('T')
+
 
 class AnalysisId(Enum):
 	UNKNOWN = 0
@@ -254,9 +266,6 @@ class UserConstantDataType(Enum):
 	Text = 7
 
 class FamilyConceptUID(Enum):
-	'''
-	Values match UID of family_concept_definition table.
-	'''
 	Unknown = 0
 	One_Stack_Unstiffened = 1
 	Two_Stack_Unstiffened = 2
@@ -315,6 +324,29 @@ class FamilyConceptUID(Enum):
 	Shear_Clip_Frame_Fastened = 222
 	Cruciform = 223
 
+class BeamPanelFamily(Enum):
+	Unassigned = 0
+	Unstiffened = 2
+	Corrugated = 3
+	Uniaxial = 4
+	Grid = 5
+	PRSEUS = 6
+	OpenBeam = 7
+	RectangularBeam = 8
+	CircularBeam = 9
+
+class HeightSizingVariable(Enum):
+	Invalid = 0
+	TotalPanelHeight = 1
+	StiffenerHeight = 2
+	WebHeight = 3
+
+class MaterialMode(Enum):
+	none = 0
+	Metal = 1
+	Composite = 2
+	Any = 3
+
 class ToolingSelectionType(Enum):
 	'''
 	Defines which selection a given tooling constraint is currently set to.
@@ -323,6 +355,12 @@ class ToolingSelectionType(Enum):
 	AnyValue = 1
 	SpecifiedValue = 2
 	SpecifiedLimitOrRange = 3
+
+class VariableInputMode(Enum):
+	UNKNOWN = 0
+	Dimensions = 1
+	Plies = 2
+	Stock = 3
 
 class DiscreteFieldDataType(Enum):
 	'''
@@ -377,9 +415,6 @@ class DiscreteDefinitionType(Enum):
 	WebCruciformUpper = 27
 
 class FamilyCategory(Enum):
-	'''
-	Representative of the family_category table
-	'''
 	Unknown = 0
 	Panel = 1
 	Beam = 2
@@ -504,9 +539,121 @@ class FemType(Enum):
 	Ply = 100
 	MPC = 101
 
+class ConstraintType(Enum):
+	UNKNOWN = 0
+	Displacement = 1
+	Buckling = 2
+	Moment = 3
+	Frequency = 4
+
+class DegreeOfFreedom(Enum):
+	T1 = 0
+	T2 = 1
+	T3 = 2
+	R1 = 3
+	R2 = 4
+	R3 = 5
+	Tmag = 6
+	Rmag = 7
+
+class DisplacementShapeType(Enum):
+	Unknown = 0
+	Sphere = 1
+	Cylinder = 2
+	Plane = 3
+
+class StiffnessCriteriaType(Enum):
+	Displacement = 0
+	Rotation = 1
+	Buckling = 2
+	Frequency = 3
+
+class JointConceptId(Enum):
+	Unassigned = 0
+	Clevis = 2
+	EdgeAllowable = 10
+	BoltedSingleShear = 13
+	BondedSingleLap = 14
+	RivetedSingleShear = 15
+	DoubleStrap = 16
+	Doubler = 17
+	SteppedLap = 18
+	BoltedDoubleShear = 19
+	BoltedTripleShear = 20
+	BoltedQuadrupleShear = 21
+
+class JointRangeId(Enum):
+	Torque = 1
+	Spacing = 2
+	FastenerRows = 3
+	LengthOverlap = 4
+	TaperAngle = 5
+	FinalThickness = 6
+	PulloffNormalAllowable = 7
+	CompressiveNormalAllowable = 8
+	ShearAllowable = 9
+	Adherend1Thickness = 10
+	Adherend2Thickness = 11
+	Sheet1Thickness = 12
+	Sheet2Thickness = 13
+	ThicknessAdhesive = 14
+	ThicknessDoubler = 15
+	ThicknessClevis = 16
+	ThicknessStrap = 17
+	LengthDoubler = 18
+	NumberOfSteps = 19
+	Sheet3Thickness = 20
+	Sheet4Thickness = 21
+
+class JointSelectionId(Enum):
+	AdhesiveMaterial = 1
+	UpperStrapMaterial = 2
+	LowerStrapMaterial = 3
+	ClevisMaterial = 4
+	FastenerSelection = 5
+	Adherend1Material = 6
+	Adherend2Material = 7
+	Sheet1Material = 8
+	Sheet2Material = 9
+	RivetMaterial = 10
+	StrapMaterial = 11
+	DoublerMaterial = 12
+	Sheet3Material = 13
+	Sheet4Material = 14
+
+class BoundaryConditionType(Enum):
+	Force = 1
+	Displacement = 2
+	Free = 3
+	Fixed = 4
+
+class ForceTransformType(Enum):
+	HyperXConvention = 1
+	SolverConvention = 2
+
 class LoadCaseType(Enum):
 	Static = 1
 	Fatigue = 2
+
+class LoadPropertyAverageElementType(Enum):
+	TensionCompressionAverage = 0
+	TrueAverage = 1
+
+class LoadPropertyPeakElementScope(Enum):
+	PeakDesignCase = 1
+	AllDesignCases = 2
+
+class LoadPropertyType(Enum):
+	none = 0
+	Average = 1
+	Statistical = 2
+	PeakLoad = 3
+	NeighborAverage = 4
+	ElementBased = 5
+	UserFEA = 6
+	UserBonded = 7
+	UserBolted = 8
+	UserGeneral = 9
 
 class LoadSubCaseFactor(Enum):
 	none = 0
@@ -584,13 +731,13 @@ class CorrectionId(Enum):
 	'''
 	Correction1 = 1
 	Correction2 = 2
-	Correction3 = 3
-	Correction4 = 4
-	Correction5 = 5
-	Correction6 = 6
-	Correction7 = 7
-	Correction8 = 8
-	Correction9 = 9
+	Correction7 = 3
+	Correction6 = 4
+	Correction8 = 5
+	Correction9 = 6
+	Correction5 = 7
+	Correction3 = 8
+	Correction4 = 9
 
 class CorrectionIndependentDefinition(Enum):
 	'''
@@ -713,10 +860,76 @@ class EquationParameterId(Enum):
 	QuadDiamThick_Thickness_Over_D = 6006
 	QuadDiamThick_Thickness_Over_D_Squared = 6007
 
+class LaminateFamilySettingType(Enum):
+	none = 0
+	Allowed = 1
+	Required = 2
+
+class PlyDropPattern(Enum):
+	none = 0
+	Hourglass = 1
+	Diamond = 2
+	UpsideDownTriangle = 3
+	Pyramid = 4
+	Interleaved = 5
+	InterleavedHourglass = 6
+	Element = 7
+	Stiffener = 8
+
+class PlyStiffenerSubType(Enum):
+	none = 0
+	Base1 = 1
+	Plank = 2
+	FootCharge = 3
+	WebCharge = 4
+	CapCharge = 5
+	CapCover = 6
+	Charge = 7
+	Base2 = 8
+	BottomCover = 9
+	TopCover = 10
+
+class StiffenerLaminateLayerLocation(Enum):
+	Base = 1
+	Plank = 2
+	FootCharge = 3
+	WebCharge = 4
+	CapCharge = 5
+	BottomCover = 6
+	TopCover = 7
+
+class StiffenerProfile(Enum):
+	Corrugated = 1
+	IPanel = 2
+	TPanel = 3
+	ZPanel = 4
+	JPanel = 5
+	CPanel = 6
+	AnglePanel = 7
+	InvertedTPanel = 8
+	LPanel = 9
+	IsoGrid = 10
+	Orthogrid = 11
+	GeneralGrid = 12
+	IBeam = 13
+	CBeam = 14
+	TBeam = 15
+	ZBeam = 16
+	LBeam = 17
+	JBeam = 18
+	RectangularBeam = 19
+
+class MaterialType(Enum):
+	'''
+	Represents a material's type.
+	'''
+	Foam = 0
+	Honeycomb = 1
+	Isotropic = 2
+	Laminate = 3
+	Orthotropic = 5
+
 class FamilyObjectUID(Enum):
-	'''
-	Values match UID of family_object_definition table.
-	'''
 	Default_Object = 0
 	Top_Stack = 1
 	Middle_Stack = 2
@@ -818,6 +1031,67 @@ class JointObject(Enum):
 	EdgeAllowableSheet = 12
 	Rivet = 13
 
+class VariableParameter(Enum):
+	none = 0
+	BottomFaceThicknessMaterial = 1
+	BottomFlangeThickness = 2
+	BottomFlangeWidth = 3
+	ThreeStackCoreThicknessMaterial = 4
+	WebAngle = 5
+	Height = 6
+	Spacing = 7
+	TopFaceThicknessMaterial = 8
+	TopClearSpanWidth = 9
+	TopFlangeThickness = 10
+	TopFlangeWidth = 11
+	EllipticalTubeWallThicknessMaterial = 13
+	WebThicknessMaterial = 14
+	GridStiffened90WebThickness = 15
+	GridStiffenedAngleWebThickness = 16
+	GridStiffened0WebHeight = 17
+	GridStiffened90WebHeight = 18
+	GridStiffenedAngleWebHeight = 19
+	GridStiffened90WebStiffenerSpacing = 20
+	GridStiffenedAngleWebStiffenerSpacing = 21
+	RectangularBeamTopWallThickness = 24
+	RectangularBeamSideWallThicknessMaterial = 25
+	RectangularBeamBottomWallThickness = 26
+	BeamWidth = 28
+	TubeTaperAngle = 29
+	RodStiffenedStringerHeight = 31
+	RodStiffenedFrameWebThicknessMaterial = 32
+	RodStiffenedFrameHeight = 33
+	RodStiffenedFrameSpacing = 34
+	RodStiffenedFrameFlangeWidth = 35
+	RodStiffenedFrameFlangeThickness = 36
+	RodStiffenedRodDiameterMaterial = 37
+	RodStiffenedFrameClearSpan = 38
+	RodStiffenedFoamThicknessMaterial = 41
+	RodStiffenedTopFaceThicknessMaterial = 42
+	RodStiffenedStringerSpacing = 43
+	RodStiffenedStringerFlangeWidth = 44
+	RodStiffenedStringerFlangeThickness = 45
+	RodStiffenedStringerClearSpan = 46
+	HoneycombThicknessMaterial = 47
+	FoamThicknessMaterial = 48
+	HeightStiffener = 49
+	HeightStiffenerWeb = 50
+	CapBeamThicknessMaterial = 51
+	FrameMidThickness = 52
+	FrameMidWidth = 53
+	FrameMidHeight = 54
+	ShearClipFootThickness = 55
+	ShearClipFootWidth = 56
+	ShearClipWebThickness = 57
+	ShearClipWebHeight = 58
+	FrameWebCapThickness = 59
+	ShearClipRefHeight = 60
+	CorrugatedWebThicknessMaterial = 61
+
+class LoadSetType(Enum):
+	Mechanical = 0
+	Thermal = 1
+
 class ProjectModelFormat(Enum):
 	UNKNOWN = 0
 	MscNastran = 1
@@ -833,4 +1107,132 @@ class SectionCutPropertyLocation(Enum):
 	'''
 	Centroid = 0
 	Origin = 1
+
+class ReferencePlaneBeam(Enum):
+	UNKNOWN = 0
+	Neutral = 1
+	Top = 2
+	Bottom = 3
+
+class ReferencePlanePanel(Enum):
+	UNKNOWN = 0
+	MidplaneTopFace = 1
+	Midplane = 2
+	MidplaneBottomFace = 3
+	OML = 4
+	IML = 5
+
+class ZoneBucklingMode(Enum):
+	UNKNOWN = 0
+	InternalX = 1
+	InternalY = 2
+	ExternalX = 3
+	ExternalY = 4
+
+class SimpleStatus:
+	'''
+	Lots of methods need to return a Success state and an associated Message.
+	'''
+	def __init__(self, simpleStatus: _types.SimpleStatus):
+		self._Entity = simpleStatus
+
+	def Create_SimpleStatus_success_message(success: bool, message: str):
+		return SimpleStatus(_api.SimpleStatus(success, message))
+
+	def Create_SimpleStatus_tupleInput(tupleInput: tuple[bool, str]):
+		return SimpleStatus(_api.SimpleStatus(tupleInput._Entity))
+
+	@property
+	def Success(self) -> bool:
+		return self._Entity.Success
+
+	@property
+	def Message(self) -> str:
+		return self._Entity.Message
+
+	def ToString(self) -> str:
+		return self._Entity.ToString()
+
+	def GetHashCode(self) -> int:
+		return self._Entity.GetHashCode()
+
+	@overload
+	def Equals(self, obj) -> bool: ...
+
+	@overload
+	def Equals(self, other) -> bool: ...
+
+	def Equals(self, item1 = None) -> bool:
+		if isinstance(item1, SimpleStatus):
+			return self._Entity.Equals(_types.SimpleStatus(item1.value))
+
+		return self._Entity.Equals(item1)
+
+	def __eq__(self, other):
+		return self.Equals(other)
+
+	def __ne__(self, other):
+		return not self.Equals(other)
+
+
+class DesignLink:
+	def __init__(self, designLink: _types.DesignLink):
+		self._Entity = designLink
+
+	def Create_DesignLink(designId: int, familyId: BeamPanelFamily, conceptId: int, linkedVariableId: int):
+		return DesignLink(_api.DesignLink(designId, _types.BeamPanelFamily(familyId.value), conceptId, linkedVariableId))
+
+	@property
+	def DesignId(self) -> int:
+		return self._Entity.DesignId
+
+	@property
+	def FamilyId(self) -> BeamPanelFamily:
+		return BeamPanelFamily[self._Entity.FamilyId.ToString()]
+
+	@property
+	def ConceptId(self) -> int:
+		return self._Entity.ConceptId
+
+	@property
+	def LinkedVariableId(self) -> int:
+		return self._Entity.LinkedVariableId
+
+	def Equals(self, obj) -> bool:
+		return self._Entity.Equals(obj._Entity)
+
+	def GetHashCode(self) -> int:
+		return self._Entity.GetHashCode()
+
+
+class HyperFeaSolver:
+	def __init__(self, hyperFeaSolver: _types.HyperFeaSolver):
+		self._Entity = hyperFeaSolver
+
+	def Create_HyperFeaSolver(projectModelFormat: ProjectModelFormat, solverPath: str, arguments: str):
+		return HyperFeaSolver(_api.HyperFeaSolver(_types.ProjectModelFormat(projectModelFormat.value), solverPath, arguments))
+
+	@property
+	def ProjectModelFormat(self) -> ProjectModelFormat:
+		return ProjectModelFormat[self._Entity.ProjectModelFormat.ToString()]
+
+	@property
+	def SolverPath(self) -> str:
+		return self._Entity.SolverPath
+
+	@property
+	def Arguments(self) -> str:
+		return self._Entity.Arguments
+
+	@ProjectModelFormat.setter
+	def ProjectModelFormat(self, value: ProjectModelFormat) -> None:
+		self._Entity.ProjectModelFormat = _types.ProjectModelFormat(value.value)
+
+	@SolverPath.setter
+	def SolverPath(self, value: str) -> None:
+		self._Entity.SolverPath = value
+
+	@Arguments.setter
+	def Arguments(self, value: str) -> None:
+		self._Entity.Arguments = value
 

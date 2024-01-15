@@ -45,3 +45,6 @@ def ReferenceLibrary():
     # Allow C#-compatible types.
     # from System.Collections.Generic import List
     clr.AddReference('System.Collections')
+    
+    # Enable dashboard features
+    clr.AddReference('System.Security.Cryptography.ProtectedData')

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from ..library import _api, _types
 
 from ..api import types
@@ -5,7 +6,7 @@ from typing import TypeVar, Generic, overload
 from enum import Enum
 from System.Collections.Generic import List, IEnumerable, Dictionary, HashSet
 from System.Threading.Tasks import Task
-from System import Guid, DateTime
+from System import Guid, DateTime, Action
 
 from abc import ABC, abstractmethod
 
@@ -109,6 +110,17 @@ class PropertyAssignmentStatus(Enum):
 	PropertyIsNull = 4
 	PropertyNotFoundInDb = 5
 	EmptyCollection = 6
+	IncompatiblePropertyAssignment = 7
+	EntityDoesNotExist = 8
+
+class RundeckBulkUpdateStatus(Enum):
+	NoRundecksUpdated = 0
+	Success = 1
+	InputFilePathDoesNotExist = 2
+	ResultFilePathDoesNotExist = 3
+	InputFilePathAlreadyExists = 4
+	ResultFilePathAlreadyExists = 5
+	InvalidPathCount = 6
 
 class RundeckCreationStatus(Enum):
 	Success = 1
@@ -130,10 +142,22 @@ class RundeckUpdateStatus(Enum):
 	InputPathInUse = 5
 	ResultPathInUse = 6
 	RundeckCommitFailure = 7
+	InputPathDoesNotExist = 8
+	ResultPathDoesNotExist = 9
+
+class ZoneCreationStatus(Enum):
+	'''
+	Indicates whether a zone was created successfully. 
+            If not, this indicates why the zone was not created.
+	'''
+	Success = 1
+	DuplicateNameFailure = 2
+	InvalidFamilyCategory = 3
 
 class ZoneIdUpdateStatus(Enum):
 	Success = 1
 	DuplicateIdFailure = 2
+	IdOutOfRangeError = 3
 
 class UnitSystem(Enum):
 	'''
@@ -141,7 +165,6 @@ class UnitSystem(Enum):
 	'''
 	English = 1
 	SI = 2
-
 
 class IdEntity(ABC):
 	'''
@@ -226,11 +249,13 @@ class AnalysisResult(ABC):
 		'''
 		Represents a Margin result.
 		'''
-		return Margin(self._Entity.Margin)
+		result = self._Entity.Margin
+		return Margin(result) if result is not None else None
 
 	@property
 	def AnalysisDefinition(self) -> AnalysisDefinition:
-		return AnalysisDefinition(self._Entity.AnalysisDefinition)
+		result = self._Entity.AnalysisDefinition
+		return AnalysisDefinition(result) if result is not None else None
 
 
 class JointAnalysisResult(AnalysisResult):
@@ -251,9 +276,6 @@ class ZoneAnalysisConceptResult(AnalysisResult):
 
 	@property
 	def ConceptId(self) -> types.FamilyConceptUID:
-		'''
-		Values match UID of family_concept_definition table.
-		'''
 		return types.FamilyConceptUID[self._Entity.ConceptId.ToString()]
 
 
@@ -263,9 +285,6 @@ class ZoneAnalysisObjectResult(AnalysisResult):
 
 	@property
 	def ObjectId(self) -> types.FamilyObjectUID:
-		'''
-		Values match UID of family_object_definition table.
-		'''
 		return types.FamilyObjectUID[self._Entity.ObjectId.ToString()]
 
 
@@ -280,9 +299,6 @@ class AssignablePropertyWithFamilyCategory(AssignableProperty):
 
 	@property
 	def FamilyCategory(self) -> types.FamilyCategory:
-		'''
-		Representative of the family_category table
-		'''
 		return types.FamilyCategory[self._Entity.FamilyCategory.ToString()]
 
 
@@ -304,6 +320,18 @@ class FailureObjectGroup(IdNameEntity):
 	@property
 	def RequiredMargin(self) -> float:
 		return self._Entity.RequiredMargin
+
+	@IsEnabled.setter
+	def IsEnabled(self, value: bool) -> None:
+		self._Entity.IsEnabled = value
+
+	@LimitUltimate.setter
+	def LimitUltimate(self, value: types.LimitUltimate) -> None:
+		self._Entity.LimitUltimate = _types.LimitUltimate(value.value)
+
+	@RequiredMargin.setter
+	def RequiredMargin(self, value: float) -> None:
+		self._Entity.RequiredMargin = value
 
 
 class FailureSetting(IdNameEntity):
@@ -353,6 +381,21 @@ class FailureSetting(IdNameEntity):
 	def Value(self) -> str:
 		return self._Entity.Value
 
+	def SetStringValue(self, value: str) -> None:
+		return self._Entity.SetStringValue(value)
+
+	def SetIntValue(self, value: int) -> None:
+		return self._Entity.SetIntValue(value)
+
+	def SetFloatValue(self, value: float) -> None:
+		return self._Entity.SetFloatValue(value)
+
+	def SetBoolValue(self, value: bool) -> None:
+		return self._Entity.SetBoolValue(value)
+
+	def SetSelectionValue(self, index: int) -> None:
+		return self._Entity.SetSelectionValue(index)
+
 
 class IdEntityCol(Generic[T], ABC):
 	def __init__(self, idEntityCol: _api.IdEntityCol):
@@ -360,7 +403,14 @@ class IdEntityCol(Generic[T], ABC):
 
 	@property
 	def IdEntityColList(self) -> tuple[IdEntity]:
-		return tuple([IdEntity(idEntityCol) for idEntityCol in self._Entity])
+		if self._Entity.Count() <= 0:
+			return ()
+		thisClass = type(self._Entity._items[0]).__name__
+		givenClass = IdEntity
+		for subclass in IdEntity.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return tuple([givenClass(idEntityCol) for idEntityCol in self._Entity])
 
 	@property
 	def Ids(self) -> tuple[int]:
@@ -392,7 +442,14 @@ class IdNameEntityCol(IdEntityCol, Generic[T]):
 
 	@property
 	def IdNameEntityColList(self) -> tuple[T]:
-		return tuple([T(idNameEntityCol) for idNameEntityCol in self._Entity])
+		if self._Entity.Count() <= 0:
+			return ()
+		thisClass = type(self._Entity._items[0]).__name__
+		givenClass = T
+		for subclass in T.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return tuple([givenClass(idNameEntityCol) for idNameEntityCol in self._Entity])
 
 	@property
 	def Names(self) -> tuple[str]:
@@ -509,7 +566,8 @@ class FailureCriterion(IdNameEntity):
 
 	@property
 	def ObjectGroups(self) -> FailureObjectGroupCol:
-		return FailureObjectGroupCol(self._Entity.ObjectGroups)
+		result = self._Entity.ObjectGroups
+		return FailureObjectGroupCol(result) if result is not None else None
 
 	@property
 	def RequiredMargin(self) -> float:
@@ -517,7 +575,20 @@ class FailureCriterion(IdNameEntity):
 
 	@property
 	def Settings(self) -> FailureSettingCol:
-		return FailureSettingCol(self._Entity.Settings)
+		result = self._Entity.Settings
+		return FailureSettingCol(result) if result is not None else None
+
+	@IsEnabled.setter
+	def IsEnabled(self, value: bool) -> None:
+		self._Entity.IsEnabled = value
+
+	@LimitUltimate.setter
+	def LimitUltimate(self, value: types.LimitUltimate) -> None:
+		self._Entity.LimitUltimate = _types.LimitUltimate(value.value)
+
+	@RequiredMargin.setter
+	def RequiredMargin(self, value: float) -> None:
+		self._Entity.RequiredMargin = value
 
 
 class IdNameEntityRenameable(IdNameEntity):
@@ -576,11 +647,13 @@ class FailureMode(IdNameEntityRenameable):
 
 	@property
 	def Criteria(self) -> FailureCriterionCol:
-		return FailureCriterionCol(self._Entity.Criteria)
+		result = self._Entity.Criteria
+		return FailureCriterionCol(result) if result is not None else None
 
 	@property
 	def Settings(self) -> FailureSettingCol:
-		return FailureSettingCol(self._Entity.Settings)
+		result = self._Entity.Settings
+		return FailureSettingCol(result) if result is not None else None
 
 
 class FailureModeCol(IdNameEntityCol[FailureMode]):
@@ -593,10 +666,25 @@ class FailureModeCol(IdNameEntityCol[FailureMode]):
 		return tuple([FailureMode(failureModeCol) for failureModeCol in self._Entity])
 
 	@overload
+	def CreateFailureMode(self, failureModeCategoryId: int, name: str = None) -> FailureMode: ...
+
+	@overload
+	def CreateFailureMode(self, failureModeCategory: str, name: str = None) -> FailureMode: ...
+
+	@overload
 	def Get(self, name: str) -> FailureMode: ...
 
 	@overload
 	def Get(self, id: int) -> FailureMode: ...
+
+	def CreateFailureMode(self, item1 = None, item2 = None) -> FailureMode:
+		if isinstance(item1, int) and isinstance(item2, str):
+			return FailureMode(self._Entity.CreateFailureMode(item1, item2))
+
+		if isinstance(item1, str) and isinstance(item2, str):
+			return FailureMode(self._Entity.CreateFailureMode(item1, item2))
+
+		return self._Entity.CreateFailureMode(item1, item2)
 
 	def Get(self, item1 = None) -> FailureMode:
 		if isinstance(item1, str):
@@ -623,7 +711,8 @@ class AnalysisProperty(AssignablePropertyWithFamilyCategory):
 
 	@property
 	def FailureModes(self) -> FailureModeCol:
-		return FailureModeCol(self._Entity.FailureModes)
+		result = self._Entity.FailureModes
+		return FailureModeCol(result) if result is not None else None
 
 	@overload
 	def AddFailureMode(self, id: int) -> None: ...
@@ -664,13 +753,35 @@ class DesignProperty(AssignablePropertyWithFamilyCategory):
 	def __init__(self, designProperty: _api.DesignProperty):
 		self._Entity = designProperty
 
-	def Copy(self, newName: str) -> int:
-		return self._Entity.Copy(newName)
+	def Copy(self, newName: str = None) -> DesignProperty:
+		result = self._Entity.Copy(newName)
+		thisClass = type(result).__name__
+		givenClass = DesignProperty
+		for subclass in DesignProperty.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 
 class LoadProperty(AssignableProperty):
 	def __init__(self, loadProperty: _api.LoadProperty):
 		self._Entity = loadProperty
+
+	@property
+	def Category(self) -> types.FamilyCategory:
+		return types.FamilyCategory[self._Entity.Category.ToString()]
+
+	@property
+	def Type(self) -> types.LoadPropertyType:
+		return types.LoadPropertyType[self._Entity.Type.ToString()]
+
+	@property
+	def IsZeroCurvature(self) -> bool:
+		return self._Entity.IsZeroCurvature
+
+	@property
+	def ModificationDate(self) -> DateTime:
+		return self._Entity.ModificationDate
 
 
 class DesignLoadSubcase(IdNameEntity):
@@ -740,7 +851,8 @@ class DesignLoadSubcaseMultiplier(IdNameEntity):
 
 	@property
 	def Subcase(self) -> DesignLoadSubcase:
-		return DesignLoadSubcase(self._Entity.Subcase)
+		result = self._Entity.Subcase
+		return DesignLoadSubcase(result) if result is not None else None
 
 	@property
 	def UltimateFactor(self) -> float:
@@ -761,7 +873,8 @@ class DesignLoadSubcaseTemperature(IdNameEntity):
 
 	@property
 	def Subcase(self) -> DesignLoadSubcase:
-		return DesignLoadSubcase(self._Entity.Subcase)
+		result = self._Entity.Subcase
+		return DesignLoadSubcase(result) if result is not None else None
 
 	@property
 	def TemperatureChoiceType(self) -> types.TemperatureChoiceType:
@@ -815,15 +928,17 @@ class DesignLoad(IdNameEntity):
 
 	@property
 	def AnalysisTemperature(self) -> DesignLoadSubcaseTemperature:
-		return DesignLoadSubcaseTemperature(self._Entity.AnalysisTemperature)
+		result = self._Entity.AnalysisTemperature
+		return DesignLoadSubcaseTemperature(result) if result is not None else None
+
+	@property
+	def InitialTemperature(self) -> DesignLoadSubcaseTemperature:
+		result = self._Entity.InitialTemperature
+		return DesignLoadSubcaseTemperature(result) if result is not None else None
 
 	@property
 	def Description(self) -> str:
 		return self._Entity.Description
-
-	@property
-	def InitialTemperature(self) -> DesignLoadSubcaseTemperature:
-		return DesignLoadSubcaseTemperature(self._Entity.InitialTemperature)
 
 	@property
 	def IsActive(self) -> bool:
@@ -843,7 +958,8 @@ class DesignLoad(IdNameEntity):
 
 	@property
 	def SubcaseMultipliers(self) -> DesignLoadSubcaseMultiplierCol:
-		return DesignLoadSubcaseMultiplierCol(self._Entity.SubcaseMultipliers)
+		result = self._Entity.SubcaseMultipliers
+		return DesignLoadSubcaseMultiplierCol(result) if result is not None else None
 
 	@property
 	def Types(self) -> list[types.LoadCaseType]:
@@ -852,6 +968,32 @@ class DesignLoad(IdNameEntity):
 	@property
 	def UID(self) -> Guid:
 		return self._Entity.UID
+
+
+class JointDesignResult(IdEntity):
+	def __init__(self, jointDesignResult: _api.JointDesignResult):
+		self._Entity = jointDesignResult
+
+
+class ZoneDesignResult(IdEntity):
+	def __init__(self, zoneDesignResult: _api.ZoneDesignResult):
+		self._Entity = zoneDesignResult
+
+	@property
+	def VariableParameter(self) -> types.VariableParameter:
+		return types.VariableParameter[self._Entity.VariableParameter.ToString()]
+
+	@property
+	def Value(self) -> float:
+		return self._Entity.Value
+
+	@property
+	def MaterialId(self) -> int:
+		return self._Entity.MaterialId
+
+	@property
+	def MaterialType(self) -> types.MaterialType:
+		return types.MaterialType[self._Entity.MaterialType.ToString()]
 
 
 class Vector3d:
@@ -1034,6 +1176,23 @@ class DiscreteField(IdNameEntityRenameable):
 		return self._Entity.SetStringValue(item1, item2, item3)
 
 
+class Node(IdEntity):
+	def __init__(self, node: _api.Node):
+		self._Entity = node
+
+	@property
+	def X(self) -> float:
+		return self._Entity.X
+
+	@property
+	def Y(self) -> float:
+		return self._Entity.Y
+
+	@property
+	def Z(self) -> float:
+		return self._Entity.Z
+
+
 class Centroid:
 	def __init__(self, centroid: _api.Centroid):
 		self._Entity = centroid
@@ -1061,7 +1220,12 @@ class Element(IdEntity):
 
 	@property
 	def Centroid(self) -> Centroid:
-		return Centroid(self._Entity.Centroid)
+		result = self._Entity.Centroid
+		return Centroid(result) if result is not None else None
+
+	@property
+	def Nodes(self) -> list[Node]:
+		return [Node(node) for node in self._Entity.Nodes]
 
 
 class FailureModeCategory(IdNameEntity):
@@ -1079,7 +1243,8 @@ class EntityWithAssignableProperties(IdNameEntityRenameable):
 
 	@property
 	def AssignedAnalysisProperty(self) -> AnalysisProperty:
-		return AnalysisProperty(self._Entity.AssignedAnalysisProperty)
+		result = self._Entity.AssignedAnalysisProperty
+		return AnalysisProperty(result) if result is not None else None
 
 	@property
 	def AssignedDesignProperty(self) -> DesignProperty:
@@ -1088,11 +1253,18 @@ class EntityWithAssignableProperties(IdNameEntityRenameable):
 		for subclass in DesignProperty.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(self._Entity.AssignedDesignProperty)
+		result = self._Entity.AssignedDesignProperty
+		return givenClass(result) if result is not None else None
 
 	@property
 	def AssignedLoadProperty(self) -> LoadProperty:
-		return LoadProperty(self._Entity.AssignedLoadProperty)
+		thisClass = type(self._Entity.AssignedLoadProperty).__name__
+		givenClass = LoadProperty
+		for subclass in LoadProperty.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		result = self._Entity.AssignedLoadProperty
+		return givenClass(result) if result is not None else None
 
 	def AssignAnalysisProperty(self, id: int) -> PropertyAssignmentStatus:
 		return PropertyAssignmentStatus[self._Entity.AssignAnalysisProperty(id).ToString()]
@@ -1113,7 +1285,14 @@ class AnalysisResultCol(Generic[T]):
 
 	@property
 	def AnalysisResultColList(self) -> tuple[AnalysisResult]:
-		return tuple([AnalysisResult(analysisResultCol) for analysisResultCol in self._Entity])
+		if self._Entity.Count() <= 0:
+			return ()
+		thisClass = type(self._Entity._items[0]).__name__
+		givenClass = AnalysisResult
+		for subclass in AnalysisResult.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return tuple([givenClass(analysisResultCol) for analysisResultCol in self._Entity])
 
 	def Count(self) -> int:
 		return self._Entity.Count()
@@ -1141,25 +1320,133 @@ class ZoneJointEntity(EntityWithAssignableProperties):
 
 	@abstractmethod
 	def GetControllingResult(self) -> AnalysisResult:
-		return AnalysisResult(self._Entity.GetControllingResult())
+		result = self._Entity.GetControllingResult()
+		thisClass = type(result).__name__
+		givenClass = AnalysisResult
+		for subclass in AnalysisResult.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	@abstractmethod
 	def GetAllResults(self) -> AnalysisResultCol:
 		return AnalysisResultCol(self._Entity.GetAllResults())
 
 
+class JointDesignResultCol(IdEntityCol[JointDesignResult]):
+	def __init__(self, jointDesignResultCol: _api.JointDesignResultCol):
+		self._Entity = jointDesignResultCol
+		self._CollectedClass = JointDesignResult
+
+	@property
+	def JointDesignResultColList(self) -> tuple[JointDesignResult]:
+		return tuple([JointDesignResult(jointDesignResultCol) for jointDesignResultCol in self._Entity])
+
+	@overload
+	def Get(self, jointSelectionId: types.JointSelectionId) -> JointDesignResult: ...
+
+	@overload
+	def Get(self, jointRangeId: types.JointRangeId) -> JointDesignResult: ...
+
+	@overload
+	def Get(self, id: int) -> JointDesignResult: ...
+
+	def Get(self, item1 = None) -> JointDesignResult:
+		if isinstance(item1, types.JointSelectionId):
+			result = self._Entity.Get(_types.JointSelectionId(item1.value))
+			thisClass = type(result).__name__
+			givenClass = JointDesignResult
+			for subclass in JointDesignResult.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result)
+
+		if isinstance(item1, types.JointRangeId):
+			result = self._Entity.Get(_types.JointRangeId(item1.value))
+			thisClass = type(result).__name__
+			givenClass = JointDesignResult
+			for subclass in JointDesignResult.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result)
+
+		if isinstance(item1, int):
+			return JointDesignResult(super().Get(item1))
+
+		return self._Entity.Get(_types.JointSelectionId(item1.value))
+
+	def __getitem__(self, index: int):
+		return self.JointDesignResultColList[index]
+
+	def __iter__(self):
+		yield from self.JointDesignResultColList
+
+	def __len__(self):
+		return len(self.JointDesignResultColList)
+
+
 class Joint(ZoneJointEntity):
 	def __init__(self, joint: _api.Joint):
 		self._Entity = joint
+
+	@property
+	def JointRangeSizingResults(self) -> JointDesignResultCol:
+		result = self._Entity.JointRangeSizingResults
+		return JointDesignResultCol(result) if result is not None else None
+
+	@property
+	def JointSelectionSizingResults(self) -> JointDesignResultCol:
+		result = self._Entity.JointSelectionSizingResults
+		return JointDesignResultCol(result) if result is not None else None
 
 	def GetAllResults(self) -> AnalysisResultCol:
 		return AnalysisResultCol(self._Entity.GetAllResults())
 
 	def GetControllingResult(self) -> AnalysisResult:
-		return AnalysisResult(self._Entity.GetControllingResult())
+		result = self._Entity.GetControllingResult()
+		thisClass = type(result).__name__
+		givenClass = AnalysisResult
+		for subclass in AnalysisResult.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	def GetMinimumMargin(self) -> Margin:
 		return Margin(self._Entity.GetMinimumMargin())
+
+
+class ZoneDesignResultCol(IdEntityCol[ZoneDesignResult]):
+	def __init__(self, zoneDesignResultCol: _api.ZoneDesignResultCol):
+		self._Entity = zoneDesignResultCol
+		self._CollectedClass = ZoneDesignResult
+
+	@property
+	def ZoneDesignResultColList(self) -> tuple[ZoneDesignResult]:
+		return tuple([ZoneDesignResult(zoneDesignResultCol) for zoneDesignResultCol in self._Entity])
+
+	@overload
+	def Get(self, parameterId: types.VariableParameter) -> ZoneDesignResult: ...
+
+	@overload
+	def Get(self, id: int) -> ZoneDesignResult: ...
+
+	def Get(self, item1 = None) -> ZoneDesignResult:
+		if isinstance(item1, types.VariableParameter):
+			return ZoneDesignResult(self._Entity.Get(_types.VariableParameter(item1.value)))
+
+		if isinstance(item1, int):
+			return ZoneDesignResult(super().Get(item1))
+
+		return self._Entity.Get(_types.VariableParameter(item1.value))
+
+	def __getitem__(self, index: int):
+		return self.ZoneDesignResultColList[index]
+
+	def __iter__(self):
+		yield from self.ZoneDesignResultColList
+
+	def __len__(self):
+		return len(self.ZoneDesignResultColList)
 
 
 class ZoneBase(ZoneJointEntity):
@@ -1171,7 +1458,8 @@ class ZoneBase(ZoneJointEntity):
 
 	@property
 	def Centroid(self) -> Centroid:
-		return Centroid(self._Entity.Centroid)
+		result = self._Entity.Centroid
+		return Centroid(result) if result is not None else None
 
 	@property
 	def Id(self) -> int:
@@ -1181,6 +1469,193 @@ class ZoneBase(ZoneJointEntity):
 	def Weight(self) -> float:
 		return self._Entity.Weight
 
+	@property
+	def NonOptimumFactor(self) -> float:
+		return self._Entity.NonOptimumFactor
+
+	@property
+	def AddedWeight(self) -> float:
+		return self._Entity.AddedWeight
+
+	@property
+	def SuperimposePanel(self) -> bool:
+		return self._Entity.SuperimposePanel
+
+	@property
+	def BucklingImperfection(self) -> float:
+		return self._Entity.BucklingImperfection
+
+	@property
+	def IsBeamColumn(self) -> bool:
+		return self._Entity.IsBeamColumn
+
+	@property
+	def SuperimposeBoundaryCondition(self) -> int:
+		return self._Entity.SuperimposeBoundaryCondition
+
+	@property
+	def IsZeroOutFeaMoments(self) -> bool:
+		return self._Entity.IsZeroOutFeaMoments
+
+	@property
+	def IsZeroOutFeaTransverseShears(self) -> bool:
+		return self._Entity.IsZeroOutFeaTransverseShears
+
+	@property
+	def MechanicalLimit(self) -> float:
+		return self._Entity.MechanicalLimit
+
+	@property
+	def MechanicalUltimate(self) -> float:
+		return self._Entity.MechanicalUltimate
+
+	@property
+	def ThermalHelp(self) -> float:
+		return self._Entity.ThermalHelp
+
+	@property
+	def ThermalHurt(self) -> float:
+		return self._Entity.ThermalHurt
+
+	@property
+	def FatigueKTSkin(self) -> float:
+		return self._Entity.FatigueKTSkin
+
+	@property
+	def FatigueKTStiff(self) -> float:
+		return self._Entity.FatigueKTStiff
+
+	@property
+	def XSpan(self) -> float:
+		return self._Entity.XSpan
+
+	@property
+	def EARequired(self) -> float:
+		return self._Entity.EARequired
+
+	@property
+	def EI1Required(self) -> float:
+		return self._Entity.EI1Required
+
+	@property
+	def EI2Required(self) -> float:
+		return self._Entity.EI2Required
+
+	@property
+	def GJRequired(self) -> float:
+		return self._Entity.GJRequired
+
+	@property
+	def EAAuto(self) -> float:
+		return self._Entity.EAAuto
+
+	@property
+	def EI1Auto(self) -> float:
+		return self._Entity.EI1Auto
+
+	@property
+	def EI2Auto(self) -> float:
+		return self._Entity.EI2Auto
+
+	@property
+	def GJAuto(self) -> float:
+		return self._Entity.GJAuto
+
+	@property
+	def Ex(self) -> float:
+		return self._Entity.Ex
+
+	@property
+	def Dmid(self) -> float:
+		return self._Entity.Dmid
+
+	@NonOptimumFactor.setter
+	def NonOptimumFactor(self, value: float) -> None:
+		self._Entity.NonOptimumFactor = value
+
+	@AddedWeight.setter
+	def AddedWeight(self, value: float) -> None:
+		self._Entity.AddedWeight = value
+
+	@SuperimposePanel.setter
+	def SuperimposePanel(self, value: bool) -> None:
+		self._Entity.SuperimposePanel = value
+
+	@BucklingImperfection.setter
+	def BucklingImperfection(self, value: float) -> None:
+		self._Entity.BucklingImperfection = value
+
+	@IsBeamColumn.setter
+	def IsBeamColumn(self, value: bool) -> None:
+		self._Entity.IsBeamColumn = value
+
+	@SuperimposeBoundaryCondition.setter
+	def SuperimposeBoundaryCondition(self, value: int) -> None:
+		self._Entity.SuperimposeBoundaryCondition = value
+
+	@IsZeroOutFeaMoments.setter
+	def IsZeroOutFeaMoments(self, value: bool) -> None:
+		self._Entity.IsZeroOutFeaMoments = value
+
+	@IsZeroOutFeaTransverseShears.setter
+	def IsZeroOutFeaTransverseShears(self, value: bool) -> None:
+		self._Entity.IsZeroOutFeaTransverseShears = value
+
+	@MechanicalLimit.setter
+	def MechanicalLimit(self, value: float) -> None:
+		self._Entity.MechanicalLimit = value
+
+	@MechanicalUltimate.setter
+	def MechanicalUltimate(self, value: float) -> None:
+		self._Entity.MechanicalUltimate = value
+
+	@ThermalHelp.setter
+	def ThermalHelp(self, value: float) -> None:
+		self._Entity.ThermalHelp = value
+
+	@ThermalHurt.setter
+	def ThermalHurt(self, value: float) -> None:
+		self._Entity.ThermalHurt = value
+
+	@FatigueKTSkin.setter
+	def FatigueKTSkin(self, value: float) -> None:
+		self._Entity.FatigueKTSkin = value
+
+	@FatigueKTStiff.setter
+	def FatigueKTStiff(self, value: float) -> None:
+		self._Entity.FatigueKTStiff = value
+
+	@XSpan.setter
+	def XSpan(self, value: float) -> None:
+		self._Entity.XSpan = value
+
+	@EARequired.setter
+	def EARequired(self, value: float) -> None:
+		self._Entity.EARequired = value
+
+	@EI1Required.setter
+	def EI1Required(self, value: float) -> None:
+		self._Entity.EI1Required = value
+
+	@EI2Required.setter
+	def EI2Required(self, value: float) -> None:
+		self._Entity.EI2Required = value
+
+	@GJRequired.setter
+	def GJRequired(self, value: float) -> None:
+		self._Entity.GJRequired = value
+
+	@Ex.setter
+	def Ex(self, value: float) -> None:
+		self._Entity.Ex = value
+
+	@Dmid.setter
+	def Dmid(self, value: float) -> None:
+		self._Entity.Dmid = value
+
+	def GetZoneDesignResults(self, solutionId: int = 1) -> ZoneDesignResultCol:
+		return ZoneDesignResultCol(self._Entity.GetZoneDesignResults(solutionId))
+
 	def RenumberZone(self, newId: int) -> ZoneIdUpdateStatus:
 		return ZoneIdUpdateStatus[self._Entity.RenumberZone(newId).ToString()]
 
@@ -1188,7 +1663,13 @@ class ZoneBase(ZoneJointEntity):
 		return AnalysisResultCol(self._Entity.GetAllResults())
 
 	def GetControllingResult(self) -> AnalysisResult:
-		return AnalysisResult(self._Entity.GetControllingResult())
+		result = self._Entity.GetControllingResult()
+		thisClass = type(result).__name__
+		givenClass = AnalysisResult
+		for subclass in AnalysisResult.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	def GetMinimumMargin(self) -> Margin:
 		return Margin(self._Entity.GetMinimumMargin())
@@ -1263,7 +1744,8 @@ class Zone(ZoneBase):
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self._Entity.Elements)
+		result = self._Entity.Elements
+		return ElementCol(result) if result is not None else None
 
 	def AddElements(self, elementIds: tuple[int]) -> None:
 		elementIdsList = MakeCSharpIntList(elementIds)
@@ -1278,7 +1760,14 @@ class EntityWithAssignablePropertiesCol(IdNameEntityCol, Generic[T]):
 
 	@property
 	def EntityWithAssignablePropertiesColList(self) -> tuple[T]:
-		return tuple([T(entityWithAssignablePropertiesCol) for entityWithAssignablePropertiesCol in self._Entity])
+		if self._Entity.Count() <= 0:
+			return ()
+		thisClass = type(self._Entity._items[0]).__name__
+		givenClass = T
+		for subclass in T.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return tuple([givenClass(entityWithAssignablePropertiesCol) for entityWithAssignablePropertiesCol in self._Entity])
 
 	def AssignPropertyToAll(self, property: AssignableProperty) -> PropertyAssignmentStatus:
 		return PropertyAssignmentStatus[self._Entity.AssignPropertyToAll(property._Entity).ToString()]
@@ -1419,15 +1908,18 @@ class ZoneJointContainer(IdNameEntityRenameable):
 
 	@property
 	def Centroid(self) -> Centroid:
-		return Centroid(self._Entity.Centroid)
+		result = self._Entity.Centroid
+		return Centroid(result) if result is not None else None
 
 	@property
 	def Joints(self) -> JointCol:
-		return JointCol(self._Entity.Joints)
+		result = self._Entity.Joints
+		return JointCol(result) if result is not None else None
 
 	@property
 	def PanelSegments(self) -> PanelSegmentCol:
-		return PanelSegmentCol(self._Entity.PanelSegments)
+		result = self._Entity.PanelSegments
+		return PanelSegmentCol(result) if result is not None else None
 
 	@property
 	def TotalBeamLength(self) -> float:
@@ -1443,12 +1935,14 @@ class ZoneJointContainer(IdNameEntityRenameable):
 
 	@property
 	def Zones(self) -> ZoneCol:
-		return ZoneCol(self._Entity.Zones)
+		result = self._Entity.Zones
+		return ZoneCol(result) if result is not None else None
 
 	@overload
 	def AddJoint(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
+	@abstractmethod
 	def AddJoint(self, joint: Joint) -> CollectionModificationStatus: ...
 
 	@overload
@@ -1458,6 +1952,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 	def RemoveJoint(self, joint: Joint) -> CollectionModificationStatus: ...
 
 	@overload
+	@abstractmethod
 	def RemoveJoints(self, jointIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
@@ -1473,6 +1968,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 	def AddZone(self, zone: Zone) -> CollectionModificationStatus: ...
 
 	@overload
+	@abstractmethod
 	def AddZones(self, zones: tuple[Zone]) -> CollectionModificationStatus: ...
 
 	@overload
@@ -1482,6 +1978,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 	def RemoveZone(self, zone: Zone) -> CollectionModificationStatus: ...
 
 	@overload
+	@abstractmethod
 	def RemoveZones(self, zoneIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
@@ -1491,6 +1988,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 	def AddPanelSegment(self, id: int) -> CollectionModificationStatus: ...
 
 	@overload
+	@abstractmethod
 	def AddPanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus: ...
 
 	@overload
@@ -1500,6 +1998,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 	def RemovePanelSegment(self, segment: PanelSegment) -> CollectionModificationStatus: ...
 
 	@overload
+	@abstractmethod
 	def RemovePanelSegments(self, segmentIds: tuple[int]) -> CollectionModificationStatus: ...
 
 	@overload
@@ -1610,6 +2109,631 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		return self._Entity.RemovePanelSegments(item1)
 
 
+class AutomatedConstraint(IdNameEntityRenameable):
+	def __init__(self, automatedConstraint: _api.AutomatedConstraint):
+		self._Entity = automatedConstraint
+
+	@property
+	def ConstraintType(self) -> types.StiffnessCriteriaType:
+		return types.StiffnessCriteriaType[self._Entity.ConstraintType.ToString()]
+
+	@property
+	def Set(self) -> str:
+		return self._Entity.Set
+
+	@property
+	def DesignLoadCases(self) -> list[str]:
+		return [string for string in self._Entity.DesignLoadCases]
+
+	@Set.setter
+	def Set(self, value: str) -> None:
+		self._Entity.Set = value
+
+	def AddDesignLoadCases(self, designLoadCases: list[str]) -> None:
+		designLoadCasesList = List[str]()
+		if designLoadCases is not None:
+			for thing in designLoadCases:
+				if thing is not None:
+					designLoadCasesList.Add(thing)
+		return self._Entity.AddDesignLoadCases(designLoadCasesList)
+
+	def RemoveDesignLoadCases(self, designLoadCases: list[str]) -> None:
+		designLoadCasesList = List[str]()
+		if designLoadCases is not None:
+			for thing in designLoadCases:
+				if thing is not None:
+					designLoadCasesList.Add(thing)
+		return self._Entity.RemoveDesignLoadCases(designLoadCasesList)
+
+
+class ModalAutomatedConstraint(AutomatedConstraint):
+	def __init__(self, modalAutomatedConstraint: _api.ModalAutomatedConstraint):
+		self._Entity = modalAutomatedConstraint
+
+	@property
+	def Eigenvalue(self) -> float:
+		return self._Entity.Eigenvalue
+
+	@Eigenvalue.setter
+	def Eigenvalue(self, value: float) -> None:
+		self._Entity.Eigenvalue = value
+
+
+class BucklingAutomatedConstraint(ModalAutomatedConstraint):
+	def __init__(self, bucklingAutomatedConstraint: _api.BucklingAutomatedConstraint):
+		self._Entity = bucklingAutomatedConstraint
+
+
+class StaticAutomatedConstraint(AutomatedConstraint):
+	def __init__(self, staticAutomatedConstraint: _api.StaticAutomatedConstraint):
+		self._Entity = staticAutomatedConstraint
+
+	@property
+	def VirtualDesignLoad(self) -> str:
+		return self._Entity.VirtualDesignLoad
+
+	@property
+	def GridId(self) -> int:
+		return self._Entity.GridId
+
+	@property
+	def Orientation(self) -> types.DisplacementShapeType:
+		return types.DisplacementShapeType[self._Entity.Orientation.ToString()]
+
+	@property
+	def HasVector(self) -> bool:
+		return self._Entity.HasVector
+
+	@property
+	def X(self) -> float:
+		return self._Entity.X
+
+	@property
+	def Y(self) -> float:
+		return self._Entity.Y
+
+	@property
+	def Z(self) -> float:
+		return self._Entity.Z
+
+	@VirtualDesignLoad.setter
+	def VirtualDesignLoad(self, value: str) -> None:
+		self._Entity.VirtualDesignLoad = value
+
+	@GridId.setter
+	def GridId(self, value: int) -> None:
+		self._Entity.GridId = value
+
+	@Orientation.setter
+	def Orientation(self, value: types.DisplacementShapeType) -> None:
+		self._Entity.Orientation = _types.DisplacementShapeType(value.value)
+
+	@X.setter
+	def X(self, value: float) -> None:
+		self._Entity.X = value
+
+	@Y.setter
+	def Y(self, value: float) -> None:
+		self._Entity.Y = value
+
+	@Z.setter
+	def Z(self, value: float) -> None:
+		self._Entity.Z = value
+
+
+class DisplacementAutomatedConstraint(StaticAutomatedConstraint):
+	def __init__(self, displacementAutomatedConstraint: _api.DisplacementAutomatedConstraint):
+		self._Entity = displacementAutomatedConstraint
+
+	@property
+	def Limit(self) -> float:
+		return self._Entity.Limit
+
+	@Limit.setter
+	def Limit(self, value: float) -> None:
+		self._Entity.Limit = value
+
+
+class FrequencyAutomatedConstraint(ModalAutomatedConstraint):
+	def __init__(self, frequencyAutomatedConstraint: _api.FrequencyAutomatedConstraint):
+		self._Entity = frequencyAutomatedConstraint
+
+
+class RotationAutomatedConstraint(StaticAutomatedConstraint):
+	def __init__(self, rotationAutomatedConstraint: _api.RotationAutomatedConstraint):
+		self._Entity = rotationAutomatedConstraint
+
+	@property
+	def Limit(self) -> float:
+		return self._Entity.Limit
+
+	@Limit.setter
+	def Limit(self, value: float) -> None:
+		self._Entity.Limit = value
+
+
+class ManualConstraint(IdNameEntityRenameable):
+	def __init__(self, manualConstraint: _api.ManualConstraint):
+		self._Entity = manualConstraint
+
+	@property
+	def ConstraintType(self) -> types.ConstraintType:
+		return types.ConstraintType[self._Entity.ConstraintType.ToString()]
+
+	@property
+	def Set(self) -> str:
+		return self._Entity.Set
+
+	@property
+	def Limit(self) -> float:
+		return self._Entity.Limit
+
+	@property
+	def A11(self) -> bool:
+		return self._Entity.A11
+
+	@property
+	def A22(self) -> bool:
+		return self._Entity.A22
+
+	@property
+	def A33(self) -> bool:
+		return self._Entity.A33
+
+	@property
+	def D11(self) -> bool:
+		return self._Entity.D11
+
+	@property
+	def D22(self) -> bool:
+		return self._Entity.D22
+
+	@property
+	def D33(self) -> bool:
+		return self._Entity.D33
+
+	@property
+	def EA(self) -> bool:
+		return self._Entity.EA
+
+	@property
+	def EI1(self) -> bool:
+		return self._Entity.EI1
+
+	@property
+	def EI2(self) -> bool:
+		return self._Entity.EI2
+
+	@property
+	def GJ(self) -> bool:
+		return self._Entity.GJ
+
+	@property
+	def IsActive(self) -> bool:
+		return self._Entity.IsActive
+
+	@Set.setter
+	def Set(self, value: str) -> None:
+		self._Entity.Set = value
+
+	@Limit.setter
+	def Limit(self, value: float) -> None:
+		self._Entity.Limit = value
+
+	@A11.setter
+	def A11(self, value: bool) -> None:
+		self._Entity.A11 = value
+
+	@A22.setter
+	def A22(self, value: bool) -> None:
+		self._Entity.A22 = value
+
+	@A33.setter
+	def A33(self, value: bool) -> None:
+		self._Entity.A33 = value
+
+	@D11.setter
+	def D11(self, value: bool) -> None:
+		self._Entity.D11 = value
+
+	@D22.setter
+	def D22(self, value: bool) -> None:
+		self._Entity.D22 = value
+
+	@D33.setter
+	def D33(self, value: bool) -> None:
+		self._Entity.D33 = value
+
+	@EA.setter
+	def EA(self, value: bool) -> None:
+		self._Entity.EA = value
+
+	@EI1.setter
+	def EI1(self, value: bool) -> None:
+		self._Entity.EI1 = value
+
+	@EI2.setter
+	def EI2(self, value: bool) -> None:
+		self._Entity.EI2 = value
+
+	@GJ.setter
+	def GJ(self, value: bool) -> None:
+		self._Entity.GJ = value
+
+	@IsActive.setter
+	def IsActive(self, value: bool) -> None:
+		self._Entity.IsActive = value
+
+
+class ManualConstraintWithDesignLoad(ManualConstraint):
+	def __init__(self, manualConstraintWithDesignLoad: _api.ManualConstraintWithDesignLoad):
+		self._Entity = manualConstraintWithDesignLoad
+
+	@property
+	def UseAllDesignLoads(self) -> bool:
+		return self._Entity.UseAllDesignLoads
+
+	@property
+	def DesignLoadCase(self) -> str:
+		return self._Entity.DesignLoadCase
+
+	@UseAllDesignLoads.setter
+	def UseAllDesignLoads(self, value: bool) -> None:
+		self._Entity.UseAllDesignLoads = value
+
+	@DesignLoadCase.setter
+	def DesignLoadCase(self, value: str) -> None:
+		self._Entity.DesignLoadCase = value
+
+
+class BucklingManualConstraint(ManualConstraintWithDesignLoad):
+	def __init__(self, bucklingManualConstraint: _api.BucklingManualConstraint):
+		self._Entity = bucklingManualConstraint
+
+
+class DisplacementManualConstraint(ManualConstraintWithDesignLoad):
+	def __init__(self, displacementManualConstraint: _api.DisplacementManualConstraint):
+		self._Entity = displacementManualConstraint
+
+	@property
+	def DOF(self) -> types.DegreeOfFreedom:
+		return types.DegreeOfFreedom[self._Entity.DOF.ToString()]
+
+	@property
+	def Nodes(self) -> list[int]:
+		return [int32 for int32 in self._Entity.Nodes]
+
+	@property
+	def RefNodes(self) -> list[int]:
+		return [int32 for int32 in self._Entity.RefNodes]
+
+	@DOF.setter
+	def DOF(self, value: types.DegreeOfFreedom) -> None:
+		self._Entity.DOF = _types.DegreeOfFreedom(value.value)
+
+	def AddNodes(self, ids: list[int]) -> None:
+		idsList = MakeCSharpIntList(ids)
+		return self._Entity.AddNodes(idsList)
+
+	def RemoveNodes(self, ids: list[int]) -> None:
+		idsList = MakeCSharpIntList(ids)
+		return self._Entity.RemoveNodes(idsList)
+
+	def AddRefNodes(self, ids: list[int]) -> None:
+		idsList = MakeCSharpIntList(ids)
+		return self._Entity.AddRefNodes(idsList)
+
+	def RemoveRefNodes(self, ids: list[int]) -> None:
+		idsList = MakeCSharpIntList(ids)
+		return self._Entity.RemoveRefNodes(idsList)
+
+
+class FrequencyManualConstraint(ManualConstraintWithDesignLoad):
+	def __init__(self, frequencyManualConstraint: _api.FrequencyManualConstraint):
+		self._Entity = frequencyManualConstraint
+
+
+class StaticMomentManualConstraint(ManualConstraint):
+	def __init__(self, staticMomentManualConstraint: _api.StaticMomentManualConstraint):
+		self._Entity = staticMomentManualConstraint
+
+
+class AutomatedConstraintCol(IdNameEntityCol[AutomatedConstraint]):
+	def __init__(self, automatedConstraintCol: _api.AutomatedConstraintCol):
+		self._Entity = automatedConstraintCol
+		self._CollectedClass = AutomatedConstraint
+
+	@property
+	def AutomatedConstraintColList(self) -> tuple[AutomatedConstraint]:
+		return tuple([AutomatedConstraint(automatedConstraintCol) for automatedConstraintCol in self._Entity])
+
+	def AddBucklingConstraint(self, designLoads: list[str], eigenvalue: float, name: str = None) -> BucklingAutomatedConstraint:
+		designLoadsList = List[str]()
+		if designLoads is not None:
+			for thing in designLoads:
+				if thing is not None:
+					designLoadsList.Add(thing)
+		return BucklingAutomatedConstraint(self._Entity.AddBucklingConstraint(designLoadsList, eigenvalue, name))
+
+	def AddFrequencyConstraint(self, designLoads: list[str], eigenvalue: float, name: str = None) -> FrequencyAutomatedConstraint:
+		designLoadsList = List[str]()
+		if designLoads is not None:
+			for thing in designLoads:
+				if thing is not None:
+					designLoadsList.Add(thing)
+		return FrequencyAutomatedConstraint(self._Entity.AddFrequencyConstraint(designLoadsList, eigenvalue, name))
+
+	def AddDisplacementConstraint(self, designLoads: list[str], gridId: int, limit: float, name: str = None) -> DisplacementAutomatedConstraint:
+		designLoadsList = List[str]()
+		if designLoads is not None:
+			for thing in designLoads:
+				if thing is not None:
+					designLoadsList.Add(thing)
+		return DisplacementAutomatedConstraint(self._Entity.AddDisplacementConstraint(designLoadsList, gridId, limit, name))
+
+	def AddRotationConstraint(self, designLoads: list[str], gridId: int, limit: float, name: str = None) -> RotationAutomatedConstraint:
+		designLoadsList = List[str]()
+		if designLoads is not None:
+			for thing in designLoads:
+				if thing is not None:
+					designLoadsList.Add(thing)
+		return RotationAutomatedConstraint(self._Entity.AddRotationConstraint(designLoadsList, gridId, limit, name))
+
+	@overload
+	def Delete(self, id: int) -> bool: ...
+
+	@overload
+	def Delete(self, name: str) -> bool: ...
+
+	@overload
+	def GetBuckling(self, id: int) -> BucklingAutomatedConstraint: ...
+
+	@overload
+	def GetBuckling(self, name: str) -> BucklingAutomatedConstraint: ...
+
+	@overload
+	def GetFrequency(self, id: int) -> FrequencyAutomatedConstraint: ...
+
+	@overload
+	def GetFrequency(self, name: str) -> FrequencyAutomatedConstraint: ...
+
+	@overload
+	def GetRotation(self, id: int) -> RotationAutomatedConstraint: ...
+
+	@overload
+	def GetRotation(self, name: str) -> RotationAutomatedConstraint: ...
+
+	@overload
+	def GetDisplacement(self, id: int) -> DisplacementAutomatedConstraint: ...
+
+	@overload
+	def GetDisplacement(self, name: str) -> DisplacementAutomatedConstraint: ...
+
+	@overload
+	def Get(self, name: str) -> AutomatedConstraint: ...
+
+	@overload
+	def Get(self, id: int) -> AutomatedConstraint: ...
+
+	def Delete(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return self._Entity.Delete(item1)
+
+		if isinstance(item1, str):
+			return self._Entity.Delete(item1)
+
+		return self._Entity.Delete(item1)
+
+	def GetBuckling(self, item1 = None) -> BucklingAutomatedConstraint:
+		if isinstance(item1, int):
+			return BucklingAutomatedConstraint(self._Entity.GetBuckling(item1))
+
+		if isinstance(item1, str):
+			return BucklingAutomatedConstraint(self._Entity.GetBuckling(item1))
+
+		return self._Entity.GetBuckling(item1)
+
+	def GetFrequency(self, item1 = None) -> FrequencyAutomatedConstraint:
+		if isinstance(item1, int):
+			return FrequencyAutomatedConstraint(self._Entity.GetFrequency(item1))
+
+		if isinstance(item1, str):
+			return FrequencyAutomatedConstraint(self._Entity.GetFrequency(item1))
+
+		return self._Entity.GetFrequency(item1)
+
+	def GetRotation(self, item1 = None) -> RotationAutomatedConstraint:
+		if isinstance(item1, int):
+			return RotationAutomatedConstraint(self._Entity.GetRotation(item1))
+
+		if isinstance(item1, str):
+			return RotationAutomatedConstraint(self._Entity.GetRotation(item1))
+
+		return self._Entity.GetRotation(item1)
+
+	def GetDisplacement(self, item1 = None) -> DisplacementAutomatedConstraint:
+		if isinstance(item1, int):
+			return DisplacementAutomatedConstraint(self._Entity.GetDisplacement(item1))
+
+		if isinstance(item1, str):
+			return DisplacementAutomatedConstraint(self._Entity.GetDisplacement(item1))
+
+		return self._Entity.GetDisplacement(item1)
+
+	def Get(self, item1 = None) -> AutomatedConstraint:
+		if isinstance(item1, str):
+			return AutomatedConstraint(super().Get(item1))
+
+		if isinstance(item1, int):
+			return AutomatedConstraint(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.AutomatedConstraintColList[index]
+
+	def __iter__(self):
+		yield from self.AutomatedConstraintColList
+
+	def __len__(self):
+		return len(self.AutomatedConstraintColList)
+
+
+class ManualConstraintCol(IdNameEntityCol[ManualConstraint]):
+	def __init__(self, manualConstraintCol: _api.ManualConstraintCol):
+		self._Entity = manualConstraintCol
+		self._CollectedClass = ManualConstraint
+
+	@property
+	def ManualConstraintColList(self) -> tuple[ManualConstraint]:
+		return tuple([ManualConstraint(manualConstraintCol) for manualConstraintCol in self._Entity])
+
+	@overload
+	def GetFrequency(self, id: int) -> FrequencyManualConstraint: ...
+
+	@overload
+	def GetFrequency(self, name: str) -> FrequencyManualConstraint: ...
+
+	@overload
+	def GetBuckling(self, id: int) -> BucklingManualConstraint: ...
+
+	@overload
+	def GetBuckling(self, name: str) -> BucklingManualConstraint: ...
+
+	@overload
+	def GetDisplacement(self, id: int) -> DisplacementManualConstraint: ...
+
+	@overload
+	def GetDisplacement(self, name: str) -> DisplacementManualConstraint: ...
+
+	@overload
+	def GetStaticMoment(self, id: int) -> StaticMomentManualConstraint: ...
+
+	@overload
+	def GetStaticMoment(self, name: str) -> StaticMomentManualConstraint: ...
+
+	def AddFrequencyConstraint(self, setName: str, limit: float, name: str = None) -> FrequencyManualConstraint:
+		return FrequencyManualConstraint(self._Entity.AddFrequencyConstraint(setName, limit, name))
+
+	def AddBucklingConstraint(self, setName: str, limit: float, name: str = None) -> BucklingManualConstraint:
+		return BucklingManualConstraint(self._Entity.AddBucklingConstraint(setName, limit, name))
+
+	def AddStaticMomentManualConstraint(self, setName: str, limit: float, name: str = None) -> StaticMomentManualConstraint:
+		return StaticMomentManualConstraint(self._Entity.AddStaticMomentManualConstraint(setName, limit, name))
+
+	def AddDisplacementConstraint(self, setName: str, gridIds: list[int], limit: float, name: str = None) -> DisplacementManualConstraint:
+		gridIdsList = MakeCSharpIntList(gridIds)
+		return DisplacementManualConstraint(self._Entity.AddDisplacementConstraint(setName, gridIdsList, limit, name))
+
+	@overload
+	def DeleteConstraint(self, name: str) -> bool: ...
+
+	@overload
+	def DeleteConstraint(self, id: int) -> bool: ...
+
+	@overload
+	def Get(self, name: str) -> ManualConstraint: ...
+
+	@overload
+	def Get(self, id: int) -> ManualConstraint: ...
+
+	def GetFrequency(self, item1 = None) -> FrequencyManualConstraint:
+		if isinstance(item1, int):
+			return FrequencyManualConstraint(self._Entity.GetFrequency(item1))
+
+		if isinstance(item1, str):
+			return FrequencyManualConstraint(self._Entity.GetFrequency(item1))
+
+		return self._Entity.GetFrequency(item1)
+
+	def GetBuckling(self, item1 = None) -> BucklingManualConstraint:
+		if isinstance(item1, int):
+			return BucklingManualConstraint(self._Entity.GetBuckling(item1))
+
+		if isinstance(item1, str):
+			return BucklingManualConstraint(self._Entity.GetBuckling(item1))
+
+		return self._Entity.GetBuckling(item1)
+
+	def GetDisplacement(self, item1 = None) -> DisplacementManualConstraint:
+		if isinstance(item1, int):
+			return DisplacementManualConstraint(self._Entity.GetDisplacement(item1))
+
+		if isinstance(item1, str):
+			return DisplacementManualConstraint(self._Entity.GetDisplacement(item1))
+
+		return self._Entity.GetDisplacement(item1)
+
+	def GetStaticMoment(self, item1 = None) -> StaticMomentManualConstraint:
+		if isinstance(item1, int):
+			return StaticMomentManualConstraint(self._Entity.GetStaticMoment(item1))
+
+		if isinstance(item1, str):
+			return StaticMomentManualConstraint(self._Entity.GetStaticMoment(item1))
+
+		return self._Entity.GetStaticMoment(item1)
+
+	def DeleteConstraint(self, item1 = None) -> bool:
+		if isinstance(item1, str):
+			return self._Entity.DeleteConstraint(item1)
+
+		if isinstance(item1, int):
+			return self._Entity.DeleteConstraint(item1)
+
+		return self._Entity.DeleteConstraint(item1)
+
+	def Get(self, item1 = None) -> ManualConstraint:
+		if isinstance(item1, str):
+			return ManualConstraint(super().Get(item1))
+
+		if isinstance(item1, int):
+			return ManualConstraint(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.ManualConstraintColList[index]
+
+	def __iter__(self):
+		yield from self.ManualConstraintColList
+
+	def __len__(self):
+		return len(self.ManualConstraintColList)
+
+
+class HyperFea:
+	def __init__(self, hyperFea: _api.HyperFea):
+		self._Entity = hyperFea
+
+	@property
+	def ManualConstraints(self) -> ManualConstraintCol:
+		result = self._Entity.ManualConstraints
+		return ManualConstraintCol(result) if result is not None else None
+
+	@property
+	def AutomatedConstraints(self) -> AutomatedConstraintCol:
+		result = self._Entity.AutomatedConstraints
+		return AutomatedConstraintCol(result) if result is not None else None
+
+	def RunIterations(self, numberOfIterations: int, startWithSizing: bool, deleteElementOptimizationPlies: bool) -> None:
+		return self._Entity.RunIterations(numberOfIterations, startWithSizing, deleteElementOptimizationPlies)
+
+	def SetupSolver(self, solverPath: str, arguments: str) -> types.SimpleStatus:
+		return types.SimpleStatus(self._Entity.SetupSolver(solverPath, arguments))
+
+	def TestSolver(self) -> types.SimpleStatus:
+		'''
+		Test FEA solver setup.
+		'''
+		return types.SimpleStatus(self._Entity.TestSolver())
+
+	def GetSolverSetup(self) -> types.HyperFeaSolver:
+		'''
+		Get the current FEA solver setup.
+		'''
+		return types.HyperFeaSolver(self._Entity.GetSolverSetup())
+
+
 class FoamTemperature:
 	'''
 	Foam material temperature dependent properties.
@@ -1716,6 +2840,10 @@ class Foam:
 	@property
 	def MaterialFamilyName(self) -> str:
 		return self._Entity.MaterialFamilyName
+
+	@property
+	def Id(self) -> int:
+		return self._Entity.Id
 
 	@property
 	def CreationDate(self) -> DateTime:
@@ -1829,8 +2957,8 @@ class Foam:
 	def Manufacturer(self, value: str) -> None:
 		self._Entity.Manufacturer = value
 
-	def AddTemperatureProperty(self, temperature: float, et: float = None, ec: float = None, g: float = None, ef: float = None, ftu: float = None, fcu: float = None, fsu: float = None, ffu: float = None, k: float = None, c: float = None) -> FoamTemperature:
-		return FoamTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, ef, ftu, fcu, fsu, ffu, k, c))
+	def AddTemperatureProperty(self, temperature: float, et: float, ec: float, g: float, ftu: float, fcu: float, fsu: float, ef: float = None, ffu: float = None, k: float = None, c: float = None) -> FoamTemperature:
+		return FoamTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, ftu, fcu, fsu, ef, ffu, k, c))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
 		return self._Entity.DeleteTemperatureProperty(temperature)
@@ -2001,6 +3129,10 @@ class Honeycomb:
 		return self._Entity.MaterialFamilyName
 
 	@property
+	def Id(self) -> int:
+		return self._Entity.Id
+
+	@property
 	def CreationDate(self) -> DateTime:
 		return self._Entity.CreationDate
 
@@ -2104,7 +3236,7 @@ class Honeycomb:
 	def Manufacturer(self, value: str) -> None:
 		self._Entity.Manufacturer = value
 
-	def AddTemperatureProperty(self, temperature: float, et: float = None, ec: float = None, gw: float = None, gl: float = None, ftu: float = None, fcus: float = None, fcub: float = None, fcuc: float = None, fsuw: float = None, fsul: float = None, sScfl: float = None, sScfh: float = None, k1: float = None, k2: float = None, k3: float = None, c: float = None) -> HoneycombTemperature:
+	def AddTemperatureProperty(self, temperature: float, et: float, ec: float, gw: float, gl: float, ftu: float, fcus: float, fcub: float, fcuc: float, fsuw: float, fsul: float, sScfl: float = None, sScfh: float = None, k1: float = None, k2: float = None, k3: float = None, c: float = None) -> HoneycombTemperature:
 		return HoneycombTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, gw, gl, ftu, fcus, fcub, fcuc, fsuw, fsul, sScfl, sScfh, k1, k2, k3, c))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
@@ -2412,6 +3544,10 @@ class Isotropic:
 		return self._Entity.MaterialFamilyName
 
 	@property
+	def Id(self) -> int:
+		return self._Entity.Id
+
+	@property
 	def CreationDate(self) -> DateTime:
 		return self._Entity.CreationDate
 
@@ -2515,8 +3651,8 @@ class Isotropic:
 	def BucklingStiffnessKnockdown(self, value: float) -> None:
 		self._Entity.BucklingStiffnessKnockdown = value
 
-	def AddTemperatureProperty(self, temperature: float, et: float = None, ec: float = None, g: float = None, n: float = None, f02: float = None, ftuL: float = None, ftyL: float = None, fcyL: float = None, ftuLT: float = None, ftyLT: float = None, fcyLT: float = None, fsu: float = None, fbru15: float = None, fbry15: float = None, fbru20: float = None, fbry20: float = None, alpha: float = None, k: float = None, c: float = None, etyL: float = None, ecyL: float = None, etyLT: float = None, ecyLT: float = None, esu: float = None, fpadh: float = None, fsadh: float = None, esadh: float = None, cd: float = None, ffwt: float = None, ffxz: float = None, ffyz: float = None, ftFatigue: float = None, fcFatigue: float = None) -> IsotropicTemperature:
-		return IsotropicTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, n, f02, ftuL, ftyL, fcyL, ftuLT, ftyLT, fcyLT, fsu, fbru15, fbry15, fbru20, fbry20, alpha, k, c, etyL, ecyL, etyLT, ecyLT, esu, fpadh, fsadh, esadh, cd, ffwt, ffxz, ffyz, ftFatigue, fcFatigue))
+	def AddTemperatureProperty(self, temperature: float, et: float, ec: float, g: float, ftuL: float, ftyL: float, fcyL: float, ftuLT: float, ftyLT: float, fcyLT: float, fsu: float, alpha: float, n: float = None, f02: float = None, k: float = None, c: float = None, fbru15: float = None, fbry15: float = None, fbru20: float = None, fbry20: float = None, etyL: float = None, ecyL: float = None, etyLT: float = None, ecyLT: float = None, esu: float = None, fpadh: float = None, fsadh: float = None, esadh: float = None, cd: float = None, ffwt: float = None, ffxz: float = None, ffyz: float = None, ftFatigue: float = None, fcFatigue: float = None) -> IsotropicTemperature:
+		return IsotropicTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, ftuL, ftyL, fcyL, ftuLT, ftyLT, fcyLT, fsu, alpha, n, f02, k, c, fbru15, fbry15, fbru20, fbry20, etyL, ecyL, etyLT, ecyLT, esu, fpadh, fsadh, esadh, cd, ffwt, ffxz, ffyz, ftFatigue, fcFatigue))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
 		return self._Entity.DeleteTemperatureProperty(temperature)
@@ -2529,6 +3665,406 @@ class Isotropic:
 		Save any changes to this isotropic material to the database.
 		'''
 		return self._Entity.Save()
+
+
+class LaminateBase(ABC):
+	def __init__(self, laminateBase: _api.LaminateBase):
+		self._Entity = laminateBase
+
+	@property
+	def Id(self) -> int:
+		return self._Entity.Id
+
+	@property
+	def Name(self) -> str:
+		return self._Entity.Name
+
+	@property
+	def IsEditable(self) -> bool:
+		return self._Entity.IsEditable
+
+	@property
+	def MaterialFamilyName(self) -> str:
+		return self._Entity.MaterialFamilyName
+
+	@property
+	def LayerCount(self) -> int:
+		return self._Entity.LayerCount
+
+	@property
+	def Density(self) -> float:
+		return self._Entity.Density
+
+	@property
+	def Thickness(self) -> float:
+		return self._Entity.Thickness
+
+	@property
+	def LaminateFamilyId(self) -> int:
+		return self._Entity.LaminateFamilyId
+
+	@property
+	def LaminateFamilyOrder(self) -> int:
+		return self._Entity.LaminateFamilyOrder
+
+	@property
+	def HyperLaminate(self) -> bool:
+		return self._Entity.HyperLaminate
+
+	@Name.setter
+	def Name(self, value: str) -> None:
+		self._Entity.Name = value
+
+	@MaterialFamilyName.setter
+	def MaterialFamilyName(self, value: str) -> None:
+		self._Entity.MaterialFamilyName = value
+
+	@abstractmethod
+	def Save(self) -> None:
+		'''
+		Save the laminate.
+		'''
+		return self._Entity.Save()
+
+
+class LaminateFamily(IdNameEntity):
+	def __init__(self, laminateFamily: _api.LaminateFamily):
+		self._Entity = laminateFamily
+
+	@property
+	def Laminates(self) -> list[LaminateBase]:
+		return [LaminateBase(laminateBase) for laminateBase in self._Entity.Laminates]
+
+	@property
+	def ModificationDate(self) -> DateTime:
+		return self._Entity.ModificationDate
+
+	@property
+	def PlankSetting(self) -> types.LaminateFamilySettingType:
+		return types.LaminateFamilySettingType[self._Entity.PlankSetting.ToString()]
+
+	@property
+	def PlankMinRatio(self) -> float:
+		return self._Entity.PlankMinRatio
+
+	@property
+	def PlankMaxRatio(self) -> float:
+		return self._Entity.PlankMaxRatio
+
+	@property
+	def FootChargeSetting(self) -> types.LaminateFamilySettingType:
+		return types.LaminateFamilySettingType[self._Entity.FootChargeSetting.ToString()]
+
+	@property
+	def FootChargeMinRatio(self) -> float:
+		return self._Entity.FootChargeMinRatio
+
+	@property
+	def FootChargeMaxRatio(self) -> float:
+		return self._Entity.FootChargeMaxRatio
+
+	@property
+	def WebChargeSetting(self) -> types.LaminateFamilySettingType:
+		return types.LaminateFamilySettingType[self._Entity.WebChargeSetting.ToString()]
+
+	@property
+	def WebChargeMinRatio(self) -> float:
+		return self._Entity.WebChargeMinRatio
+
+	@property
+	def WebChargeMaxRatio(self) -> float:
+		return self._Entity.WebChargeMaxRatio
+
+	@property
+	def CapChargeSetting(self) -> types.LaminateFamilySettingType:
+		return types.LaminateFamilySettingType[self._Entity.CapChargeSetting.ToString()]
+
+	@property
+	def CapChargeMinRatio(self) -> float:
+		return self._Entity.CapChargeMinRatio
+
+	@property
+	def CapChargeMaxRatio(self) -> float:
+		return self._Entity.CapChargeMaxRatio
+
+	@property
+	def CapCoverSetting(self) -> types.LaminateFamilySettingType:
+		return types.LaminateFamilySettingType[self._Entity.CapCoverSetting.ToString()]
+
+	@property
+	def CapCoverMinRatio(self) -> float:
+		return self._Entity.CapCoverMinRatio
+
+	@property
+	def CapCoverMaxRatio(self) -> float:
+		return self._Entity.CapCoverMaxRatio
+
+	@property
+	def DropPattern(self) -> types.PlyDropPattern:
+		return types.PlyDropPattern[self._Entity.DropPattern.ToString()]
+
+	@property
+	def LaminateStiffenerProfile(self) -> types.StiffenerProfile:
+		return types.StiffenerProfile[self._Entity.LaminateStiffenerProfile.ToString()]
+
+
+class LaminateLayerBase(ABC):
+	def __init__(self, laminateLayerBase: _api.LaminateLayerBase):
+		self._Entity = laminateLayerBase
+
+	@property
+	def LayerId(self) -> int:
+		return self._Entity.LayerId
+
+	@property
+	def LayerMaterial(self) -> str:
+		return self._Entity.LayerMaterial
+
+	@property
+	def LayerMaterialType(self) -> types.MaterialType:
+		'''
+		Represents a material's type.
+		'''
+		return types.MaterialType[self._Entity.LayerMaterialType.ToString()]
+
+	@property
+	def Angle(self) -> float:
+		return self._Entity.Angle
+
+	@property
+	def Thickness(self) -> float:
+		return self._Entity.Thickness
+
+	@property
+	def IsFabric(self) -> bool:
+		return self._Entity.IsFabric
+
+	@Angle.setter
+	@abstractmethod
+	def Angle(self, value: float) -> None:
+		self._Entity.Angle = value
+
+	def SetThickness(self, thickness: float) -> None:
+		return self._Entity.SetThickness(thickness)
+
+	@overload
+	def SetMaterial(self, matId: int) -> bool: ...
+
+	@overload
+	def SetMaterial(self, matName: str) -> bool: ...
+
+	def SetMaterial(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return self._Entity.SetMaterial(item1)
+
+		if isinstance(item1, str):
+			return self._Entity.SetMaterial(item1)
+
+		return self._Entity.SetMaterial(item1)
+
+
+class LaminateLayer(LaminateLayerBase):
+	'''
+	Layer in a non-stiffener laminate.
+	'''
+	def __init__(self, laminateLayer: _api.LaminateLayer):
+		self._Entity = laminateLayer
+
+	@property
+	def LayerId(self) -> int:
+		return self._Entity.LayerId
+
+	@property
+	def LayerMaterialType(self) -> types.MaterialType:
+		'''
+		Represents a material's type.
+		'''
+		return types.MaterialType[self._Entity.LayerMaterialType.ToString()]
+
+	@property
+	def Angle(self) -> float:
+		return self._Entity.Angle
+
+	@property
+	def Thickness(self) -> float:
+		return self._Entity.Thickness
+
+	@property
+	def IsFabric(self) -> bool:
+		return self._Entity.IsFabric
+
+	@Angle.setter
+	def Angle(self, value: float) -> None:
+		self._Entity.Angle = value
+
+	@overload
+	def SetMaterial(self, matId: int) -> bool: ...
+
+	@overload
+	def SetMaterial(self, matName: str) -> bool: ...
+
+	def SetMaterial(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return bool(super().SetMaterial(item1))
+
+		if isinstance(item1, str):
+			return bool(super().SetMaterial(item1))
+
+		return self._Entity.SetMaterial(item1)
+
+
+class Laminate(LaminateBase):
+	'''
+	Laminate
+	'''
+	def __init__(self, laminate: _api.Laminate):
+		self._Entity = laminate
+
+	@property
+	def Layers(self) -> list[LaminateLayer]:
+		return [LaminateLayer(laminateLayer) for laminateLayer in self._Entity.Layers]
+
+	def AddLayer(self, materialName: str, angle: float, thickness: float = None) -> LaminateLayer:
+		return LaminateLayer(self._Entity.AddLayer(materialName, angle, thickness))
+
+	def InsertLayer(self, layerId: int, materialName: str, angle: float, thickness: float = None) -> LaminateLayer:
+		return LaminateLayer(self._Entity.InsertLayer(layerId, materialName, angle, thickness))
+
+	def RemoveLayer(self, layerId: int) -> bool:
+		return self._Entity.RemoveLayer(layerId)
+
+	def Save(self) -> None:
+		'''
+		Save any changes to this laminate material to the database.
+		'''
+		return self._Entity.Save()
+
+
+class StiffenerLaminateLayer(LaminateLayerBase):
+	'''
+	Stiffener Laminate Layer
+	'''
+	def __init__(self, stiffenerLaminateLayer: _api.StiffenerLaminateLayer):
+		self._Entity = stiffenerLaminateLayer
+
+	@property
+	def LayerLocations(self) -> list[types.StiffenerLaminateLayerLocation]:
+		return [types.StiffenerLaminateLayerLocation[stiffenerLaminateLayerLocation.ToString()] for stiffenerLaminateLayerLocation in self._Entity.LayerLocations]
+
+	@property
+	def LayerId(self) -> int:
+		return self._Entity.LayerId
+
+	@property
+	def LayerMaterialType(self) -> types.MaterialType:
+		'''
+		Represents a material's type.
+		'''
+		return types.MaterialType[self._Entity.LayerMaterialType.ToString()]
+
+	@property
+	def Angle(self) -> float:
+		return self._Entity.Angle
+
+	@property
+	def Thickness(self) -> float:
+		return self._Entity.Thickness
+
+	@property
+	def IsFabric(self) -> bool:
+		return self._Entity.IsFabric
+
+	@Angle.setter
+	def Angle(self, value: float) -> None:
+		self._Entity.Angle = value
+
+	def AddLayerLocation(self, location: types.StiffenerLaminateLayerLocation) -> None:
+		return self._Entity.AddLayerLocation(_types.StiffenerLaminateLayerLocation(location.value))
+
+	def RemoveLayerLocation(self, location: types.StiffenerLaminateLayerLocation) -> bool:
+		return self._Entity.RemoveLayerLocation(_types.StiffenerLaminateLayerLocation(location.value))
+
+	@overload
+	def SetMaterial(self, matId: int) -> bool: ...
+
+	@overload
+	def SetMaterial(self, matName: str) -> bool: ...
+
+	def SetMaterial(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return bool(super().SetMaterial(item1))
+
+		if isinstance(item1, str):
+			return bool(super().SetMaterial(item1))
+
+		return self._Entity.SetMaterial(item1)
+
+
+class StiffenerLaminate(LaminateBase):
+	'''
+	Stiffener Laminate
+	'''
+	def __init__(self, stiffenerLaminate: _api.StiffenerLaminate):
+		self._Entity = stiffenerLaminate
+
+	@property
+	def Layers(self) -> list[StiffenerLaminateLayer]:
+		return [StiffenerLaminateLayer(stiffenerLaminateLayer) for stiffenerLaminateLayer in self._Entity.Layers]
+
+	@property
+	def LaminateStiffenerProfile(self) -> types.StiffenerProfile:
+		return types.StiffenerProfile[self._Entity.LaminateStiffenerProfile.ToString()]
+
+	@overload
+	def AddLayer(self, location: types.StiffenerLaminateLayerLocation, materialName: str, angle: float, thickness: float = None) -> StiffenerLaminateLayer: ...
+
+	@overload
+	def InsertLayer(self, location: types.StiffenerLaminateLayerLocation, layerId: int, materialName: str, angle: float, thickness: float = None) -> StiffenerLaminateLayer: ...
+
+	@overload
+	def AddLayer(self, locations: tuple[types.StiffenerLaminateLayerLocation], materialName: str, angle: float, thickness: float = None) -> StiffenerLaminateLayer: ...
+
+	@overload
+	def InsertLayer(self, locations: tuple[types.StiffenerLaminateLayerLocation], layerId: int, materialName: str, angle: float, thickness: float = None) -> StiffenerLaminateLayer: ...
+
+	def RemoveLayer(self, layerId: int) -> bool:
+		return self._Entity.RemoveLayer(layerId)
+
+	def Save(self) -> None:
+		'''
+		Save laminate to database.
+		'''
+		return self._Entity.Save()
+
+	def AddLayer(self, item1 = None, item2 = None, item3 = None, item4 = None) -> StiffenerLaminateLayer:
+		if isinstance(item1, types.StiffenerLaminateLayerLocation) and isinstance(item2, str) and isinstance(item3, float) and isinstance(item4, float):
+			return StiffenerLaminateLayer(self._Entity.AddLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4))
+
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, str) and isinstance(item3, float) and isinstance(item4, float):
+			locationsList = List[_types.StiffenerLaminateLayerLocation]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						locationsList.Add(_types.StiffenerLaminateLayerLocation(thing.value))
+			locationsEnumerable = IEnumerable(locationsList)
+			return StiffenerLaminateLayer(self._Entity.AddLayer(locationsEnumerable, item2, item3, item4))
+
+		return self._Entity.AddLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4)
+
+	def InsertLayer(self, item1 = None, item2 = None, item3 = None, item4 = None, item5 = None) -> StiffenerLaminateLayer:
+		if isinstance(item1, types.StiffenerLaminateLayerLocation) and isinstance(item2, int) and isinstance(item3, str) and isinstance(item4, float) and isinstance(item5, float):
+			return StiffenerLaminateLayer(self._Entity.InsertLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4, item5))
+
+		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, int) and isinstance(item3, str) and isinstance(item4, float) and isinstance(item5, float):
+			locationsList = List[_types.StiffenerLaminateLayerLocation]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						locationsList.Add(_types.StiffenerLaminateLayerLocation(thing.value))
+			locationsEnumerable = IEnumerable(locationsList)
+			return StiffenerLaminateLayer(self._Entity.InsertLayer(locationsEnumerable, item2, item3, item4, item5))
+
+		return self._Entity.InsertLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4, item5)
 
 
 class OrthotropicCorrectionFactorBase(ABC):
@@ -2554,6 +4090,9 @@ class OrthotropicCorrectionFactorBase(ABC):
 
 
 class OrthotropicCorrectionFactorPoint:
+	'''
+	Pointer to an Equation-based or Tabular Correction Factor.
+	'''
 	def __init__(self, orthotropicCorrectionFactorPoint: _api.OrthotropicCorrectionFactorPoint):
 		self._Entity = orthotropicCorrectionFactorPoint
 
@@ -2592,7 +4131,7 @@ class OrthotropicCorrectionFactorPoint:
 
 class OrthotropicCorrectionFactorValue:
 	'''
-	Orthotropic material correction factor value.
+	Orthotropic material equation-based correction factor value. (NOT TABULAR)
 	'''
 	def __init__(self, orthotropicCorrectionFactorValue: _api.OrthotropicCorrectionFactorValue):
 		self._Entity = orthotropicCorrectionFactorValue
@@ -2700,7 +4239,11 @@ class TabularCorrectionFactorRow:
 
 	@property
 	def IndependentValues(self) -> dict[types.CorrectionIndependentDefinition, TabularCorrectionFactorIndependentValue]:
-		return dict[types.CorrectionIndependentDefinition, TabularCorrectionFactorIndependentValue](self._Entity.IndependentValues)
+		independentValuesDict = {}
+		for kvp in self._Entity.IndependentValues:
+			independentValuesDict[types.CorrectionIndependentDefinition[kvp.Key.ToString()]] = TabularCorrectionFactorIndependentValue(kvp.Value)
+
+		return independentValuesDict
 
 
 class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
@@ -2736,15 +4279,15 @@ class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
 
 	def SetIndependentValue(self, item1 = None, item2 = None, item3 = None) -> None:
 		if isinstance(item1, int) and isinstance(item2, types.CorrectionIndependentDefinition) and isinstance(item3, float):
-			return self._Entity.SetIndependentValue(item1, item2, item3)
+			return self._Entity.SetIndependentValue(item1, _types.CorrectionIndependentDefinition(item2.value), item3)
 
 		if isinstance(item1, int) and isinstance(item2, types.CorrectionIndependentDefinition) and isinstance(item3, bool):
-			return self._Entity.SetIndependentValue(item1, item2, item3)
+			return self._Entity.SetIndependentValue(item1, _types.CorrectionIndependentDefinition(item2.value), item3)
 
 		if isinstance(item1, int) and isinstance(item2, types.CorrectionIndependentDefinition) and isinstance(item3, int):
-			return self._Entity.SetIndependentValue(item1, item2, item3)
+			return self._Entity.SetIndependentValue(item1, _types.CorrectionIndependentDefinition(item2.value), item3)
 
-		return self._Entity.SetIndependentValue(item1, item2, item3)
+		return self._Entity.SetIndependentValue(item1, _types.CorrectionIndependentDefinition(item2.value), item3)
 
 
 class OrthotropicAllowableCurvePoint:
@@ -3214,6 +4757,10 @@ class Orthotropic:
 		return self._Entity.MaterialFamilyName
 
 	@property
+	def Id(self) -> int:
+		return self._Entity.Id
+
+	@property
 	def CreationDate(self) -> DateTime:
 		return self._Entity.CreationDate
 
@@ -3303,7 +4850,8 @@ class Orthotropic:
 		Orthotropic material effective laminate properties. Read-only from the API.
             Check if material is an effective laminate with orthotropic.IsEffectiveLaminate.
 		'''
-		return OrthotropicEffectiveLaminate(self._Entity.OrthotropicEffectiveLaminate)
+		result = self._Entity.OrthotropicEffectiveLaminate
+		return OrthotropicEffectiveLaminate(result) if result is not None else None
 
 	@property
 	def OrthotropicEquationCorrectionFactors(self) -> dict[OrthotropicCorrectionFactorPoint, OrthotropicEquationCorrectionFactor]:
@@ -3393,7 +4941,7 @@ class Orthotropic:
 	def BucklingStiffnessKnockdown(self, value: float) -> None:
 		self._Entity.BucklingStiffnessKnockdown = value
 
-	def AddTemperatureProperty(self, temperature: float, et1: float = None, et2: float = None, vt12: float = None, ec1: float = None, ec2: float = None, vc12: float = None, g12: float = None, ftu1: float = None, ftu2: float = None, fcu1: float = None, fcu2: float = None, fsu12: float = None, alpha1: float = None, alpha2: float = None, etu1: float = None, etu2: float = None, ecu1: float = None, ecu2: float = None, esu12: float = None) -> OrthotropicTemperature:
+	def AddTemperatureProperty(self, temperature: float, et1: float, et2: float, vt12: float, ec1: float, ec2: float, vc12: float, g12: float, ftu1: float, ftu2: float, fcu1: float, fcu2: float, fsu12: float, alpha1: float, alpha2: float, etu1: float, etu2: float, ecu1: float, ecu2: float, esu12: float) -> OrthotropicTemperature:
 		return OrthotropicTemperature(self._Entity.AddTemperatureProperty(temperature, et1, et2, vt12, ec1, ec2, vc12, g12, ftu1, ftu2, fcu1, fcu2, fsu12, alpha1, alpha2, etu1, etu2, ecu1, ecu2, esu12))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
@@ -3482,7 +5030,8 @@ class ElementSet(IdNameEntity):
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self._Entity.Elements)
+		result = self._Entity.Elements
+		return ElementCol(result) if result is not None else None
 
 
 class FemProperty(IdNameEntity):
@@ -3494,7 +5043,8 @@ class FemProperty(IdNameEntity):
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self._Entity.Elements)
+		result = self._Entity.Elements
+		return ElementCol(result) if result is not None else None
 
 	@property
 	def FemType(self) -> types.FemType:
@@ -3545,11 +5095,34 @@ class FemDataSet:
 
 	@property
 	def FemProperties(self) -> FemPropertyCol:
-		return FemPropertyCol(self._Entity.FemProperties)
+		result = self._Entity.FemProperties
+		return FemPropertyCol(result) if result is not None else None
 
 	@property
 	def ElementSets(self) -> ElementSetCol:
-		return ElementSetCol(self._Entity.ElementSets)
+		result = self._Entity.ElementSets
+		return ElementSetCol(result) if result is not None else None
+
+
+class PluginPackage(IdNameEntity):
+	def __init__(self, pluginPackage: _api.PluginPackage):
+		self._Entity = pluginPackage
+
+	@property
+	def FilePath(self) -> str:
+		return self._Entity.FilePath
+
+	@property
+	def Version(self) -> str:
+		return self._Entity.Version
+
+	@property
+	def Description(self) -> str:
+		return self._Entity.Description
+
+	@property
+	def ModificationDate(self) -> DateTime:
+		return self._Entity.ModificationDate
 
 
 class Ply(IdNameEntity):
@@ -3578,7 +5151,8 @@ class Ply(IdNameEntity):
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self._Entity.Elements)
+		result = self._Entity.Elements
+		return ElementCol(result) if result is not None else None
 
 	@property
 	def MaterialId(self) -> int:
@@ -3622,6 +5196,27 @@ class Rundeck(IdEntity):
 
 	def SetResultFilePath(self, filepath: str) -> RundeckUpdateStatus:
 		return RundeckUpdateStatus[self._Entity.SetResultFilePath(filepath).ToString()]
+
+
+class RundeckPathPair:
+	def __init__(self, rundeckPathPair: _api.RundeckPathPair):
+		self._Entity = rundeckPathPair
+
+	@property
+	def InputFilePath(self) -> str:
+		return self._Entity.InputFilePath
+
+	@property
+	def ResultFilePath(self) -> str:
+		return self._Entity.ResultFilePath
+
+	@InputFilePath.setter
+	def InputFilePath(self, value: str) -> None:
+		self._Entity.InputFilePath = value
+
+	@ResultFilePath.setter
+	def ResultFilePath(self, value: str) -> None:
+		self._Entity.ResultFilePath = value
 
 
 class BeamLoads:
@@ -3669,28 +5264,32 @@ class SectionCut(IdNameEntity):
 		'''
 		Represents a readonly 3D vector.
 		'''
-		return Vector3d(self._Entity.HorizontalVector)
+		result = self._Entity.HorizontalVector
+		return Vector3d(result) if result is not None else None
 
 	@property
 	def NormalVector(self) -> Vector3d:
 		'''
 		Represents a readonly 3D vector.
 		'''
-		return Vector3d(self._Entity.NormalVector)
+		result = self._Entity.NormalVector
+		return Vector3d(result) if result is not None else None
 
 	@property
 	def OriginVector(self) -> Vector3d:
 		'''
 		Represents a readonly 3D vector.
 		'''
-		return Vector3d(self._Entity.OriginVector)
+		result = self._Entity.OriginVector
+		return Vector3d(result) if result is not None else None
 
 	@property
 	def VerticalVector(self) -> Vector3d:
 		'''
 		Represents a readonly 3D vector.
 		'''
-		return Vector3d(self._Entity.VerticalVector)
+		result = self._Entity.VerticalVector
+		return Vector3d(result) if result is not None else None
 
 	@property
 	def MaxAngleBound(self) -> float:
@@ -3753,21 +5352,24 @@ class SectionCut(IdNameEntity):
 		'''
 		Represents a readonly 2D vector.
 		'''
-		return Vector2d(self._Entity.CG)
+		result = self._Entity.CG
+		return Vector2d(result) if result is not None else None
 
 	@property
 	def CN(self) -> Vector2d:
 		'''
 		Represents a readonly 2D vector.
 		'''
-		return Vector2d(self._Entity.CN)
+		result = self._Entity.CN
+		return Vector2d(result) if result is not None else None
 
 	@property
 	def CQ(self) -> Vector2d:
 		'''
 		Represents a readonly 2D vector.
 		'''
-		return Vector2d(self._Entity.CQ)
+		result = self._Entity.CQ
+		return Vector2d(result) if result is not None else None
 
 	@property
 	def EnclosedArea(self) -> float:
@@ -3811,15 +5413,18 @@ class SectionCut(IdNameEntity):
 
 	@property
 	def Elements(self) -> ElementCol:
-		return ElementCol(self._Entity.Elements)
+		result = self._Entity.Elements
+		return ElementCol(result) if result is not None else None
 
 	@property
 	def PlateElements(self) -> ElementCol:
-		return ElementCol(self._Entity.PlateElements)
+		result = self._Entity.PlateElements
+		return ElementCol(result) if result is not None else None
 
 	@property
 	def BeamElements(self) -> ElementCol:
-		return ElementCol(self._Entity.BeamElements)
+		result = self._Entity.BeamElements
+		return ElementCol(result) if result is not None else None
 
 	@ReferencePoint.setter
 	def ReferencePoint(self, value: types.SectionCutPropertyLocation) -> None:
@@ -3925,15 +5530,18 @@ class Set(ZoneJointContainer):
 
 	@property
 	def Joints(self) -> JointCol:
-		return JointCol(self._Entity.Joints)
+		result = self._Entity.Joints
+		return JointCol(result) if result is not None else None
 
 	@property
 	def PanelSegments(self) -> PanelSegmentCol:
-		return PanelSegmentCol(self._Entity.PanelSegments)
+		result = self._Entity.PanelSegments
+		return PanelSegmentCol(result) if result is not None else None
 
 	@property
 	def Zones(self) -> ZoneCol:
-		return ZoneCol(self._Entity.Zones)
+		result = self._Entity.Zones
+		return ZoneCol(result) if result is not None else None
 
 	@overload
 	def AddJoint(self, joint: Joint) -> CollectionModificationStatus: ...
@@ -4153,19 +5761,23 @@ class Structure(ZoneJointContainer):
 
 	@property
 	def Plies(self) -> PlyCol:
-		return PlyCol(self._Entity.Plies)
+		result = self._Entity.Plies
+		return PlyCol(result) if result is not None else None
 
 	@property
 	def Joints(self) -> JointCol:
-		return JointCol(self._Entity.Joints)
+		result = self._Entity.Joints
+		return JointCol(result) if result is not None else None
 
 	@property
 	def PanelSegments(self) -> PanelSegmentCol:
-		return PanelSegmentCol(self._Entity.PanelSegments)
+		result = self._Entity.PanelSegments
+		return PanelSegmentCol(result) if result is not None else None
 
 	@property
 	def Zones(self) -> ZoneCol:
-		return ZoneCol(self._Entity.Zones)
+		result = self._Entity.Zones
+		return ZoneCol(result) if result is not None else None
 
 	def ExportVCP(self, fileName: str) -> None:
 		return self._Entity.ExportVCP(fileName)
@@ -4189,16 +5801,22 @@ class Structure(ZoneJointContainer):
 	@overload
 	def AddZones(self, zones: tuple[Zone]) -> CollectionModificationStatus: ...
 
-	def CreateZone(self, elementIds: tuple[int], name: str = None) -> None:
+	def CreateZone(self, elementIds: tuple[int], name: str = None) -> Zone:
 		elementIdsList = MakeCSharpIntList(elementIds)
 		elementIdsEnumerable = IEnumerable(elementIdsList)
-		return self._Entity.CreateZone(elementIdsEnumerable, name)
+		result = self._Entity.CreateZone(elementIdsEnumerable, name)
+		thisClass = type(result).__name__
+		givenClass = Zone
+		for subclass in Zone.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
-	def CreatePanelSegment(self, discreteTechnique: types.DiscreteTechnique, discreteElementLkp: dict[types.DiscreteDefinitionType, list[int]], name: str = None) -> int:
+	def CreatePanelSegment(self, discreteTechnique: types.DiscreteTechnique, discreteElementLkp: dict[types.DiscreteDefinitionType, list[int]], name: str = None) -> PanelSegment:
 		discreteElementLkpDict = Dictionary[_types.DiscreteDefinitionType, List[int]]()
 		for kvp in discreteElementLkp:
 			discreteElementLkpDict.Add(_types.DiscreteDefinitionType(kvp.value), MakeCSharpIntList(discreteElementLkp[kvp]))
-		return self._Entity.CreatePanelSegment(_types.DiscreteTechnique(discreteTechnique.value), discreteElementLkpDict, name)
+		return PanelSegment(self._Entity.CreatePanelSegment(_types.DiscreteTechnique(discreteTechnique.value), discreteElementLkpDict, name))
 
 	@overload
 	def Remove(self, zoneIds: tuple[int], jointIds: tuple[int]) -> CollectionModificationStatus: ...
@@ -4388,11 +6006,29 @@ class AnalysisPropertyCol(IdNameEntityCol[AnalysisProperty]):
 	def AnalysisPropertyColList(self) -> tuple[AnalysisProperty]:
 		return tuple([AnalysisProperty(analysisPropertyCol) for analysisPropertyCol in self._Entity])
 
+	def CreateAnalysisProperty(self, type: types.FamilyCategory, name: str = None) -> AnalysisProperty:
+		return AnalysisProperty(self._Entity.CreateAnalysisProperty(_types.FamilyCategory(type.value), name))
+
+	@overload
+	def DeleteAnalysisProperty(self, name: str) -> bool: ...
+
+	@overload
+	def DeleteAnalysisProperty(self, id: int) -> bool: ...
+
 	@overload
 	def Get(self, name: str) -> AnalysisProperty: ...
 
 	@overload
 	def Get(self, id: int) -> AnalysisProperty: ...
+
+	def DeleteAnalysisProperty(self, item1 = None) -> bool:
+		if isinstance(item1, str):
+			return self._Entity.DeleteAnalysisProperty(item1)
+
+		if isinstance(item1, int):
+			return self._Entity.DeleteAnalysisProperty(item1)
+
+		return self._Entity.DeleteAnalysisProperty(item1)
 
 	def Get(self, item1 = None) -> AnalysisProperty:
 		if isinstance(item1, str):
@@ -4421,6 +6057,15 @@ class DesignPropertyCol(IdNameEntityCol[DesignProperty]):
 	@property
 	def DesignPropertyColList(self) -> tuple[DesignProperty]:
 		return tuple([DesignProperty(designPropertyCol) for designPropertyCol in self._Entity])
+
+	def CreateDesignProperty(self, familyConcept: types.FamilyConceptUID, materialMode: types.MaterialMode = types.MaterialMode.Any, name: str = None) -> DesignProperty:
+		result = self._Entity.CreateDesignProperty(_types.FamilyConceptUID(familyConcept.value), _types.MaterialMode(materialMode.value), name)
+		thisClass = type(result).__name__
+		givenClass = DesignProperty
+		for subclass in DesignProperty.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	@overload
 	def Get(self, name: str) -> DesignProperty: ...
@@ -4456,11 +6101,35 @@ class LoadPropertyCol(IdNameEntityCol[LoadProperty]):
 	def LoadPropertyColList(self) -> tuple[LoadProperty]:
 		return tuple([LoadProperty(loadPropertyCol) for loadPropertyCol in self._Entity])
 
+	def CreateLoadProperty(self, loadPropertyType: types.LoadPropertyType, category: types.FamilyCategory, name: str = None) -> LoadProperty:
+		result = self._Entity.CreateLoadProperty(_types.LoadPropertyType(loadPropertyType.value), _types.FamilyCategory(category.value), name)
+		thisClass = type(result).__name__
+		givenClass = LoadProperty
+		for subclass in LoadProperty.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
+
+	@overload
+	def DeleteLoadProperty(self, id: int) -> bool: ...
+
+	@overload
+	def DeleteLoadProperty(self, name: str) -> bool: ...
+
 	@overload
 	def Get(self, name: str) -> LoadProperty: ...
 
 	@overload
 	def Get(self, id: int) -> LoadProperty: ...
+
+	def DeleteLoadProperty(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return self._Entity.DeleteLoadProperty(item1)
+
+		if isinstance(item1, str):
+			return self._Entity.DeleteLoadProperty(item1)
+
+		return self._Entity.DeleteLoadProperty(item1)
 
 	def Get(self, item1 = None) -> LoadProperty:
 		if isinstance(item1, str):
@@ -4524,19 +6193,19 @@ class DiscreteFieldCol(IdNameEntityCol[DiscreteField]):
 	def DiscreteFieldColList(self) -> tuple[DiscreteField]:
 		return tuple([DiscreteField(discreteFieldCol) for discreteFieldCol in self._Entity])
 
-	def Create(self, name: str, entityType: types.DiscreteFieldPhysicalEntityType, dataType: types.DiscreteFieldDataType) -> int:
-		return self._Entity.Create(name, _types.DiscreteFieldPhysicalEntityType(entityType.value), _types.DiscreteFieldDataType(dataType.value))
+	def Create(self, entityType: types.DiscreteFieldPhysicalEntityType, dataType: types.DiscreteFieldDataType, name: str = None) -> DiscreteField:
+		return DiscreteField(self._Entity.Create(_types.DiscreteFieldPhysicalEntityType(entityType.value), _types.DiscreteFieldDataType(dataType.value), name))
 
-	def CreateFromVCP(self, filepath: str) -> list[int]:
-		return list[int](self._Entity.CreateFromVCP(filepath))
+	def CreateFromVCP(self, filepath: str) -> list[DiscreteField]:
+		return [DiscreteField(discreteField) for discreteField in self._Entity.CreateFromVCP(filepath)]
 
 	def Delete(self, id: int) -> CollectionModificationStatus:
 		return CollectionModificationStatus[self._Entity.Delete(id).ToString()]
 
-	def CreateByPointMapToElements(self, elementIds: list[int], discreteFieldIds: list[int], suffix: str = None, tolerance: float = None) -> None:
+	def CreateByPointMapToElements(self, elementIds: list[int], discreteFieldIds: list[int], suffix: str = None, tolerance: float = None) -> list[DiscreteField]:
 		elementIdsList = MakeCSharpIntList(elementIds)
 		discreteFieldIdsList = MakeCSharpIntList(discreteFieldIds)
-		return self._Entity.CreateByPointMapToElements(elementIdsList, discreteFieldIdsList, suffix, tolerance)
+		return [DiscreteField(discreteField) for discreteField in self._Entity.CreateByPointMapToElements(elementIdsList, discreteFieldIdsList, suffix, tolerance)]
 
 	@overload
 	def Get(self, name: str) -> DiscreteField: ...
@@ -4570,10 +6239,17 @@ class ZoneJointContainerCol(IdNameEntityCol, Generic[T]):
 
 	@property
 	def ZoneJointContainerColList(self) -> tuple[T]:
-		return tuple([T(zoneJointContainerCol) for zoneJointContainerCol in self._Entity])
+		if self._Entity.Count() <= 0:
+			return ()
+		thisClass = type(self._Entity._items[0]).__name__
+		givenClass = T
+		for subclass in T.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return tuple([givenClass(zoneJointContainerCol) for zoneJointContainerCol in self._Entity])
 
 	@abstractmethod
-	def Create(self, name: str) -> bool:
+	def Create(self, name: str) -> T:
 		return self._Entity.Create(name)
 
 	@overload
@@ -4610,14 +6286,31 @@ class RundeckCol(IdEntityCol[Rundeck]):
 	def RundeckColList(self) -> tuple[Rundeck]:
 		return tuple([Rundeck(rundeckCol) for rundeckCol in self._Entity])
 
-	def AddRundeck(self, inputPath: str, resultPath: str = None) -> RundeckCreationStatus:
-		return RundeckCreationStatus[self._Entity.AddRundeck(inputPath, resultPath).ToString()]
+	def AddRundeck(self, inputPath: str, resultPath: str = None) -> Rundeck:
+		return Rundeck(self._Entity.AddRundeck(inputPath, resultPath))
 
 	def ReassignPrimary(self, id: int) -> RundeckUpdateStatus:
 		return RundeckUpdateStatus[self._Entity.ReassignPrimary(id).ToString()]
 
 	def RemoveRundeck(self, id: int) -> RundeckRemoveStatus:
 		return RundeckRemoveStatus[self._Entity.RemoveRundeck(id).ToString()]
+
+	def UpdateAllRundecks(self, newPaths: list[RundeckPathPair]) -> RundeckBulkUpdateStatus:
+		newPathsList = List[_api.RundeckPathPair]()
+		if newPaths is not None:
+			for thing in newPaths:
+				if thing is not None:
+					newPathsList.Add(thing._Entity)
+		return RundeckBulkUpdateStatus[self._Entity.UpdateAllRundecks(newPathsList).ToString()]
+
+	def GetRundeckPathSetters(self) -> list[RundeckPathPair]:
+		'''
+		Get RundeckPathSetters to be edited and input to UpdateAllRundecks.
+		'''
+		return [RundeckPathPair(rundeckPathPair) for rundeckPathPair in self._Entity.GetRundeckPathSetters()]
+
+	def ReplaceStringInAllPaths(self, stringToReplace: str, newString: str) -> RundeckBulkUpdateStatus:
+		return RundeckBulkUpdateStatus[self._Entity.ReplaceStringInAllPaths(stringToReplace, newString).ToString()]
 
 	def __getitem__(self, index: int):
 		return self.RundeckColList[index]
@@ -4638,8 +6331,8 @@ class SectionCutCol(IdNameEntityCol[SectionCut]):
 	def SectionCutColList(self) -> tuple[SectionCut]:
 		return tuple([SectionCut(sectionCutCol) for sectionCutCol in self._Entity])
 
-	def Create(self, name: str, origin: Vector3d, normal: Vector3d, horizontal: Vector3d) -> None:
-		return self._Entity.Create(name, origin._Entity, normal._Entity, horizontal._Entity)
+	def Create(self, origin: Vector3d, normal: Vector3d, horizontal: Vector3d, name: str = None) -> SectionCut:
+		return SectionCut(self._Entity.Create(origin._Entity, normal._Entity, horizontal._Entity, name))
 
 	def Delete(self, id: int) -> CollectionModificationStatus:
 		return CollectionModificationStatus[self._Entity.Delete(id).ToString()]
@@ -4678,8 +6371,8 @@ class SetCol(ZoneJointContainerCol[Set]):
 	def SetColList(self) -> tuple[Set]:
 		return tuple([Set(setCol) for setCol in self._Entity])
 
-	def Create(self, name: str) -> bool:
-		return self._Entity.Create(name)
+	def Create(self, name: str = None) -> Set:
+		return Set(self._Entity.Create(name))
 
 	@overload
 	def Get(self, name: str) -> Set: ...
@@ -4715,14 +6408,17 @@ class StructureCol(ZoneJointContainerCol[Structure]):
 	def StructureColList(self) -> tuple[Structure]:
 		return tuple([Structure(structureCol) for structureCol in self._Entity])
 
-	def Create(self, name: str) -> bool:
-		return self._Entity.Create(name)
+	def Create(self, name: str = None) -> Structure:
+		return Structure(self._Entity.Create(name))
 
 	@overload
-	def DeleteStructure(self, structure: Structure) -> CollectionModificationStatus: ...
+	def DeleteStructure(self, structure: Structure) -> bool: ...
 
 	@overload
-	def DeleteStructure(self, id: int) -> CollectionModificationStatus: ...
+	def DeleteStructure(self, name: str) -> bool: ...
+
+	@overload
+	def DeleteStructure(self, id: int) -> bool: ...
 
 	@overload
 	def Get(self, name: str) -> Structure: ...
@@ -4730,12 +6426,15 @@ class StructureCol(ZoneJointContainerCol[Structure]):
 	@overload
 	def Get(self, id: int) -> Structure: ...
 
-	def DeleteStructure(self, item1 = None) -> CollectionModificationStatus:
+	def DeleteStructure(self, item1 = None) -> bool:
 		if isinstance(item1, Structure):
-			return CollectionModificationStatus[self._Entity.DeleteStructure(item1._Entity).ToString()]
+			return self._Entity.DeleteStructure(item1._Entity)
+
+		if isinstance(item1, str):
+			return self._Entity.DeleteStructure(item1)
 
 		if isinstance(item1, int):
-			return CollectionModificationStatus[self._Entity.DeleteStructure(item1).ToString()]
+			return self._Entity.DeleteStructure(item1)
 
 		return self._Entity.DeleteStructure(item1._Entity)
 
@@ -4766,16 +6465,23 @@ class Project:
 		self._Entity = project
 
 	@property
+	def HyperFea(self) -> HyperFea:
+		result = self._Entity.HyperFea
+		return HyperFea(result) if result is not None else None
+
+	@property
 	def WorkingFolder(self) -> str:
 		return self._Entity.WorkingFolder
 
 	@property
 	def FemDataSet(self) -> FemDataSet:
-		return FemDataSet(self._Entity.FemDataSet)
+		result = self._Entity.FemDataSet
+		return FemDataSet(result) if result is not None else None
 
 	@property
 	def Beams(self) -> ZoneCol:
-		return ZoneCol(self._Entity.Beams)
+		result = self._Entity.Beams
+		return ZoneCol(result) if result is not None else None
 
 	@property
 	def Id(self) -> int:
@@ -4783,7 +6489,8 @@ class Project:
 
 	@property
 	def Joints(self) -> JointCol:
-		return JointCol(self._Entity.Joints)
+		result = self._Entity.Joints
+		return JointCol(result) if result is not None else None
 
 	@property
 	def Name(self) -> str:
@@ -4791,51 +6498,63 @@ class Project:
 
 	@property
 	def Panels(self) -> ZoneCol:
-		return ZoneCol(self._Entity.Panels)
+		result = self._Entity.Panels
+		return ZoneCol(result) if result is not None else None
 
 	@property
 	def Rundecks(self) -> RundeckCol:
-		return RundeckCol(self._Entity.Rundecks)
+		result = self._Entity.Rundecks
+		return RundeckCol(result) if result is not None else None
 
 	@property
 	def Sets(self) -> SetCol:
-		return SetCol(self._Entity.Sets)
+		result = self._Entity.Sets
+		return SetCol(result) if result is not None else None
 
 	@property
 	def Structures(self) -> StructureCol:
-		return StructureCol(self._Entity.Structures)
+		result = self._Entity.Structures
+		return StructureCol(result) if result is not None else None
 
 	@property
 	def Zones(self) -> ZoneCol:
-		return ZoneCol(self._Entity.Zones)
+		result = self._Entity.Zones
+		return ZoneCol(result) if result is not None else None
 
 	@property
 	def PanelSegments(self) -> PanelSegmentCol:
-		return PanelSegmentCol(self._Entity.PanelSegments)
+		result = self._Entity.PanelSegments
+		return PanelSegmentCol(result) if result is not None else None
 
 	@property
 	def SectionCuts(self) -> SectionCutCol:
-		return SectionCutCol(self._Entity.SectionCuts)
+		result = self._Entity.SectionCuts
+		return SectionCutCol(result) if result is not None else None
 
 	@property
 	def DesignLoads(self) -> DesignLoadCol:
-		return DesignLoadCol(self._Entity.DesignLoads)
+		result = self._Entity.DesignLoads
+		return DesignLoadCol(result) if result is not None else None
 
 	@property
 	def DiscreteFieldTables(self) -> DiscreteFieldCol:
-		return DiscreteFieldCol(self._Entity.DiscreteFieldTables)
+		result = self._Entity.DiscreteFieldTables
+		return DiscreteFieldCol(result) if result is not None else None
 
 	@property
 	def AnalysisProperties(self) -> AnalysisPropertyCol:
-		return AnalysisPropertyCol(self._Entity.AnalysisProperties)
+		result = self._Entity.AnalysisProperties
+		return AnalysisPropertyCol(result) if result is not None else None
 
 	@property
 	def DesignProperties(self) -> DesignPropertyCol:
-		return DesignPropertyCol(self._Entity.DesignProperties)
+		result = self._Entity.DesignProperties
+		return DesignPropertyCol(result) if result is not None else None
 
 	@property
 	def LoadProperties(self) -> LoadPropertyCol:
-		return LoadPropertyCol(self._Entity.LoadProperties)
+		result = self._Entity.LoadProperties
+		return LoadPropertyCol(result) if result is not None else None
 
 	@property
 	def FemFormat(self) -> types.ProjectModelFormat:
@@ -4872,6 +6591,81 @@ class Project:
 	def GetDashboardTags(self, companyName: str) -> list[str]:
 		return list[str](self._Entity.GetDashboardTags(companyName))
 
+	def GenerateSolverSizingInputFile(self, inputFile: str = None, zones: set[int] = None, sectionCuts: set[int] = None, panelSegments: set[int] = None) -> str:
+		zonesSet = HashSet[int]()
+		if zones is not None:
+			for thing in zones:
+				if thing is not None:
+					zonesSet.Add(thing)
+		sectionCutsSet = HashSet[int]()
+		if sectionCuts is not None:
+			for thing in sectionCuts:
+				if thing is not None:
+					sectionCutsSet.Add(thing)
+		panelSegmentsSet = HashSet[int]()
+		if panelSegments is not None:
+			for thing in panelSegments:
+				if thing is not None:
+					panelSegmentsSet.Add(thing)
+		return self._Entity.GenerateSolverSizingInputFile(inputFile, zones if zones is None else zonesSet, sectionCuts if sectionCuts is None else sectionCutsSet, panelSegments if panelSegments is None else panelSegmentsSet)
+
+	def GenerateSolverAnalysisInputFile(self, inputFile: str = None, zones: set[int] = None, sectionCuts: set[int] = None, panelSegments: set[int] = None) -> str:
+		zonesSet = HashSet[int]()
+		if zones is not None:
+			for thing in zones:
+				if thing is not None:
+					zonesSet.Add(thing)
+		sectionCutsSet = HashSet[int]()
+		if sectionCuts is not None:
+			for thing in sectionCuts:
+				if thing is not None:
+					sectionCutsSet.Add(thing)
+		panelSegmentsSet = HashSet[int]()
+		if panelSegments is not None:
+			for thing in panelSegments:
+				if thing is not None:
+					panelSegmentsSet.Add(thing)
+		return self._Entity.GenerateSolverAnalysisInputFile(inputFile, zones if zones is None else zonesSet, sectionCuts if sectionCuts is None else sectionCutsSet, panelSegments if panelSegments is None else panelSegmentsSet)
+
+	def FullRunSolverSizing(self, inputFile: str = None, outputFile: str = None, zones: set[int] = None, sectionCuts: set[int] = None, panelSegments: set[int] = None, nThreads: int = None) -> bool:
+		zonesSet = HashSet[int]()
+		if zones is not None:
+			for thing in zones:
+				if thing is not None:
+					zonesSet.Add(thing)
+		sectionCutsSet = HashSet[int]()
+		if sectionCuts is not None:
+			for thing in sectionCuts:
+				if thing is not None:
+					sectionCutsSet.Add(thing)
+		panelSegmentsSet = HashSet[int]()
+		if panelSegments is not None:
+			for thing in panelSegments:
+				if thing is not None:
+					panelSegmentsSet.Add(thing)
+		return self._Entity.FullRunSolverSizing(inputFile, outputFile, zones if zones is None else zonesSet, sectionCuts if sectionCuts is None else sectionCutsSet, panelSegments if panelSegments is None else panelSegmentsSet, nThreads)
+
+	def FullRunSolverAnalysis(self, inputFile: str = None, outputFile: str = None, zones: set[int] = None, sectionCuts: set[int] = None, panelSegments: set[int] = None, nThreads: int = None) -> bool:
+		zonesSet = HashSet[int]()
+		if zones is not None:
+			for thing in zones:
+				if thing is not None:
+					zonesSet.Add(thing)
+		sectionCutsSet = HashSet[int]()
+		if sectionCuts is not None:
+			for thing in sectionCuts:
+				if thing is not None:
+					sectionCutsSet.Add(thing)
+		panelSegmentsSet = HashSet[int]()
+		if panelSegments is not None:
+			for thing in panelSegments:
+				if thing is not None:
+					panelSegmentsSet.Add(thing)
+		return self._Entity.FullRunSolverAnalysis(inputFile, outputFile, zones if zones is None else zonesSet, sectionCuts if sectionCuts is None else sectionCutsSet, panelSegments if panelSegments is None else panelSegmentsSet, nThreads)
+
+	def RunSolver(self, inputFile: str, outputFile: str = None, nThreads: int = None) -> bool:
+		return self._Entity.RunSolver(inputFile, outputFile, nThreads)
+
 	def Dispose(self) -> None:
 		return self._Entity.Dispose()
 
@@ -4884,7 +6678,13 @@ class Project:
 			for thing in joints:
 				if thing is not None:
 					jointsList.Add(thing._Entity)
-		return dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]](self._Entity.GetJointAnalysisResults(joints if joints is None else jointsList, _api.AnalysisResultToReturn(analysisResultType.value)))
+		result = self._Entity.GetJointAnalysisResults(joints if joints is None else jointsList, _api.AnalysisResultToReturn(analysisResultType.value))
+		thisClass = type(result).__name__
+		givenClass = dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]]
+		for subclass in dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]].__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	def GetObjectName(self, zoneId: int, objectId: int) -> str:
 		return self._Entity.GetObjectName(zoneId, objectId)
@@ -4908,6 +6708,9 @@ class Project:
 	def ImportFem(self) -> None:
 		return self._Entity.ImportFem()
 
+	def ImportFeaResults(self, alwaysImport: bool = False) -> str:
+		return self._Entity.ImportFeaResults(alwaysImport)
+
 	def SetFemFormat(self, femFormat: types.ProjectModelFormat) -> None:
 		return self._Entity.SetFemFormat(_types.ProjectModelFormat(femFormat.value))
 
@@ -4924,16 +6727,34 @@ class Project:
 		return tuple([result.Item1, result.Item2, result.Item3])
 
 	@overload
-	def AnalyzeZones(self, zones: list[Zone] = None) -> tuple[bool, str]: ...
+	def AnalyzeZones(self, zones: list[Zone] = None) -> types.SimpleStatus: ...
 
 	@overload
-	def AnalyzeZones(self, zoneIds: list[int]) -> tuple[bool, str]: ...
+	def AnalyzeZones(self, zoneIds: list[int]) -> types.SimpleStatus: ...
 
 	@overload
-	def SizeZones(self, zones: list[Zone] = None) -> tuple[bool, str]: ...
+	def SizeZones(self, zones: list[Zone] = None) -> types.SimpleStatus: ...
 
 	@overload
-	def SizeZones(self, zoneIds: list[int]) -> tuple[bool, str]: ...
+	def SizeZones(self, zoneIds: list[int]) -> types.SimpleStatus: ...
+
+	def CreateNonFeaZone(self, category: types.FamilyCategory, name: str = None) -> Zone:
+		result = self._Entity.CreateNonFeaZone(_types.FamilyCategory(category.value), name)
+		thisClass = type(result).__name__
+		givenClass = Zone
+		for subclass in Zone.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
+
+	def ReturnToUnusedFem(self, zoneNumbers: list[int] = None, jointIds: set[int] = None) -> None:
+		zoneNumbersList = MakeCSharpIntList(zoneNumbers)
+		jointIdsSet = HashSet[int]()
+		if jointIds is not None:
+			for thing in jointIds:
+				if thing is not None:
+					jointIdsSet.Add(thing)
+		return self._Entity.ReturnToUnusedFem(zoneNumbers if zoneNumbers is None else zoneNumbersList, jointIds if jointIds is None else jointIdsSet)
 
 	def UnimportFemAsync(self) -> Task:
 		return Task(self._Entity.UnimportFemAsync())
@@ -4950,37 +6771,40 @@ class Project:
 	@overload
 	def ExportCad(self, cadIds: tuple[int], filePath: str) -> None: ...
 
-	def AnalyzeZones(self, item1 = None) -> tuple[bool, str]:
+	def RegeneratePfem(self) -> None:
+		'''
+		Regenerates and displays the preview FEM. If running a script outside of the Script Runner,
+            do not call this method
+		'''
+		return self._Entity.RegeneratePfem()
+
+	def AnalyzeZones(self, item1 = None) -> types.SimpleStatus:
 		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], Zone):
 			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
 					if thing is not None:
 						zonesList.Add(thing._Entity)
-			result = self._Entity.AnalyzeZones(item1 if item1 is None else zonesList)
-			return tuple([result.Item1, result.Item2])
+			return types.SimpleStatus(self._Entity.AnalyzeZones(item1 if item1 is None else zonesList))
 
 		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
-			result = self._Entity.AnalyzeZones(zoneIdsList)
-			return tuple([result.Item1, result.Item2])
+			return types.SimpleStatus(self._Entity.AnalyzeZones(zoneIdsList))
 
 		return self._Entity.AnalyzeZones(item1)
 
-	def SizeZones(self, item1 = None) -> tuple[bool, str]:
+	def SizeZones(self, item1 = None) -> types.SimpleStatus:
 		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], Zone):
 			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
 					if thing is not None:
 						zonesList.Add(thing._Entity)
-			result = self._Entity.SizeZones(item1 if item1 is None else zonesList)
-			return tuple([result.Item1, result.Item2])
+			return types.SimpleStatus(self._Entity.SizeZones(item1 if item1 is None else zonesList))
 
 		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
-			result = self._Entity.SizeZones(zoneIdsList)
-			return tuple([result.Item1, result.Item2])
+			return types.SimpleStatus(self._Entity.SizeZones(zoneIdsList))
 
 		return self._Entity.SizeZones(item1)
 
@@ -5052,11 +6876,11 @@ class FoamCol(Generic[T]):
 	def Contains(self, materialName: str) -> bool:
 		return self._Entity.Contains(materialName)
 
-	def Create(self, newMaterialName: str, materialFamilyName: str, density: float, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self._Entity.Create(newMaterialName, materialFamilyName, density, femId).ToString()]
+	def Create(self, materialFamilyName: str, density: float, newMaterialName: str = None, femId: int = None) -> Foam:
+		return Foam(self._Entity.Create(materialFamilyName, density, newMaterialName, femId))
 
-	def Copy(self, fmToCopyName: str, newMaterialName: str, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self._Entity.Copy(fmToCopyName, newMaterialName, femId).ToString()]
+	def Copy(self, fmToCopyName: str, newMaterialName: str = None, femId: int = None) -> Foam:
+		return Foam(self._Entity.Copy(fmToCopyName, newMaterialName, femId))
 
 	def Delete(self, materialName: str) -> bool:
 		return self._Entity.Delete(materialName)
@@ -5088,11 +6912,11 @@ class HoneycombCol(Generic[T]):
 	def Contains(self, materialName: str) -> bool:
 		return self._Entity.Contains(materialName)
 
-	def Create(self, newMaterialName: str, materialFamilyName: str, density: float, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self._Entity.Create(newMaterialName, materialFamilyName, density, femId).ToString()]
+	def Create(self, materialFamilyName: str, density: float, newMaterialName: str = None, femId: int = None) -> Honeycomb:
+		return Honeycomb(self._Entity.Create(materialFamilyName, density, newMaterialName, femId))
 
-	def Copy(self, honeyToCopyName: str, newMaterialName: str, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self._Entity.Copy(honeyToCopyName, newMaterialName, femId).ToString()]
+	def Copy(self, honeyToCopyName: str, newMaterialName: str = None, femId: int = None) -> Honeycomb:
+		return Honeycomb(self._Entity.Copy(honeyToCopyName, newMaterialName, femId))
 
 	def Delete(self, materialName: str) -> bool:
 		return self._Entity.Delete(materialName)
@@ -5124,11 +6948,11 @@ class IsotropicCol(Generic[T]):
 	def Contains(self, materialName: str) -> bool:
 		return self._Entity.Contains(materialName)
 
-	def Create(self, newMaterialName: str, materialFamilyName: str, density: float, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self._Entity.Create(newMaterialName, materialFamilyName, density, femId).ToString()]
+	def Create(self, materialFamilyName: str, density: float, newMaterialName: str = None, femId: int = None) -> Isotropic:
+		return Isotropic(self._Entity.Create(materialFamilyName, density, newMaterialName, femId))
 
-	def Copy(self, isoToCopyName: str, newMaterialName: str, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self._Entity.Copy(isoToCopyName, newMaterialName, femId).ToString()]
+	def Copy(self, isoToCopyName: str, newMaterialName: str = None, femId: int = None) -> Isotropic:
+		return Isotropic(self._Entity.Copy(isoToCopyName, newMaterialName, femId))
 
 	def Delete(self, materialName: str) -> bool:
 		return self._Entity.Delete(materialName)
@@ -5141,6 +6965,97 @@ class IsotropicCol(Generic[T]):
 
 	def __len__(self):
 		return len(self.IsotropicColList)
+
+
+class LaminateFamilyCol(IdNameEntityCol[LaminateFamily]):
+	def __init__(self, laminateFamilyCol: _api.LaminateFamilyCol):
+		self._Entity = laminateFamilyCol
+		self._CollectedClass = LaminateFamily
+
+	@property
+	def LaminateFamilyColList(self) -> tuple[LaminateFamily]:
+		return tuple([LaminateFamily(laminateFamilyCol) for laminateFamilyCol in self._Entity])
+
+	@overload
+	def Get(self, name: str) -> LaminateFamily: ...
+
+	@overload
+	def Get(self, id: int) -> LaminateFamily: ...
+
+	def Get(self, item1 = None) -> LaminateFamily:
+		if isinstance(item1, str):
+			return LaminateFamily(super().Get(item1))
+
+		if isinstance(item1, int):
+			return LaminateFamily(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.LaminateFamilyColList[index]
+
+	def __iter__(self):
+		yield from self.LaminateFamilyColList
+
+	def __len__(self):
+		return len(self.LaminateFamilyColList)
+
+
+class LaminateCol(Generic[T]):
+	def __init__(self, laminateCol: _api.LaminateCol):
+		self._Entity = laminateCol
+
+	@property
+	def LaminateColList(self) -> tuple[Laminate]:
+		return tuple([Laminate(laminateCol) for laminateCol in self._Entity])
+
+	def Count(self) -> int:
+		return self._Entity.Count()
+
+	def Get(self, laminateName: str) -> LaminateBase:
+		result = self._Entity.Get(laminateName)
+		thisClass = type(result).__name__
+		givenClass = LaminateBase
+		for subclass in LaminateBase.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
+
+	def Contains(self, laminateName: str) -> bool:
+		return self._Entity.Contains(laminateName)
+
+	def CreateLaminate(self, materialFamily: str, laminateName: str = None) -> Laminate:
+		return Laminate(self._Entity.CreateLaminate(materialFamily, laminateName))
+
+	def CreateStiffenerLaminate(self, materialFamily: str, stiffenerProfile: types.StiffenerProfile, laminateName: str = None) -> StiffenerLaminate:
+		return StiffenerLaminate(self._Entity.CreateStiffenerLaminate(materialFamily, _types.StiffenerProfile(stiffenerProfile.value), laminateName))
+
+	def Copy(self, laminateToCopyName: str, newLaminateName: str = None) -> LaminateBase:
+		result = self._Entity.Copy(laminateToCopyName, newLaminateName)
+		thisClass = type(result).__name__
+		givenClass = LaminateBase
+		for subclass in LaminateBase.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
+
+	def Delete(self, name: str) -> bool:
+		return self._Entity.Delete(name)
+
+	def GetLaminate(self, name: str) -> Laminate:
+		return Laminate(self._Entity.GetLaminate(name))
+
+	def GetStiffenerLaminate(self, name: str) -> StiffenerLaminate:
+		return StiffenerLaminate(self._Entity.GetStiffenerLaminate(name))
+
+	def __getitem__(self, index: int):
+		return self.LaminateColList[index]
+
+	def __iter__(self):
+		yield from self.LaminateColList
+
+	def __len__(self):
+		return len(self.LaminateColList)
 
 
 class OrthotropicCol(Generic[T]):
@@ -5160,11 +7075,11 @@ class OrthotropicCol(Generic[T]):
 	def Contains(self, materialName: str) -> bool:
 		return self._Entity.Contains(materialName)
 
-	def Create(self, newMaterialName: str, materialFamilyName: str, thickness: float, density: float, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self._Entity.Create(newMaterialName, materialFamilyName, thickness, density, femId).ToString()]
+	def Create(self, materialFamilyName: str, thickness: float, density: float, newMaterialName: str = None, femId: int = None) -> Orthotropic:
+		return Orthotropic(self._Entity.Create(materialFamilyName, thickness, density, newMaterialName, femId))
 
-	def Copy(self, orthoToCopyName: str, newMaterialName: str, femId: int = 0) -> MaterialCreationStatus:
-		return MaterialCreationStatus[self._Entity.Copy(orthoToCopyName, newMaterialName, femId).ToString()]
+	def Copy(self, orthoToCopyName: str, newMaterialName: str = None, femId: int = None) -> Orthotropic:
+		return Orthotropic(self._Entity.Copy(orthoToCopyName, newMaterialName, femId))
 
 	def Delete(self, materialName: str) -> bool:
 		return self._Entity.Delete(materialName)
@@ -5177,6 +7092,71 @@ class OrthotropicCol(Generic[T]):
 
 	def __len__(self):
 		return len(self.OrthotropicColList)
+
+
+class PluginPackageCol(IdNameEntityCol[PluginPackage]):
+	def __init__(self, pluginPackageCol: _api.PluginPackageCol):
+		self._Entity = pluginPackageCol
+		self._CollectedClass = PluginPackage
+
+	@property
+	def PluginPackageColList(self) -> tuple[PluginPackage]:
+		return tuple([PluginPackage(pluginPackageCol) for pluginPackageCol in self._Entity])
+
+	def AddPluginPackage(self, path: str) -> PluginPackage:
+		return PluginPackage(self._Entity.AddPluginPackage(path))
+
+	@overload
+	def RemovePluginPackage(self, name: str) -> bool: ...
+
+	@overload
+	def RemovePluginPackage(self, id: int) -> bool: ...
+
+	def ClearAllPluginPackages(self) -> None:
+		'''
+		Clears all packages out of the database
+		'''
+		return self._Entity.ClearAllPluginPackages()
+
+	def GetPluginPackages(self) -> list[PluginPackage]:
+		'''
+		Gets a list of package info
+            Includes name, id, file path, version, description, and modification date
+		'''
+		return [PluginPackage(pluginPackage) for pluginPackage in self._Entity.GetPluginPackages()]
+
+	@overload
+	def Get(self, name: str) -> PluginPackage: ...
+
+	@overload
+	def Get(self, id: int) -> PluginPackage: ...
+
+	def RemovePluginPackage(self, item1 = None) -> bool:
+		if isinstance(item1, str):
+			return self._Entity.RemovePluginPackage(item1)
+
+		if isinstance(item1, int):
+			return self._Entity.RemovePluginPackage(item1)
+
+		return self._Entity.RemovePluginPackage(item1)
+
+	def Get(self, item1 = None) -> PluginPackage:
+		if isinstance(item1, str):
+			return PluginPackage(super().Get(item1))
+
+		if isinstance(item1, int):
+			return PluginPackage(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.PluginPackageColList[index]
+
+	def __iter__(self):
+		yield from self.PluginPackageColList
+
+	def __len__(self):
+		return len(self.PluginPackageColList)
 
 
 class ProjectInfoCol(IdNameEntityCol[ProjectInfo]):
@@ -5238,7 +7218,8 @@ class Application:
 		'''
 		Represents a HyperX project within a database.
 		'''
-		return Project(self._Entity.ActiveProject)
+		result = self._Entity.ActiveProject
+		return Project(result) if result is not None else None
 
 	@property
 	def UiRunnerMode(self) -> bool:
@@ -5250,58 +7231,83 @@ class Application:
 
 	@property
 	def FailureModeCategories(self) -> FailureModeCategoryCol:
-		return FailureModeCategoryCol(self._Entity.FailureModeCategories)
+		result = self._Entity.FailureModeCategories
+		return FailureModeCategoryCol(result) if result is not None else None
 
 	@property
 	def FailureModes(self) -> FailureModeCol:
-		return FailureModeCol(self._Entity.FailureModes)
+		result = self._Entity.FailureModes
+		return FailureModeCol(result) if result is not None else None
+
+	@property
+	def Packages(self) -> PluginPackageCol:
+		result = self._Entity.Packages
+		return PluginPackageCol(result) if result is not None else None
 
 	@property
 	def Foams(self) -> FoamCol:
 		'''
 		Contains a set of all foam materials in a database.
 		'''
-		return FoamCol(self._Entity.Foams)
+		result = self._Entity.Foams
+		return FoamCol(result) if result is not None else None
 
 	@property
 	def Honeycombs(self) -> HoneycombCol:
 		'''
 		Contains a set of all honeycomb materials in a database.
 		'''
-		return HoneycombCol(self._Entity.Honeycombs)
+		result = self._Entity.Honeycombs
+		return HoneycombCol(result) if result is not None else None
 
 	@property
 	def Isotropics(self) -> IsotropicCol:
 		'''
 		Contains a set of all isotropic materials in a database.
 		'''
-		return IsotropicCol(self._Entity.Isotropics)
+		result = self._Entity.Isotropics
+		return IsotropicCol(result) if result is not None else None
+
+	@property
+	def Laminates(self) -> LaminateCol:
+		result = self._Entity.Laminates
+		return LaminateCol(result) if result is not None else None
+
+	@property
+	def LaminateFamilies(self) -> LaminateFamilyCol:
+		result = self._Entity.LaminateFamilies
+		return LaminateFamilyCol(result) if result is not None else None
 
 	@property
 	def AnalysisProperties(self) -> AnalysisPropertyCol:
-		return AnalysisPropertyCol(self._Entity.AnalysisProperties)
+		result = self._Entity.AnalysisProperties
+		return AnalysisPropertyCol(result) if result is not None else None
 
 	@property
 	def DesignProperties(self) -> DesignPropertyCol:
-		return DesignPropertyCol(self._Entity.DesignProperties)
+		result = self._Entity.DesignProperties
+		return DesignPropertyCol(result) if result is not None else None
 
 	@property
 	def LoadProperties(self) -> LoadPropertyCol:
-		return LoadPropertyCol(self._Entity.LoadProperties)
+		result = self._Entity.LoadProperties
+		return LoadPropertyCol(result) if result is not None else None
 
 	@property
 	def Orthotropics(self) -> OrthotropicCol:
 		'''
 		Contains a set of all orthotropic materials in a database.
 		'''
-		return OrthotropicCol(self._Entity.Orthotropics)
+		result = self._Entity.Orthotropics
+		return OrthotropicCol(result) if result is not None else None
 
 	@property
 	def ProjectInfos(self) -> ProjectInfoCol:
 		'''
 		Contains a set of all projects in a database.
 		'''
-		return ProjectInfoCol(self._Entity.ProjectInfos)
+		result = self._Entity.ProjectInfos
+		return ProjectInfoCol(result) if result is not None else None
 
 	@property
 	def UserName(self) -> str:
@@ -5314,23 +7320,14 @@ class Application:
 	def CloseDatabase(self, delay: int = 0) -> None:
 		return self._Entity.CloseDatabase(delay)
 
-	def CopyProject(self, projectId: int, newName: str, copyDesignProperties: bool = True, copyAnalysisProperties: bool = True, copyLoadProperties: bool = True, copyWorkingFolder: bool = True) -> int:
-		return self._Entity.CopyProject(projectId, newName, copyDesignProperties, copyAnalysisProperties, copyLoadProperties, copyWorkingFolder)
+	def CopyProject(self, projectId: int, newName: str = None, copyDesignProperties: bool = True, copyAnalysisProperties: bool = True, copyLoadProperties: bool = True, copyWorkingFolder: bool = True) -> ProjectInfo:
+		return ProjectInfo(self._Entity.CopyProject(projectId, newName, copyDesignProperties, copyAnalysisProperties, copyLoadProperties, copyWorkingFolder))
 
-	def CreateAnalysisProperty(self, name: str, type: types.FamilyCategory) -> int:
-		return self._Entity.CreateAnalysisProperty(name, _types.FamilyCategory(type.value))
+	def CreateDatabaseFromTemplate(self, templateName: str, newPath: str) -> None:
+		return self._Entity.CreateDatabaseFromTemplate(templateName, newPath)
 
-	def CreateFailureMode(self, failureModeCategoryId: int) -> int:
-		return self._Entity.CreateFailureMode(failureModeCategoryId)
-
-	def CreateDatabaseFromTemplate(self, templateName: str, newPath: str) -> CreateDatabaseStatus:
-		return CreateDatabaseStatus[self._Entity.CreateDatabaseFromTemplate(templateName, newPath).ToString()]
-
-	def CreateProject(self, projectName: str) -> ProjectCreationStatus:
-		return ProjectCreationStatus[self._Entity.CreateProject(projectName).ToString()]
-
-	def DeleteAnalysisProperty(self, id: int) -> None:
-		return self._Entity.DeleteAnalysisProperty(id)
+	def CreateProject(self, projectName: str = None) -> ProjectInfo:
+		return ProjectInfo(self._Entity.CreateProject(projectName))
 
 	def DeleteProject(self, projectName: str) -> ProjectDeletionStatus:
 		return ProjectDeletionStatus[self._Entity.DeleteProject(projectName).ToString()]
@@ -5344,7 +7341,7 @@ class Application:
 
 	def GetAnalyses(self) -> dict[int, AnalysisDefinition]:
 		'''
-		Get all Analysis Defintions in the database.
+		Get all Analysis Definitions in the database.
 		'''
 		return dict[int, AnalysisDefinition](self._Entity.GetAnalyses())
 
@@ -5353,6 +7350,9 @@ class Application:
 
 	def Migrate(self, databasePath: str) -> str:
 		return self._Entity.Migrate(databasePath)
+
+	def CheckDatabaseIsUpToDate(self, databasePath: str) -> bool:
+		return self._Entity.CheckDatabaseIsUpToDate(databasePath)
 
 	def OpenDatabase(self, databasePath: str) -> None:
 		return self._Entity.OpenDatabase(databasePath)
@@ -5364,6 +7364,207 @@ class Application:
 class JointDesignProperty(DesignProperty):
 	def __init__(self, jointDesignProperty: _api.JointDesignProperty):
 		self._Entity = jointDesignProperty
+
+
+class SizingMaterial(IdEntity):
+	def __init__(self, sizingMaterial: _api.SizingMaterial):
+		self._Entity = sizingMaterial
+
+	@property
+	def MaterialId(self) -> int:
+		return self._Entity.MaterialId
+
+	@property
+	def MaterialType(self) -> types.MaterialType:
+		'''
+		Represents a material's type.
+		'''
+		return types.MaterialType[self._Entity.MaterialType.ToString()]
+
+
+class SizingMaterialCol(IdEntityCol[SizingMaterial]):
+	def __init__(self, sizingMaterialCol: _api.SizingMaterialCol):
+		self._Entity = sizingMaterialCol
+		self._CollectedClass = SizingMaterial
+
+	@property
+	def SizingMaterialColList(self) -> tuple[SizingMaterial]:
+		return tuple([SizingMaterial(sizingMaterialCol) for sizingMaterialCol in self._Entity])
+
+	@overload
+	def Get(self, name: str) -> SizingMaterial: ...
+
+	@overload
+	def Contains(self, name: str) -> bool: ...
+
+	@overload
+	def AddSizingMaterial(self, materialId: int) -> bool: ...
+
+	@overload
+	def AddSizingMaterial(self, name: str) -> bool: ...
+
+	@overload
+	def RemoveSizingMaterial(self, materialId: int) -> bool: ...
+
+	@overload
+	def RemoveSizingMaterial(self, name: str) -> bool: ...
+
+	@overload
+	def Contains(self, id: int) -> bool: ...
+
+	@overload
+	def Get(self, id: int) -> SizingMaterial: ...
+
+	def Get(self, item1 = None) -> SizingMaterial:
+		if isinstance(item1, str):
+			return SizingMaterial(self._Entity.Get(item1))
+
+		if isinstance(item1, int):
+			return SizingMaterial(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def Contains(self, item1 = None) -> bool:
+		if isinstance(item1, str):
+			return self._Entity.Contains(item1)
+
+		if isinstance(item1, int):
+			return bool(super().Contains(item1))
+
+		return self._Entity.Contains(item1)
+
+	def AddSizingMaterial(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return self._Entity.AddSizingMaterial(item1)
+
+		if isinstance(item1, str):
+			return self._Entity.AddSizingMaterial(item1)
+
+		return self._Entity.AddSizingMaterial(item1)
+
+	def RemoveSizingMaterial(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return self._Entity.RemoveSizingMaterial(item1)
+
+		if isinstance(item1, str):
+			return self._Entity.RemoveSizingMaterial(item1)
+
+		return self._Entity.RemoveSizingMaterial(item1)
+
+	def __getitem__(self, index: int):
+		return self.SizingMaterialColList[index]
+
+	def __iter__(self):
+		yield from self.SizingMaterialColList
+
+	def __len__(self):
+		return len(self.SizingMaterialColList)
+
+
+class ZoneOverride(IdEntity):
+	def __init__(self, zoneOverride: _api.ZoneOverride):
+		self._Entity = zoneOverride
+
+	@property
+	def AllowMaterials(self) -> bool:
+		return self._Entity.AllowMaterials
+
+	@property
+	def ProjectId(self) -> int:
+		return self._Entity.ProjectId
+
+	@property
+	def DesignId(self) -> int:
+		return self._Entity.DesignId
+
+	@property
+	def FamilyId(self) -> types.BeamPanelFamily:
+		return types.BeamPanelFamily[self._Entity.FamilyId.ToString()]
+
+	@property
+	def ConceptId(self) -> int:
+		return self._Entity.ConceptId
+
+	@property
+	def VariableId(self) -> int:
+		return self._Entity.VariableId
+
+	@property
+	def MinBound(self) -> float:
+		return self._Entity.MinBound
+
+	@property
+	def MaxBound(self) -> float:
+		return self._Entity.MaxBound
+
+	@property
+	def StepSize(self) -> float:
+		return self._Entity.StepSize
+
+	@property
+	def MinPlies(self) -> int:
+		return self._Entity.MinPlies
+
+	@property
+	def MaxPlies(self) -> int:
+		return self._Entity.MaxPlies
+
+	@property
+	def PlyStepSize(self) -> int:
+		return self._Entity.PlyStepSize
+
+	@property
+	def InputMode(self) -> types.VariableInputMode:
+		return types.VariableInputMode[self._Entity.InputMode.ToString()]
+
+	@property
+	def SizingMaterials(self) -> SizingMaterialCol:
+		result = self._Entity.SizingMaterials
+		return SizingMaterialCol(result) if result is not None else None
+
+	@property
+	def AnalysisValue(self) -> float:
+		return self._Entity.AnalysisValue
+
+	@property
+	def AnalysisMaterial(self) -> str:
+		return self._Entity.AnalysisMaterial
+
+	@property
+	def AnalysisMaterialType(self) -> types.MaterialType:
+		return types.MaterialType[self._Entity.AnalysisMaterialType.ToString()]
+
+	@MinBound.setter
+	def MinBound(self, value: float) -> None:
+		self._Entity.MinBound = value
+
+	@MaxBound.setter
+	def MaxBound(self, value: float) -> None:
+		self._Entity.MaxBound = value
+
+	@StepSize.setter
+	def StepSize(self, value: float) -> None:
+		self._Entity.StepSize = value
+
+	@MinPlies.setter
+	def MinPlies(self, value: int) -> None:
+		self._Entity.MinPlies = value
+
+	@MaxPlies.setter
+	def MaxPlies(self, value: int) -> None:
+		self._Entity.MaxPlies = value
+
+	@PlyStepSize.setter
+	def PlyStepSize(self, value: int) -> None:
+		self._Entity.PlyStepSize = value
+
+	@AnalysisValue.setter
+	def AnalysisValue(self, value: float) -> None:
+		self._Entity.AnalysisValue = value
+
+	@AnalysisMaterial.setter
+	def AnalysisMaterial(self, value: str) -> None:
+		self._Entity.AnalysisMaterial = value
 
 
 class ToolingConstraint(IdNameEntity):
@@ -5405,6 +7606,28 @@ class ToolingConstraint(IdNameEntity):
 		return self._Entity.SetToValue(value)
 
 
+class ZoneOverrideCol(IdEntityCol[ZoneOverride]):
+	def __init__(self, zoneOverrideCol: _api.ZoneOverrideCol):
+		self._Entity = zoneOverrideCol
+		self._CollectedClass = ZoneOverride
+
+	@property
+	def ZoneOverrideColList(self) -> tuple[ZoneOverride]:
+		return tuple([ZoneOverride(zoneOverrideCol) for zoneOverrideCol in self._Entity])
+
+	def Get(self, zoneNumber: int) -> ZoneOverride:
+		return ZoneOverride(self._Entity.Get(zoneNumber))
+
+	def __getitem__(self, index: int):
+		return self.ZoneOverrideColList[index]
+
+	def __iter__(self):
+		yield from self.ZoneOverrideColList
+
+	def __len__(self):
+		return len(self.ZoneOverrideColList)
+
+
 class DesignVariable(IdEntity):
 	'''
 	Holds design variable data.
@@ -5412,6 +7635,10 @@ class DesignVariable(IdEntity):
 	'''
 	def __init__(self, designVariable: _api.DesignVariable):
 		self._Entity = designVariable
+
+	@property
+	def VariableParameter(self) -> types.VariableParameter:
+		return types.VariableParameter[self._Entity.VariableParameter.ToString()]
 
 	@property
 	def AllowMaterials(self) -> bool:
@@ -5437,6 +7664,27 @@ class DesignVariable(IdEntity):
 	def UseAnalysis(self) -> bool:
 		return self._Entity.UseAnalysis
 
+	@property
+	def AnalysisMaterial(self) -> str:
+		return self._Entity.AnalysisMaterial
+
+	@property
+	def AnalysisMaterialType(self) -> types.MaterialType:
+		return types.MaterialType[self._Entity.AnalysisMaterialType.ToString()]
+
+	@property
+	def SizingMaterialType(self) -> types.MaterialType:
+		return types.MaterialType[self._Entity.SizingMaterialType.ToString()]
+
+	@property
+	def AnalysisValue(self) -> float:
+		return self._Entity.AnalysisValue
+
+	@property
+	def Overrides(self) -> ZoneOverrideCol:
+		result = self._Entity.Overrides
+		return ZoneOverrideCol(result) if result is not None else None
+
 	@Max.setter
 	def Max(self, value: float) -> None:
 		self._Entity.Max = value
@@ -5453,15 +7701,30 @@ class DesignVariable(IdEntity):
 	def UseAnalysis(self, value: bool) -> None:
 		self._Entity.UseAnalysis = value
 
-	def AddMaterials(self, materialIds: list[int]) -> None:
-		materialIdsList = MakeCSharpIntList(materialIds)
-		return self._Entity.AddMaterials(materialIdsList)
+	@AnalysisMaterial.setter
+	def AnalysisMaterial(self, value: str) -> None:
+		self._Entity.AnalysisMaterial = value
+
+	@AnalysisValue.setter
+	def AnalysisValue(self, value: float) -> None:
+		self._Entity.AnalysisValue = value
+
+	@overload
+	def AddMaterials(self, materialIds: set[int]) -> None: ...
+
+	@overload
+	def AddMaterials(self, materialNames: set[str]) -> None: ...
 
 	def GetSizingMaterials(self) -> list[int]:
 		'''
 		Get a list of materials used for sizing, if they exist.
 		'''
-		return list[int](self._Entity.GetSizingMaterials())
+		return [int32 for int32 in self._Entity.GetSizingMaterials()]
+
+	def RemoveSizingMaterials(self, materialIds: tuple[int] = None) -> None:
+		materialIdsList = MakeCSharpIntList(materialIds)
+		materialIdsEnumerable = IEnumerable(materialIdsList)
+		return self._Entity.RemoveSizingMaterials(materialIds if materialIds is None else materialIdsEnumerable)
 
 	def GetAnalysisMaterial(self) -> int:
 		'''
@@ -5469,16 +7732,30 @@ class DesignVariable(IdEntity):
 		'''
 		return self._Entity.GetAnalysisMaterial()
 
-	def RemoveSizingMaterials(self, materialIds: tuple[int] = None) -> None:
-		materialIdsList = MakeCSharpIntList(materialIds)
-		materialIdsEnumerable = IEnumerable(materialIdsList)
-		return self._Entity.RemoveSizingMaterials(materialIds if materialIds is None else materialIdsEnumerable)
-
 	def RemoveAnalysisMaterial(self) -> None:
 		'''
 		Remove the analysis material assigned to this variable.
 		'''
 		return self._Entity.RemoveAnalysisMaterial()
+
+	def AddMaterials(self, item1 = None) -> None:
+		if isinstance(item1, set):
+			materialIdsSet = HashSet[int]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						materialIdsSet.Add(thing)
+			return self._Entity.AddMaterials(materialIdsSet)
+
+		if isinstance(item1, set):
+			materialNamesSet = HashSet[str]()
+			if item1 is not None:
+				for thing in item1:
+					if thing is not None:
+						materialNamesSet.Add(thing)
+			return self._Entity.AddMaterials(materialNamesSet)
+
+		return self._Entity.AddMaterials(item1)
 
 
 class ToolingConstraintCol(IdNameEntityCol[ToolingConstraint]):
@@ -5524,6 +7801,21 @@ class DesignVariableCol(IdEntityCol[DesignVariable]):
 	def DesignVariableColList(self) -> tuple[DesignVariable]:
 		return tuple([DesignVariable(designVariableCol) for designVariableCol in self._Entity])
 
+	@overload
+	def Get(self, parameterId: types.VariableParameter) -> DesignVariable: ...
+
+	@overload
+	def Get(self, id: int) -> DesignVariable: ...
+
+	def Get(self, item1 = None) -> DesignVariable:
+		if isinstance(item1, types.VariableParameter):
+			return DesignVariable(self._Entity.Get(_types.VariableParameter(item1.value)))
+
+		if isinstance(item1, int):
+			return DesignVariable(super().Get(item1))
+
+		return self._Entity.Get(_types.VariableParameter(item1.value))
+
 	def __getitem__(self, index: int):
 		return self.DesignVariableColList[index]
 
@@ -5539,12 +7831,1720 @@ class ZoneDesignProperty(DesignProperty):
 		self._Entity = zoneDesignProperty
 
 	@property
+	def FamilyId(self) -> types.BeamPanelFamily:
+		return types.BeamPanelFamily[self._Entity.FamilyId.ToString()]
+
+	@property
+	def ConceptId(self) -> int:
+		return self._Entity.ConceptId
+
+	@property
+	def FamilyConceptUID(self) -> types.FamilyConceptUID:
+		return types.FamilyConceptUID[self._Entity.FamilyConceptUID.ToString()]
+
+	@property
 	def ToolingConstraints(self) -> ToolingConstraintCol:
-		return ToolingConstraintCol(self._Entity.ToolingConstraints)
+		result = self._Entity.ToolingConstraints
+		return ToolingConstraintCol(result) if result is not None else None
 
 	@property
 	def DesignVariables(self) -> DesignVariableCol:
-		return DesignVariableCol(self._Entity.DesignVariables)
+		result = self._Entity.DesignVariables
+		return DesignVariableCol(result) if result is not None else None
+
+
+class BulkUpdaterBase(ABC):
+	def __init__(self, bulkUpdaterBase: _api.BulkUpdaterBase):
+		self._Entity = bulkUpdaterBase
+
+	def Update(self, func: Action) -> None:
+		entityType = self._Entity.GetType().BaseType.GenericTypeArguments[0]
+		funcAction = Action[entityType](func)
+		return self._Entity.Update(funcAction)
+
+
+class LoadPropertyUserRowBulkUpdater(BulkUpdaterBase):
+	def __init__(self, loadPropertyUserRowBulkUpdater: _api.LoadPropertyUserRowBulkUpdater):
+		self._Entity = loadPropertyUserRowBulkUpdater
+
+
+class LoadPropertyUserRow(IdNameEntity):
+	def __init__(self, loadPropertyUserRow: _api.LoadPropertyUserRow):
+		self._Entity = loadPropertyUserRow
+
+	@property
+	def LoadScenarioId(self) -> int:
+		return self._Entity.LoadScenarioId
+
+	@property
+	def LoadPropertyId(self) -> int:
+		return self._Entity.LoadPropertyId
+
+	@property
+	def Type(self) -> types.LoadSetType:
+		return types.LoadSetType[self._Entity.Type.ToString()]
+
+	@property
+	def ReferenceTemperature(self) -> float:
+		return self._Entity.ReferenceTemperature
+
+	@property
+	def PressureOrTemperature(self) -> float:
+		return self._Entity.PressureOrTemperature
+
+	@property
+	def LimitFactor(self) -> float:
+		return self._Entity.LimitFactor
+
+	@property
+	def UltimateFactor(self) -> float:
+		return self._Entity.UltimateFactor
+
+	@ReferenceTemperature.setter
+	def ReferenceTemperature(self, value: float) -> None:
+		self._Entity.ReferenceTemperature = value
+
+	@PressureOrTemperature.setter
+	def PressureOrTemperature(self, value: float) -> None:
+		self._Entity.PressureOrTemperature = value
+
+	@LimitFactor.setter
+	def LimitFactor(self, value: float) -> None:
+		self._Entity.LimitFactor = value
+
+	@UltimateFactor.setter
+	def UltimateFactor(self, value: float) -> None:
+		self._Entity.UltimateFactor = value
+
+
+class LoadPropertyUserBeamRow(LoadPropertyUserRow):
+	def __init__(self, loadPropertyUserBeamRow: _api.LoadPropertyUserBeamRow):
+		self._Entity = loadPropertyUserBeamRow
+
+	@property
+	def M1A(self) -> float:
+		return self._Entity.M1A
+
+	@property
+	def M2A(self) -> float:
+		return self._Entity.M2A
+
+	@property
+	def M1B(self) -> float:
+		return self._Entity.M1B
+
+	@property
+	def M2B(self) -> float:
+		return self._Entity.M2B
+
+	@property
+	def V1(self) -> float:
+		return self._Entity.V1
+
+	@property
+	def V2(self) -> float:
+		return self._Entity.V2
+
+	@property
+	def Axial(self) -> float:
+		return self._Entity.Axial
+
+	@property
+	def Torque(self) -> float:
+		return self._Entity.Torque
+
+	@M1A.setter
+	def M1A(self, value: float) -> None:
+		self._Entity.M1A = value
+
+	@M2A.setter
+	def M2A(self, value: float) -> None:
+		self._Entity.M2A = value
+
+	@M1B.setter
+	def M1B(self, value: float) -> None:
+		self._Entity.M1B = value
+
+	@M2B.setter
+	def M2B(self, value: float) -> None:
+		self._Entity.M2B = value
+
+	@V1.setter
+	def V1(self, value: float) -> None:
+		self._Entity.V1 = value
+
+	@V2.setter
+	def V2(self, value: float) -> None:
+		self._Entity.V2 = value
+
+	@Axial.setter
+	def Axial(self, value: float) -> None:
+		self._Entity.Axial = value
+
+	@Torque.setter
+	def Torque(self, value: float) -> None:
+		self._Entity.Torque = value
+
+
+class LoadPropertyUserFeaBeamRow(LoadPropertyUserBeamRow):
+	def __init__(self, loadPropertyUserFeaBeamRow: _api.LoadPropertyUserFeaBeamRow):
+		self._Entity = loadPropertyUserFeaBeamRow
+
+	def SetName(self, name: str) -> None:
+		return self._Entity.SetName(name)
+
+
+class LoadPropertyUserFeaBeamRowBulkUpdater(LoadPropertyUserRowBulkUpdater):
+	def __init__(self, loadPropertyUserFeaBeamRowBulkUpdater: _api.LoadPropertyUserFeaBeamRowBulkUpdater):
+		self._Entity = loadPropertyUserFeaBeamRowBulkUpdater
+
+	def GetBulkUpdater(application: Application, items: list[LoadPropertyUserFeaBeamRow]) -> LoadPropertyUserFeaBeamRowBulkUpdater:
+		itemsList = List[_api.LoadPropertyUserFeaBeamRow]()
+		if items is not None:
+			for thing in items:
+				if thing is not None:
+					itemsList.Add(thing._Entity)
+		return LoadPropertyUserFeaBeamRowBulkUpdater(_api.LoadPropertyUserFeaBeamRowBulkUpdater.GetBulkUpdater(application._Entity, itemsList))
+
+
+class LoadPropertyUserPanelJointRow(LoadPropertyUserRow):
+	def __init__(self, loadPropertyUserPanelJointRow: _api.LoadPropertyUserPanelJointRow):
+		self._Entity = loadPropertyUserPanelJointRow
+
+	@property
+	def Nx(self) -> float:
+		return self._Entity.Nx
+
+	@property
+	def Ny(self) -> float:
+		return self._Entity.Ny
+
+	@property
+	def Nxy(self) -> float:
+		return self._Entity.Nxy
+
+	@property
+	def Mx(self) -> float:
+		return self._Entity.Mx
+
+	@property
+	def My(self) -> float:
+		return self._Entity.My
+
+	@property
+	def Mxy(self) -> float:
+		return self._Entity.Mxy
+
+	@property
+	def Qx(self) -> float:
+		return self._Entity.Qx
+
+	@property
+	def Qy(self) -> float:
+		return self._Entity.Qy
+
+	@Nx.setter
+	def Nx(self, value: float) -> None:
+		self._Entity.Nx = value
+
+	@Ny.setter
+	def Ny(self, value: float) -> None:
+		self._Entity.Ny = value
+
+	@Nxy.setter
+	def Nxy(self, value: float) -> None:
+		self._Entity.Nxy = value
+
+	@Mx.setter
+	def Mx(self, value: float) -> None:
+		self._Entity.Mx = value
+
+	@My.setter
+	def My(self, value: float) -> None:
+		self._Entity.My = value
+
+	@Mxy.setter
+	def Mxy(self, value: float) -> None:
+		self._Entity.Mxy = value
+
+	@Qx.setter
+	def Qx(self, value: float) -> None:
+		self._Entity.Qx = value
+
+	@Qy.setter
+	def Qy(self, value: float) -> None:
+		self._Entity.Qy = value
+
+
+class LoadPropertyUserFeaJointRow(LoadPropertyUserPanelJointRow):
+	def __init__(self, loadPropertyUserFeaJointRow: _api.LoadPropertyUserFeaJointRow):
+		self._Entity = loadPropertyUserFeaJointRow
+
+	def SetName(self, name: str) -> None:
+		return self._Entity.SetName(name)
+
+
+class LoadPropertyUserFeaJointRowBulkUpdater(LoadPropertyUserRowBulkUpdater):
+	def __init__(self, loadPropertyUserFeaJointRowBulkUpdater: _api.LoadPropertyUserFeaJointRowBulkUpdater):
+		self._Entity = loadPropertyUserFeaJointRowBulkUpdater
+
+	def GetBulkUpdater(application: Application, items: list[LoadPropertyUserFeaJointRow]) -> LoadPropertyUserFeaJointRowBulkUpdater:
+		itemsList = List[_api.LoadPropertyUserFeaJointRow]()
+		if items is not None:
+			for thing in items:
+				if thing is not None:
+					itemsList.Add(thing._Entity)
+		return LoadPropertyUserFeaJointRowBulkUpdater(_api.LoadPropertyUserFeaJointRowBulkUpdater.GetBulkUpdater(application._Entity, itemsList))
+
+
+class LoadPropertyUserFeaPanelRow(LoadPropertyUserPanelJointRow):
+	def __init__(self, loadPropertyUserFeaPanelRow: _api.LoadPropertyUserFeaPanelRow):
+		self._Entity = loadPropertyUserFeaPanelRow
+
+	def SetName(self, name: str) -> None:
+		return self._Entity.SetName(name)
+
+
+class LoadPropertyUserFeaPanelRowBulkUpdater(LoadPropertyUserRowBulkUpdater):
+	def __init__(self, loadPropertyUserFeaPanelRowBulkUpdater: _api.LoadPropertyUserFeaPanelRowBulkUpdater):
+		self._Entity = loadPropertyUserFeaPanelRowBulkUpdater
+
+	def GetBulkUpdater(application: Application, items: list[LoadPropertyUserFeaPanelRow]) -> LoadPropertyUserFeaPanelRowBulkUpdater:
+		itemsList = List[_api.LoadPropertyUserFeaPanelRow]()
+		if items is not None:
+			for thing in items:
+				if thing is not None:
+					itemsList.Add(thing._Entity)
+		return LoadPropertyUserFeaPanelRowBulkUpdater(_api.LoadPropertyUserFeaPanelRowBulkUpdater.GetBulkUpdater(application._Entity, itemsList))
+
+
+class LoadPropertyUserGeneralBeamRow(LoadPropertyUserBeamRow):
+	def __init__(self, loadPropertyUserGeneralBeamRow: _api.LoadPropertyUserGeneralBeamRow):
+		self._Entity = loadPropertyUserGeneralBeamRow
+
+	@property
+	def M1A(self) -> float:
+		return self._Entity.M1A
+
+	@property
+	def M2A(self) -> float:
+		return self._Entity.M2A
+
+	@property
+	def M1B(self) -> float:
+		return self._Entity.M1B
+
+	@property
+	def M2B(self) -> float:
+		return self._Entity.M2B
+
+	@property
+	def V1(self) -> float:
+		return self._Entity.V1
+
+	@property
+	def V2(self) -> float:
+		return self._Entity.V2
+
+	@property
+	def Axial(self) -> float:
+		return self._Entity.Axial
+
+	@property
+	def Torque(self) -> float:
+		return self._Entity.Torque
+
+	@property
+	def M1AType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.M1AType.ToString()]
+
+	@property
+	def M2AType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.M2AType.ToString()]
+
+	@property
+	def M1BType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.M1BType.ToString()]
+
+	@property
+	def M2BType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.M2BType.ToString()]
+
+	@property
+	def V1Type(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.V1Type.ToString()]
+
+	@property
+	def V2Type(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.V2Type.ToString()]
+
+	@property
+	def AxialType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.AxialType.ToString()]
+
+	@property
+	def TorqueType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.TorqueType.ToString()]
+
+	@M1A.setter
+	def M1A(self, value: float) -> None:
+		self._Entity.M1A = value
+
+	@M2A.setter
+	def M2A(self, value: float) -> None:
+		self._Entity.M2A = value
+
+	@M1B.setter
+	def M1B(self, value: float) -> None:
+		self._Entity.M1B = value
+
+	@M2B.setter
+	def M2B(self, value: float) -> None:
+		self._Entity.M2B = value
+
+	@V1.setter
+	def V1(self, value: float) -> None:
+		self._Entity.V1 = value
+
+	@V2.setter
+	def V2(self, value: float) -> None:
+		self._Entity.V2 = value
+
+	@Axial.setter
+	def Axial(self, value: float) -> None:
+		self._Entity.Axial = value
+
+	@Torque.setter
+	def Torque(self, value: float) -> None:
+		self._Entity.Torque = value
+
+
+class LoadPropertyUserGeneralBeamRowBulkUpdater(LoadPropertyUserRowBulkUpdater):
+	def __init__(self, loadPropertyUserGeneralBeamRowBulkUpdater: _api.LoadPropertyUserGeneralBeamRowBulkUpdater):
+		self._Entity = loadPropertyUserGeneralBeamRowBulkUpdater
+
+	def GetBulkUpdater(application: Application, items: list[LoadPropertyUserGeneralBeamRow]) -> LoadPropertyUserGeneralBeamRowBulkUpdater:
+		itemsList = List[_api.LoadPropertyUserGeneralBeamRow]()
+		if items is not None:
+			for thing in items:
+				if thing is not None:
+					itemsList.Add(thing._Entity)
+		return LoadPropertyUserGeneralBeamRowBulkUpdater(_api.LoadPropertyUserGeneralBeamRowBulkUpdater.GetBulkUpdater(application._Entity, itemsList))
+
+
+class LoadPropertyUserGeneralPanelRow(LoadPropertyUserPanelJointRow):
+	def __init__(self, loadPropertyUserGeneralPanelRow: _api.LoadPropertyUserGeneralPanelRow):
+		self._Entity = loadPropertyUserGeneralPanelRow
+
+	@property
+	def Nx(self) -> float:
+		return self._Entity.Nx
+
+	@property
+	def Ny(self) -> float:
+		return self._Entity.Ny
+
+	@property
+	def Nxy(self) -> float:
+		return self._Entity.Nxy
+
+	@property
+	def Mx(self) -> float:
+		return self._Entity.Mx
+
+	@property
+	def My(self) -> float:
+		return self._Entity.My
+
+	@property
+	def Mxy(self) -> float:
+		return self._Entity.Mxy
+
+	@property
+	def Qx(self) -> float:
+		return self._Entity.Qx
+
+	@property
+	def Qy(self) -> float:
+		return self._Entity.Qy
+
+	@property
+	def NxType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.NxType.ToString()]
+
+	@property
+	def NyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.NyType.ToString()]
+
+	@property
+	def NxyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.NxyType.ToString()]
+
+	@property
+	def MxType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.MxType.ToString()]
+
+	@property
+	def MyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.MyType.ToString()]
+
+	@property
+	def MxyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.MxyType.ToString()]
+
+	@property
+	def QxType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.QxType.ToString()]
+
+	@property
+	def QyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.QyType.ToString()]
+
+	@Nx.setter
+	def Nx(self, value: float) -> None:
+		self._Entity.Nx = value
+
+	@Ny.setter
+	def Ny(self, value: float) -> None:
+		self._Entity.Ny = value
+
+	@Nxy.setter
+	def Nxy(self, value: float) -> None:
+		self._Entity.Nxy = value
+
+	@Mx.setter
+	def Mx(self, value: float) -> None:
+		self._Entity.Mx = value
+
+	@My.setter
+	def My(self, value: float) -> None:
+		self._Entity.My = value
+
+	@Mxy.setter
+	def Mxy(self, value: float) -> None:
+		self._Entity.Mxy = value
+
+	@Qx.setter
+	def Qx(self, value: float) -> None:
+		self._Entity.Qx = value
+
+	@Qy.setter
+	def Qy(self, value: float) -> None:
+		self._Entity.Qy = value
+
+
+class LoadPropertyUserGeneralPanelRowBulkUpdater(LoadPropertyUserRowBulkUpdater):
+	def __init__(self, loadPropertyUserGeneralPanelRowBulkUpdater: _api.LoadPropertyUserGeneralPanelRowBulkUpdater):
+		self._Entity = loadPropertyUserGeneralPanelRowBulkUpdater
+
+	def GetBulkUpdater(application: Application, items: list[LoadPropertyUserGeneralPanelRow]) -> LoadPropertyUserGeneralPanelRowBulkUpdater:
+		itemsList = List[_api.LoadPropertyUserGeneralPanelRow]()
+		if items is not None:
+			for thing in items:
+				if thing is not None:
+					itemsList.Add(thing._Entity)
+		return LoadPropertyUserGeneralPanelRowBulkUpdater(_api.LoadPropertyUserGeneralPanelRowBulkUpdater.GetBulkUpdater(application._Entity, itemsList))
+
+
+class LoadPropertyFea(LoadProperty):
+	def __init__(self, loadPropertyFea: _api.LoadPropertyFea):
+		self._Entity = loadPropertyFea
+
+	@property
+	def HasNx(self) -> bool:
+		return self._Entity.HasNx
+
+	@property
+	def HasNy(self) -> bool:
+		return self._Entity.HasNy
+
+	@property
+	def HasNxy(self) -> bool:
+		return self._Entity.HasNxy
+
+	@property
+	def HasMx(self) -> bool:
+		return self._Entity.HasMx
+
+	@property
+	def HasMy(self) -> bool:
+		return self._Entity.HasMy
+
+	@property
+	def HasMxy(self) -> bool:
+		return self._Entity.HasMxy
+
+	@property
+	def HasQx(self) -> bool:
+		return self._Entity.HasQx
+
+	@property
+	def HasQy(self) -> bool:
+		return self._Entity.HasQy
+
+	@property
+	def HasM1a(self) -> bool:
+		return self._Entity.HasM1a
+
+	@property
+	def HasM1b(self) -> bool:
+		return self._Entity.HasM1b
+
+	@property
+	def M2a(self) -> bool:
+		return self._Entity.M2a
+
+	@property
+	def V1(self) -> bool:
+		return self._Entity.V1
+
+	@property
+	def V2(self) -> bool:
+		return self._Entity.V2
+
+	@property
+	def Axial(self) -> bool:
+		return self._Entity.Axial
+
+	@property
+	def Torque(self) -> bool:
+		return self._Entity.Torque
+
+	@property
+	def Tension(self) -> bool:
+		return self._Entity.Tension
+
+	@property
+	def Shear(self) -> bool:
+		return self._Entity.Shear
+
+	@property
+	def Moment(self) -> bool:
+		return self._Entity.Moment
+
+	@HasNx.setter
+	def HasNx(self, value: bool) -> None:
+		self._Entity.HasNx = value
+
+	@HasNy.setter
+	def HasNy(self, value: bool) -> None:
+		self._Entity.HasNy = value
+
+	@HasNxy.setter
+	def HasNxy(self, value: bool) -> None:
+		self._Entity.HasNxy = value
+
+	@HasMx.setter
+	def HasMx(self, value: bool) -> None:
+		self._Entity.HasMx = value
+
+	@HasMy.setter
+	def HasMy(self, value: bool) -> None:
+		self._Entity.HasMy = value
+
+	@HasMxy.setter
+	def HasMxy(self, value: bool) -> None:
+		self._Entity.HasMxy = value
+
+	@HasQx.setter
+	def HasQx(self, value: bool) -> None:
+		self._Entity.HasQx = value
+
+	@HasQy.setter
+	def HasQy(self, value: bool) -> None:
+		self._Entity.HasQy = value
+
+	@HasM1a.setter
+	def HasM1a(self, value: bool) -> None:
+		self._Entity.HasM1a = value
+
+	@HasM1b.setter
+	def HasM1b(self, value: bool) -> None:
+		self._Entity.HasM1b = value
+
+	@M2a.setter
+	def M2a(self, value: bool) -> None:
+		self._Entity.M2a = value
+
+	@V1.setter
+	def V1(self, value: bool) -> None:
+		self._Entity.V1 = value
+
+	@V2.setter
+	def V2(self, value: bool) -> None:
+		self._Entity.V2 = value
+
+	@Axial.setter
+	def Axial(self, value: bool) -> None:
+		self._Entity.Axial = value
+
+	@Torque.setter
+	def Torque(self, value: bool) -> None:
+		self._Entity.Torque = value
+
+	@Tension.setter
+	def Tension(self, value: bool) -> None:
+		self._Entity.Tension = value
+
+	@Shear.setter
+	def Shear(self, value: bool) -> None:
+		self._Entity.Shear = value
+
+	@Moment.setter
+	def Moment(self, value: bool) -> None:
+		self._Entity.Moment = value
+
+
+class LoadPropertyAverage(LoadPropertyFea):
+	def __init__(self, loadPropertyAverage: _api.LoadPropertyAverage):
+		self._Entity = loadPropertyAverage
+
+	@property
+	def ElementType(self) -> types.LoadPropertyAverageElementType:
+		return types.LoadPropertyAverageElementType[self._Entity.ElementType.ToString()]
+
+	@ElementType.setter
+	def ElementType(self, value: types.LoadPropertyAverageElementType) -> None:
+		self._Entity.ElementType = _types.LoadPropertyAverageElementType(value.value)
+
+
+class LoadPropertyElementBased(LoadPropertyFea):
+	def __init__(self, loadPropertyElementBased: _api.LoadPropertyElementBased):
+		self._Entity = loadPropertyElementBased
+
+
+class LoadPropertyNeighborAverage(LoadPropertyFea):
+	def __init__(self, loadPropertyNeighborAverage: _api.LoadPropertyNeighborAverage):
+		self._Entity = loadPropertyNeighborAverage
+
+	@property
+	def NumberOfNeighborsPerSide(self) -> int:
+		return self._Entity.NumberOfNeighborsPerSide
+
+	@NumberOfNeighborsPerSide.setter
+	def NumberOfNeighborsPerSide(self, value: int) -> None:
+		self._Entity.NumberOfNeighborsPerSide = value
+
+
+class LoadPropertyPeakLoad(LoadPropertyFea):
+	def __init__(self, loadPropertyPeakLoad: _api.LoadPropertyPeakLoad):
+		self._Entity = loadPropertyPeakLoad
+
+	@property
+	def ElementScope(self) -> types.LoadPropertyPeakElementScope:
+		return types.LoadPropertyPeakElementScope[self._Entity.ElementScope.ToString()]
+
+	@ElementScope.setter
+	def ElementScope(self, value: types.LoadPropertyPeakElementScope) -> None:
+		self._Entity.ElementScope = _types.LoadPropertyPeakElementScope(value.value)
+
+
+class LoadPropertyStatistical(LoadPropertyFea):
+	def __init__(self, loadPropertyStatistical: _api.LoadPropertyStatistical):
+		self._Entity = loadPropertyStatistical
+
+	@property
+	def NSigma(self) -> int:
+		return self._Entity.NSigma
+
+	@NSigma.setter
+	def NSigma(self, value: int) -> None:
+		self._Entity.NSigma = value
+
+
+class LoadPropertyUserFeaRowCol(IdNameEntityCol, Generic[T]):
+	def __init__(self, loadPropertyUserFeaRowCol: _api.LoadPropertyUserFeaRowCol):
+		self._Entity = loadPropertyUserFeaRowCol
+		self._CollectedClass = T
+
+	@property
+	def LoadPropertyUserFeaRowColList(self) -> tuple[T]:
+		if self._Entity.Count() <= 0:
+			return ()
+		thisClass = type(self._Entity._items[0]).__name__
+		givenClass = T
+		for subclass in T.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return tuple([givenClass(loadPropertyUserFeaRowCol) for loadPropertyUserFeaRowCol in self._Entity])
+
+	def AddScenario(self, name: str = None) -> T:
+		return self._Entity.AddScenario(name)
+
+	@overload
+	def DeleteScenario(self, scenarioId: int) -> bool: ...
+
+	@overload
+	def DeleteScenario(self, scenarioName: str) -> bool: ...
+
+	@overload
+	def Get(self, name: str) -> T: ...
+
+	@overload
+	def Get(self, id: int) -> T: ...
+
+	def DeleteScenario(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return self._Entity.DeleteScenario(item1)
+
+		if isinstance(item1, str):
+			return self._Entity.DeleteScenario(item1)
+
+		return self._Entity.DeleteScenario(item1)
+
+	def Get(self, item1 = None) -> T:
+		if isinstance(item1, str):
+			return super().Get(item1)
+
+		if isinstance(item1, int):
+			return super().Get(item1)
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.LoadPropertyUserFeaRowColList[index]
+
+	def __iter__(self):
+		yield from self.LoadPropertyUserFeaRowColList
+
+	def __len__(self):
+		return len(self.LoadPropertyUserFeaRowColList)
+
+
+class LoadPropertyUserFeaBeamRowCol(LoadPropertyUserFeaRowCol[LoadPropertyUserFeaBeamRow]):
+	def __init__(self, loadPropertyUserFeaBeamRowCol: _api.LoadPropertyUserFeaBeamRowCol):
+		self._Entity = loadPropertyUserFeaBeamRowCol
+		self._CollectedClass = LoadPropertyUserFeaBeamRow
+
+	@property
+	def LoadPropertyUserFeaBeamRowColList(self) -> tuple[LoadPropertyUserFeaBeamRow]:
+		return tuple([LoadPropertyUserFeaBeamRow(loadPropertyUserFeaBeamRowCol) for loadPropertyUserFeaBeamRowCol in self._Entity])
+
+	@overload
+	def DeleteScenario(self, scenarioId: int) -> bool: ...
+
+	@overload
+	def DeleteScenario(self, scenarioName: str) -> bool: ...
+
+	@overload
+	def Get(self, name: str) -> LoadPropertyUserFeaBeamRow: ...
+
+	@overload
+	def Get(self, id: int) -> LoadPropertyUserFeaBeamRow: ...
+
+	def DeleteScenario(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return bool(super().DeleteScenario(item1))
+
+		if isinstance(item1, str):
+			return bool(super().DeleteScenario(item1))
+
+		return self._Entity.DeleteScenario(item1)
+
+	def Get(self, item1 = None) -> LoadPropertyUserFeaBeamRow:
+		if isinstance(item1, str):
+			return LoadPropertyUserFeaBeamRow(super().Get(item1))
+
+		if isinstance(item1, int):
+			return LoadPropertyUserFeaBeamRow(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.LoadPropertyUserFeaBeamRowColList[index]
+
+	def __iter__(self):
+		yield from self.LoadPropertyUserFeaBeamRowColList
+
+	def __len__(self):
+		return len(self.LoadPropertyUserFeaBeamRowColList)
+
+
+class LoadPropertyUserFeaBeam(LoadProperty):
+	def __init__(self, loadPropertyUserFeaBeam: _api.LoadPropertyUserFeaBeam):
+		self._Entity = loadPropertyUserFeaBeam
+
+	@property
+	def UserFeaRows(self) -> LoadPropertyUserFeaBeamRowCol:
+		result = self._Entity.UserFeaRows
+		return LoadPropertyUserFeaBeamRowCol(result) if result is not None else None
+
+
+class LoadPropertyUserFeaJointRowCol(LoadPropertyUserFeaRowCol[LoadPropertyUserFeaJointRow]):
+	def __init__(self, loadPropertyUserFeaJointRowCol: _api.LoadPropertyUserFeaJointRowCol):
+		self._Entity = loadPropertyUserFeaJointRowCol
+		self._CollectedClass = LoadPropertyUserFeaJointRow
+
+	@property
+	def LoadPropertyUserFeaJointRowColList(self) -> tuple[LoadPropertyUserFeaJointRow]:
+		return tuple([LoadPropertyUserFeaJointRow(loadPropertyUserFeaJointRowCol) for loadPropertyUserFeaJointRowCol in self._Entity])
+
+	@overload
+	def DeleteScenario(self, scenarioId: int) -> bool: ...
+
+	@overload
+	def DeleteScenario(self, scenarioName: str) -> bool: ...
+
+	@overload
+	def Get(self, name: str) -> LoadPropertyUserFeaJointRow: ...
+
+	@overload
+	def Get(self, id: int) -> LoadPropertyUserFeaJointRow: ...
+
+	def DeleteScenario(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return bool(super().DeleteScenario(item1))
+
+		if isinstance(item1, str):
+			return bool(super().DeleteScenario(item1))
+
+		return self._Entity.DeleteScenario(item1)
+
+	def Get(self, item1 = None) -> LoadPropertyUserFeaJointRow:
+		if isinstance(item1, str):
+			return LoadPropertyUserFeaJointRow(super().Get(item1))
+
+		if isinstance(item1, int):
+			return LoadPropertyUserFeaJointRow(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.LoadPropertyUserFeaJointRowColList[index]
+
+	def __iter__(self):
+		yield from self.LoadPropertyUserFeaJointRowColList
+
+	def __len__(self):
+		return len(self.LoadPropertyUserFeaJointRowColList)
+
+
+class LoadPropertyUserFeaJoint(LoadProperty):
+	def __init__(self, loadPropertyUserFeaJoint: _api.LoadPropertyUserFeaJoint):
+		self._Entity = loadPropertyUserFeaJoint
+
+	@property
+	def UserFeaRows(self) -> LoadPropertyUserFeaJointRowCol:
+		result = self._Entity.UserFeaRows
+		return LoadPropertyUserFeaJointRowCol(result) if result is not None else None
+
+
+class LoadPropertyUserFeaPanelRowCol(LoadPropertyUserFeaRowCol[LoadPropertyUserFeaPanelRow]):
+	def __init__(self, loadPropertyUserFeaPanelRowCol: _api.LoadPropertyUserFeaPanelRowCol):
+		self._Entity = loadPropertyUserFeaPanelRowCol
+		self._CollectedClass = LoadPropertyUserFeaPanelRow
+
+	@property
+	def LoadPropertyUserFeaPanelRowColList(self) -> tuple[LoadPropertyUserFeaPanelRow]:
+		return tuple([LoadPropertyUserFeaPanelRow(loadPropertyUserFeaPanelRowCol) for loadPropertyUserFeaPanelRowCol in self._Entity])
+
+	@overload
+	def DeleteScenario(self, scenarioId: int) -> bool: ...
+
+	@overload
+	def DeleteScenario(self, scenarioName: str) -> bool: ...
+
+	@overload
+	def Get(self, name: str) -> LoadPropertyUserFeaPanelRow: ...
+
+	@overload
+	def Get(self, id: int) -> LoadPropertyUserFeaPanelRow: ...
+
+	def DeleteScenario(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return bool(super().DeleteScenario(item1))
+
+		if isinstance(item1, str):
+			return bool(super().DeleteScenario(item1))
+
+		return self._Entity.DeleteScenario(item1)
+
+	def Get(self, item1 = None) -> LoadPropertyUserFeaPanelRow:
+		if isinstance(item1, str):
+			return LoadPropertyUserFeaPanelRow(super().Get(item1))
+
+		if isinstance(item1, int):
+			return LoadPropertyUserFeaPanelRow(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.LoadPropertyUserFeaPanelRowColList[index]
+
+	def __iter__(self):
+		yield from self.LoadPropertyUserFeaPanelRowColList
+
+	def __len__(self):
+		return len(self.LoadPropertyUserFeaPanelRowColList)
+
+
+class LoadPropertyUserFeaPanel(LoadProperty):
+	def __init__(self, loadPropertyUserFeaPanel: _api.LoadPropertyUserFeaPanel):
+		self._Entity = loadPropertyUserFeaPanel
+
+	@property
+	def UserFeaRows(self) -> LoadPropertyUserFeaPanelRowCol:
+		result = self._Entity.UserFeaRows
+		return LoadPropertyUserFeaPanelRowCol(result) if result is not None else None
+
+	def SetIsZeroCurvature(self, isZeroCurvature: bool) -> None:
+		return self._Entity.SetIsZeroCurvature(isZeroCurvature)
+
+
+class LoadPropertyUserGeneralDoubleRow(IdNameEntity):
+	def __init__(self, loadPropertyUserGeneralDoubleRow: _api.LoadPropertyUserGeneralDoubleRow):
+		self._Entity = loadPropertyUserGeneralDoubleRow
+
+	@property
+	def MechanicalRow(self) -> LoadPropertyUserRow:
+		thisClass = type(self._Entity.MechanicalRow).__name__
+		givenClass = LoadPropertyUserRow
+		for subclass in LoadPropertyUserRow.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		result = self._Entity.MechanicalRow
+		return givenClass(result) if result is not None else None
+
+	@property
+	def ThermalRow(self) -> LoadPropertyUserRow:
+		thisClass = type(self._Entity.ThermalRow).__name__
+		givenClass = LoadPropertyUserRow
+		for subclass in LoadPropertyUserRow.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		result = self._Entity.ThermalRow
+		return givenClass(result) if result is not None else None
+
+	def SetName(self, name: str) -> None:
+		return self._Entity.SetName(name)
+
+
+class LoadPropertyUserGeneralBeamDoubleRow(LoadPropertyUserGeneralDoubleRow):
+	def __init__(self, loadPropertyUserGeneralBeamDoubleRow: _api.LoadPropertyUserGeneralBeamDoubleRow):
+		self._Entity = loadPropertyUserGeneralBeamDoubleRow
+
+	@property
+	def MechanicalRow(self) -> LoadPropertyUserRow:
+		thisClass = type(self._Entity.MechanicalRow).__name__
+		givenClass = LoadPropertyUserRow
+		for subclass in LoadPropertyUserRow.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		result = self._Entity.MechanicalRow
+		return givenClass(result) if result is not None else None
+
+	@property
+	def ThermalRow(self) -> LoadPropertyUserRow:
+		thisClass = type(self._Entity.ThermalRow).__name__
+		givenClass = LoadPropertyUserRow
+		for subclass in LoadPropertyUserRow.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		result = self._Entity.ThermalRow
+		return givenClass(result) if result is not None else None
+
+	@property
+	def M1AType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.M1AType.ToString()]
+
+	@property
+	def M2AType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.M2AType.ToString()]
+
+	@property
+	def M1BType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.M1BType.ToString()]
+
+	@property
+	def M2BType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.M2BType.ToString()]
+
+	@property
+	def V1Type(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.V1Type.ToString()]
+
+	@property
+	def V2Type(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.V2Type.ToString()]
+
+	@property
+	def AxialType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.AxialType.ToString()]
+
+	@property
+	def TorqueType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.TorqueType.ToString()]
+
+	def SetM1AType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetM1AType(_types.BoundaryConditionType(type.value))
+
+	def SetM2AType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetM2AType(_types.BoundaryConditionType(type.value))
+
+	def SetM1BType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetM1BType(_types.BoundaryConditionType(type.value))
+
+	def SetM2BType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetM2BType(_types.BoundaryConditionType(type.value))
+
+	def SetV1Type(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetV1Type(_types.BoundaryConditionType(type.value))
+
+	def SetV2Type(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetV2Type(_types.BoundaryConditionType(type.value))
+
+	def SetAxialType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetAxialType(_types.BoundaryConditionType(type.value))
+
+	def SetTorqueType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetTorqueType(_types.BoundaryConditionType(type.value))
+
+
+class LoadPropertyUserGeneralRowCol(IdNameEntityCol, Generic[T]):
+	def __init__(self, loadPropertyUserGeneralRowCol: _api.LoadPropertyUserGeneralRowCol):
+		self._Entity = loadPropertyUserGeneralRowCol
+		self._CollectedClass = T
+
+	@property
+	def LoadPropertyUserGeneralRowColList(self) -> tuple[T]:
+		if self._Entity.Count() <= 0:
+			return ()
+		thisClass = type(self._Entity._items[0]).__name__
+		givenClass = T
+		for subclass in T.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return tuple([givenClass(loadPropertyUserGeneralRowCol) for loadPropertyUserGeneralRowCol in self._Entity])
+
+	def AddScenario(self, name: str = None) -> T:
+		return self._Entity.AddScenario(name)
+
+	@overload
+	def DeleteScenario(self, scenarioId: int) -> bool: ...
+
+	@overload
+	def DeleteScenario(self, scenarioName: str) -> bool: ...
+
+	@overload
+	def Get(self, name: str) -> T: ...
+
+	@overload
+	def Get(self, id: int) -> T: ...
+
+	def DeleteScenario(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return self._Entity.DeleteScenario(item1)
+
+		if isinstance(item1, str):
+			return self._Entity.DeleteScenario(item1)
+
+		return self._Entity.DeleteScenario(item1)
+
+	def Get(self, item1 = None) -> T:
+		if isinstance(item1, str):
+			return super().Get(item1)
+
+		if isinstance(item1, int):
+			return super().Get(item1)
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.LoadPropertyUserGeneralRowColList[index]
+
+	def __iter__(self):
+		yield from self.LoadPropertyUserGeneralRowColList
+
+	def __len__(self):
+		return len(self.LoadPropertyUserGeneralRowColList)
+
+
+class LoadPropertyUserGeneralBeamRowCol(LoadPropertyUserGeneralRowCol[LoadPropertyUserGeneralBeamDoubleRow]):
+	def __init__(self, loadPropertyUserGeneralBeamRowCol: _api.LoadPropertyUserGeneralBeamRowCol):
+		self._Entity = loadPropertyUserGeneralBeamRowCol
+		self._CollectedClass = LoadPropertyUserGeneralBeamDoubleRow
+
+	@property
+	def LoadPropertyUserGeneralBeamRowColList(self) -> tuple[LoadPropertyUserGeneralBeamDoubleRow]:
+		return tuple([LoadPropertyUserGeneralBeamDoubleRow(loadPropertyUserGeneralBeamRowCol) for loadPropertyUserGeneralBeamRowCol in self._Entity])
+
+	@overload
+	def DeleteScenario(self, scenarioId: int) -> bool: ...
+
+	@overload
+	def DeleteScenario(self, scenarioName: str) -> bool: ...
+
+	@overload
+	def Get(self, name: str) -> LoadPropertyUserGeneralBeamDoubleRow: ...
+
+	@overload
+	def Get(self, id: int) -> LoadPropertyUserGeneralBeamDoubleRow: ...
+
+	def DeleteScenario(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return bool(super().DeleteScenario(item1))
+
+		if isinstance(item1, str):
+			return bool(super().DeleteScenario(item1))
+
+		return self._Entity.DeleteScenario(item1)
+
+	def Get(self, item1 = None) -> LoadPropertyUserGeneralBeamDoubleRow:
+		if isinstance(item1, str):
+			return LoadPropertyUserGeneralBeamDoubleRow(super().Get(item1))
+
+		if isinstance(item1, int):
+			return LoadPropertyUserGeneralBeamDoubleRow(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.LoadPropertyUserGeneralBeamRowColList[index]
+
+	def __iter__(self):
+		yield from self.LoadPropertyUserGeneralBeamRowColList
+
+	def __len__(self):
+		return len(self.LoadPropertyUserGeneralBeamRowColList)
+
+
+class LoadPropertyUserGeneralBeam(LoadProperty):
+	def __init__(self, loadPropertyUserGeneralBeam: _api.LoadPropertyUserGeneralBeam):
+		self._Entity = loadPropertyUserGeneralBeam
+
+	@property
+	def UserGeneralRows(self) -> LoadPropertyUserGeneralBeamRowCol:
+		result = self._Entity.UserGeneralRows
+		return LoadPropertyUserGeneralBeamRowCol(result) if result is not None else None
+
+	@property
+	def IsIncludingThermal(self) -> bool:
+		return self._Entity.IsIncludingThermal
+
+	@IsIncludingThermal.setter
+	def IsIncludingThermal(self, value: bool) -> None:
+		self._Entity.IsIncludingThermal = value
+
+
+class LoadPropertyUserGeneralBoltedRow(IdEntity):
+	def __init__(self, loadPropertyUserGeneralBoltedRow: _api.LoadPropertyUserGeneralBoltedRow):
+		self._Entity = loadPropertyUserGeneralBoltedRow
+
+	@property
+	def LoadPropertyId(self) -> int:
+		return self._Entity.LoadPropertyId
+
+	@property
+	def LoadScenarioId(self) -> int:
+		return self._Entity.LoadScenarioId
+
+	@property
+	def Fx(self) -> float:
+		return self._Entity.Fx
+
+	@property
+	def Fy(self) -> float:
+		return self._Entity.Fy
+
+	@property
+	def Fz(self) -> float:
+		return self._Entity.Fz
+
+	@property
+	def Mx(self) -> float:
+		return self._Entity.Mx
+
+	@property
+	def My(self) -> float:
+		return self._Entity.My
+
+	@property
+	def Mz(self) -> float:
+		return self._Entity.Mz
+
+	@property
+	def NxBypass(self) -> float:
+		return self._Entity.NxBypass
+
+	@property
+	def NyBypass(self) -> float:
+		return self._Entity.NyBypass
+
+	@property
+	def NxyBypass(self) -> float:
+		return self._Entity.NxyBypass
+
+	@property
+	def LimitFactor(self) -> float:
+		return self._Entity.LimitFactor
+
+	@property
+	def UltimateFactor(self) -> float:
+		return self._Entity.UltimateFactor
+
+	@Fx.setter
+	def Fx(self, value: float) -> None:
+		self._Entity.Fx = value
+
+	@Fy.setter
+	def Fy(self, value: float) -> None:
+		self._Entity.Fy = value
+
+	@Fz.setter
+	def Fz(self, value: float) -> None:
+		self._Entity.Fz = value
+
+	@Mx.setter
+	def Mx(self, value: float) -> None:
+		self._Entity.Mx = value
+
+	@My.setter
+	def My(self, value: float) -> None:
+		self._Entity.My = value
+
+	@Mz.setter
+	def Mz(self, value: float) -> None:
+		self._Entity.Mz = value
+
+	@NxBypass.setter
+	def NxBypass(self, value: float) -> None:
+		self._Entity.NxBypass = value
+
+	@NyBypass.setter
+	def NyBypass(self, value: float) -> None:
+		self._Entity.NyBypass = value
+
+	@NxyBypass.setter
+	def NxyBypass(self, value: float) -> None:
+		self._Entity.NxyBypass = value
+
+	@LimitFactor.setter
+	def LimitFactor(self, value: float) -> None:
+		self._Entity.LimitFactor = value
+
+	@UltimateFactor.setter
+	def UltimateFactor(self, value: float) -> None:
+		self._Entity.UltimateFactor = value
+
+
+class LoadPropertyUserGeneralBoltedRowCol(IdEntityCol[LoadPropertyUserGeneralBoltedRow]):
+	def __init__(self, loadPropertyUserGeneralBoltedRowCol: _api.LoadPropertyUserGeneralBoltedRowCol):
+		self._Entity = loadPropertyUserGeneralBoltedRowCol
+		self._CollectedClass = LoadPropertyUserGeneralBoltedRow
+
+	@property
+	def LoadPropertyUserGeneralBoltedRowColList(self) -> tuple[LoadPropertyUserGeneralBoltedRow]:
+		return tuple([LoadPropertyUserGeneralBoltedRow(loadPropertyUserGeneralBoltedRowCol) for loadPropertyUserGeneralBoltedRowCol in self._Entity])
+
+	def AddScenario(self) -> None:
+		'''
+		Adds a load scenario with default values
+		'''
+		return self._Entity.AddScenario()
+
+	def DeleteScenario(self, scenarioId: int) -> bool:
+		return self._Entity.DeleteScenario(scenarioId)
+
+	def __getitem__(self, index: int):
+		return self.LoadPropertyUserGeneralBoltedRowColList[index]
+
+	def __iter__(self):
+		yield from self.LoadPropertyUserGeneralBoltedRowColList
+
+	def __len__(self):
+		return len(self.LoadPropertyUserGeneralBoltedRowColList)
+
+
+class LoadPropertyUserGeneralBolted(LoadProperty):
+	def __init__(self, loadPropertyUserGeneralBolted: _api.LoadPropertyUserGeneralBolted):
+		self._Entity = loadPropertyUserGeneralBolted
+
+	@property
+	def UserGeneralBoltedRows(self) -> LoadPropertyUserGeneralBoltedRowCol:
+		result = self._Entity.UserGeneralBoltedRows
+		return LoadPropertyUserGeneralBoltedRowCol(result) if result is not None else None
+
+
+class LoadPropertyUserGeneralBondedRow(IdEntity):
+	def __init__(self, loadPropertyUserGeneralBondedRow: _api.LoadPropertyUserGeneralBondedRow):
+		self._Entity = loadPropertyUserGeneralBondedRow
+
+	@property
+	def LoadPropertyId(self) -> int:
+		return self._Entity.LoadPropertyId
+
+	@property
+	def JointConceptId(self) -> types.JointConceptId:
+		return types.JointConceptId[self._Entity.JointConceptId.ToString()]
+
+	@property
+	def BondedBcId(self) -> int:
+		return self._Entity.BondedBcId
+
+	@property
+	def AxialType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.AxialType.ToString()]
+
+	@property
+	def MomentType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.MomentType.ToString()]
+
+	@property
+	def TransverseType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.TransverseType.ToString()]
+
+	@property
+	def ShearType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.ShearType.ToString()]
+
+	@property
+	def Axial(self) -> float:
+		return self._Entity.Axial
+
+	@property
+	def Moment(self) -> float:
+		return self._Entity.Moment
+
+	@property
+	def Transverse(self) -> float:
+		return self._Entity.Transverse
+
+	@property
+	def Shear(self) -> float:
+		return self._Entity.Shear
+
+	@AxialType.setter
+	def AxialType(self, value: types.BoundaryConditionType) -> None:
+		self._Entity.AxialType = _types.BoundaryConditionType(value.value)
+
+	@MomentType.setter
+	def MomentType(self, value: types.BoundaryConditionType) -> None:
+		self._Entity.MomentType = _types.BoundaryConditionType(value.value)
+
+	@TransverseType.setter
+	def TransverseType(self, value: types.BoundaryConditionType) -> None:
+		self._Entity.TransverseType = _types.BoundaryConditionType(value.value)
+
+	@ShearType.setter
+	def ShearType(self, value: types.BoundaryConditionType) -> None:
+		self._Entity.ShearType = _types.BoundaryConditionType(value.value)
+
+	@Axial.setter
+	def Axial(self, value: float) -> None:
+		self._Entity.Axial = value
+
+	@Moment.setter
+	def Moment(self, value: float) -> None:
+		self._Entity.Moment = value
+
+	@Transverse.setter
+	def Transverse(self, value: float) -> None:
+		self._Entity.Transverse = value
+
+	@Shear.setter
+	def Shear(self, value: float) -> None:
+		self._Entity.Shear = value
+
+	def UpdateRow(self) -> None:
+		return self._Entity.UpdateRow()
+
+
+class LoadPropertyUserGeneralBondedRowCol(IdEntityCol[LoadPropertyUserGeneralBondedRow]):
+	def __init__(self, loadPropertyUserGeneralBondedRowCol: _api.LoadPropertyUserGeneralBondedRowCol):
+		self._Entity = loadPropertyUserGeneralBondedRowCol
+		self._CollectedClass = LoadPropertyUserGeneralBondedRow
+
+	@property
+	def LoadPropertyUserGeneralBondedRowColList(self) -> tuple[LoadPropertyUserGeneralBondedRow]:
+		return tuple([LoadPropertyUserGeneralBondedRow(loadPropertyUserGeneralBondedRowCol) for loadPropertyUserGeneralBondedRowCol in self._Entity])
+
+	def __getitem__(self, index: int):
+		return self.LoadPropertyUserGeneralBondedRowColList[index]
+
+	def __iter__(self):
+		yield from self.LoadPropertyUserGeneralBondedRowColList
+
+	def __len__(self):
+		return len(self.LoadPropertyUserGeneralBondedRowColList)
+
+
+class LoadPropertyJoint(IdEntity):
+	def __init__(self, loadPropertyJoint: _api.LoadPropertyJoint):
+		self._Entity = loadPropertyJoint
+
+	@property
+	def UserGeneralBondedRows(self) -> LoadPropertyUserGeneralBondedRowCol:
+		result = self._Entity.UserGeneralBondedRows
+		return LoadPropertyUserGeneralBondedRowCol(result) if result is not None else None
+
+	@property
+	def LoadPropertyId(self) -> int:
+		return self._Entity.LoadPropertyId
+
+	@property
+	def JConceptId(self) -> types.JointConceptId:
+		return types.JointConceptId[self._Entity.JConceptId.ToString()]
+
+	@property
+	def Ex(self) -> float:
+		return self._Entity.Ex
+
+	@property
+	def Kx(self) -> float:
+		return self._Entity.Kx
+
+	@property
+	def Kxy(self) -> float:
+		return self._Entity.Kxy
+
+	@property
+	def Temperature(self) -> float:
+		return self._Entity.Temperature
+
+	@JConceptId.setter
+	def JConceptId(self, value: types.JointConceptId) -> None:
+		self._Entity.JConceptId = _types.JointConceptId(value.value)
+
+	@Ex.setter
+	def Ex(self, value: float) -> None:
+		self._Entity.Ex = value
+
+	@Kx.setter
+	def Kx(self, value: float) -> None:
+		self._Entity.Kx = value
+
+	@Kxy.setter
+	def Kxy(self, value: float) -> None:
+		self._Entity.Kxy = value
+
+	@Temperature.setter
+	def Temperature(self, value: float) -> None:
+		self._Entity.Temperature = value
+
+
+class LoadPropertyUserGeneralBonded(LoadProperty):
+	def __init__(self, loadPropertyUserGeneralBonded: _api.LoadPropertyUserGeneralBonded):
+		self._Entity = loadPropertyUserGeneralBonded
+
+	@property
+	def LoadPropertyJoint(self) -> LoadPropertyJoint:
+		result = self._Entity.LoadPropertyJoint
+		return LoadPropertyJoint(result) if result is not None else None
+
+
+class LoadPropertyUserGeneralPanelDoubleRow(LoadPropertyUserGeneralDoubleRow):
+	def __init__(self, loadPropertyUserGeneralPanelDoubleRow: _api.LoadPropertyUserGeneralPanelDoubleRow):
+		self._Entity = loadPropertyUserGeneralPanelDoubleRow
+
+	@property
+	def MechanicalRow(self) -> LoadPropertyUserRow:
+		thisClass = type(self._Entity.MechanicalRow).__name__
+		givenClass = LoadPropertyUserRow
+		for subclass in LoadPropertyUserRow.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		result = self._Entity.MechanicalRow
+		return givenClass(result) if result is not None else None
+
+	@property
+	def ThermalRow(self) -> LoadPropertyUserRow:
+		thisClass = type(self._Entity.ThermalRow).__name__
+		givenClass = LoadPropertyUserRow
+		for subclass in LoadPropertyUserRow.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		result = self._Entity.ThermalRow
+		return givenClass(result) if result is not None else None
+
+	@property
+	def NxType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.NxType.ToString()]
+
+	@property
+	def NyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.NyType.ToString()]
+
+	@property
+	def NxyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.NxyType.ToString()]
+
+	@property
+	def MxType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.MxType.ToString()]
+
+	@property
+	def MyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.MyType.ToString()]
+
+	@property
+	def MxyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.MxyType.ToString()]
+
+	@property
+	def QxType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.QxType.ToString()]
+
+	@property
+	def QyType(self) -> types.BoundaryConditionType:
+		return types.BoundaryConditionType[self._Entity.QyType.ToString()]
+
+	def SetNxType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetNxType(_types.BoundaryConditionType(type.value))
+
+	def SetNyType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetNyType(_types.BoundaryConditionType(type.value))
+
+	def SetNxyType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetNxyType(_types.BoundaryConditionType(type.value))
+
+	def SetMxType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetMxType(_types.BoundaryConditionType(type.value))
+
+	def SetMyType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetMyType(_types.BoundaryConditionType(type.value))
+
+	def SetMxyType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetMxyType(_types.BoundaryConditionType(type.value))
+
+	def SetQxType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetQxType(_types.BoundaryConditionType(type.value))
+
+	def SetQyType(self, type: types.BoundaryConditionType) -> None:
+		return self._Entity.SetQyType(_types.BoundaryConditionType(type.value))
+
+
+class LoadPropertyUserGeneralPanelRowCol(LoadPropertyUserGeneralRowCol[LoadPropertyUserGeneralPanelDoubleRow]):
+	def __init__(self, loadPropertyUserGeneralPanelRowCol: _api.LoadPropertyUserGeneralPanelRowCol):
+		self._Entity = loadPropertyUserGeneralPanelRowCol
+		self._CollectedClass = LoadPropertyUserGeneralPanelDoubleRow
+
+	@property
+	def LoadPropertyUserGeneralPanelRowColList(self) -> tuple[LoadPropertyUserGeneralPanelDoubleRow]:
+		return tuple([LoadPropertyUserGeneralPanelDoubleRow(loadPropertyUserGeneralPanelRowCol) for loadPropertyUserGeneralPanelRowCol in self._Entity])
+
+	@overload
+	def DeleteScenario(self, scenarioId: int) -> bool: ...
+
+	@overload
+	def DeleteScenario(self, scenarioName: str) -> bool: ...
+
+	@overload
+	def Get(self, name: str) -> LoadPropertyUserGeneralPanelDoubleRow: ...
+
+	@overload
+	def Get(self, id: int) -> LoadPropertyUserGeneralPanelDoubleRow: ...
+
+	def DeleteScenario(self, item1 = None) -> bool:
+		if isinstance(item1, int):
+			return bool(super().DeleteScenario(item1))
+
+		if isinstance(item1, str):
+			return bool(super().DeleteScenario(item1))
+
+		return self._Entity.DeleteScenario(item1)
+
+	def Get(self, item1 = None) -> LoadPropertyUserGeneralPanelDoubleRow:
+		if isinstance(item1, str):
+			return LoadPropertyUserGeneralPanelDoubleRow(super().Get(item1))
+
+		if isinstance(item1, int):
+			return LoadPropertyUserGeneralPanelDoubleRow(super().Get(item1))
+
+		return self._Entity.Get(item1)
+
+	def __getitem__(self, index: int):
+		return self.LoadPropertyUserGeneralPanelRowColList[index]
+
+	def __iter__(self):
+		yield from self.LoadPropertyUserGeneralPanelRowColList
+
+	def __len__(self):
+		return len(self.LoadPropertyUserGeneralPanelRowColList)
+
+
+class LoadPropertyUserGeneralPanel(LoadProperty):
+	def __init__(self, loadPropertyUserGeneralPanel: _api.LoadPropertyUserGeneralPanel):
+		self._Entity = loadPropertyUserGeneralPanel
+
+	@property
+	def UserGeneralRows(self) -> LoadPropertyUserGeneralPanelRowCol:
+		result = self._Entity.UserGeneralRows
+		return LoadPropertyUserGeneralPanelRowCol(result) if result is not None else None
+
+	@property
+	def IsIncludingThermal(self) -> bool:
+		return self._Entity.IsIncludingThermal
+
+	@IsIncludingThermal.setter
+	def IsIncludingThermal(self, value: bool) -> None:
+		self._Entity.IsIncludingThermal = value
+
+	def SetIsZeroCurvature(self, isZeroCurvature: bool) -> None:
+		return self._Entity.SetIsZeroCurvature(isZeroCurvature)
+
+
+class JointSelectionDesignResult(JointDesignResult):
+	def __init__(self, jointSelectionDesignResult: _api.JointSelectionDesignResult):
+		self._Entity = jointSelectionDesignResult
+
+	@property
+	def JointSelectionId(self) -> types.JointSelectionId:
+		return types.JointSelectionId[self._Entity.JointSelectionId.ToString()]
+
+
+class JointFastenerDesignResult(JointSelectionDesignResult):
+	def __init__(self, jointFastenerDesignResult: _api.JointFastenerDesignResult):
+		self._Entity = jointFastenerDesignResult
+
+	@property
+	def FastenerBoltId(self) -> int:
+		return self._Entity.FastenerBoltId
+
+	@property
+	def FastenerCodeId(self) -> int:
+		return self._Entity.FastenerCodeId
+
+
+class JointMaterialDesignResult(JointSelectionDesignResult):
+	def __init__(self, jointMaterialDesignResult: _api.JointMaterialDesignResult):
+		self._Entity = jointMaterialDesignResult
+
+	@property
+	def MaterialId(self) -> int:
+		return self._Entity.MaterialId
+
+	@property
+	def MaterialType(self) -> types.MaterialType:
+		'''
+		Represents a material's type.
+		'''
+		return types.MaterialType[self._Entity.MaterialType.ToString()]
+
+
+class JointRangeDesignResult(JointDesignResult):
+	def __init__(self, jointRangeDesignResult: _api.JointRangeDesignResult):
+		self._Entity = jointRangeDesignResult
+
+	@property
+	def JointRangeId(self) -> types.JointRangeId:
+		return types.JointRangeId[self._Entity.JointRangeId.ToString()]
+
+	@property
+	def Value(self) -> float:
+		return self._Entity.Value
+
+
+class JointRivetDesignResult(JointSelectionDesignResult):
+	def __init__(self, jointRivetDesignResult: _api.JointRivetDesignResult):
+		self._Entity = jointRivetDesignResult
+
+	@property
+	def RivetId(self) -> int:
+		return self._Entity.RivetId
+
+	@property
+	def RivetDiameterId(self) -> int:
+		return self._Entity.RivetDiameterId
 
 
 class Environment(ABC):
@@ -5554,14 +9554,14 @@ class Environment(ABC):
 	def __init__(self, environment: _api.Environment):
 		self._Entity = environment
 
-	def SetLocation(self, location: str) -> None:
-		return self._Entity.SetLocation(location)
+	def SetLocation(location: str) -> None:
+		return _api.Environment.SetLocation(location)
 
-	def Initialize(self) -> None:
+	def Initialize() -> None:
 		'''
 		Initialize the HyperX scripting environment.
 		'''
-		return self._Entity.Initialize()
+		return _api.Environment.Initialize()
 
 
 class FailureCriterionSetting(FailureSetting):
@@ -5584,8 +9584,116 @@ class HelperFunctions(ABC):
 	def __init__(self, helperFunctions: _api.HelperFunctions):
 		self._Entity = helperFunctions
 
-	def NullableSingle(self, input: float) -> float:
-		return self._Entity.NullableSingle(input)
+	def NullableSingle(input: float) -> float:
+		return _api.HelperFunctions.NullableSingle(input)
+
+
+class IBulkUpdatableEntity:
+	def __init__(self, iBulkUpdatableEntity: _api.IBulkUpdatableEntity):
+		self._Entity = iBulkUpdatableEntity
+
+	pass
+
+
+class LaminatePlyData:
+	'''
+	Per ply data for Laminate materials
+	'''
+	def __init__(self, laminatePlyData: _api.LaminatePlyData):
+		self._Entity = laminatePlyData
+
+	@property
+	def MaterialId(self) -> int:
+		return self._Entity.MaterialId
+
+	@property
+	def PlyId(self) -> int:
+		return self._Entity.PlyId
+
+	@property
+	def PlyMaterialId(self) -> int:
+		return self._Entity.PlyMaterialId
+
+	@property
+	def PlyMaterialType(self) -> types.MaterialType:
+		'''
+		Represents a material's type.
+		'''
+		return types.MaterialType[self._Entity.PlyMaterialType.ToString()]
+
+	@property
+	def Angle(self) -> float:
+		return self._Entity.Angle
+
+	@property
+	def Thickness(self) -> float:
+		return self._Entity.Thickness
+
+	@property
+	def IsFabric(self) -> bool:
+		return self._Entity.IsFabric
+
+	@property
+	def FamilyPlyId(self) -> int:
+		return self._Entity.FamilyPlyId
+
+	@property
+	def OriginalPlyId(self) -> int:
+		return self._Entity.OriginalPlyId
+
+	@property
+	def OriginalFamilyPlyId(self) -> int:
+		return self._Entity.OriginalFamilyPlyId
+
+	@property
+	def DisplaySequenceId(self) -> int:
+		return self._Entity.DisplaySequenceId
+
+	@property
+	def PlyStiffenerSubType(self) -> types.PlyStiffenerSubType:
+		return types.PlyStiffenerSubType[self._Entity.PlyStiffenerSubType.ToString()]
+
+	@property
+	def Object1(self) -> bool:
+		return self._Entity.Object1
+
+	@property
+	def Object2(self) -> bool:
+		return self._Entity.Object2
+
+	@property
+	def Object3(self) -> bool:
+		return self._Entity.Object3
+
+	@property
+	def IsInverted(self) -> bool:
+		return self._Entity.IsInverted
+
+	@property
+	def IsFullStructure(self) -> bool:
+		return self._Entity.IsFullStructure
+
+	@property
+	def UseTrueFiberDirection(self) -> bool:
+		return self._Entity.UseTrueFiberDirection
+
+	@property
+	def IsInFoot(self) -> bool:
+		return self._Entity.IsInFoot
+
+	@property
+	def IsInWeb(self) -> bool:
+		return self._Entity.IsInWeb
+
+	@property
+	def IsInCap(self) -> bool:
+		return self._Entity.IsInCap
+
+	def SetMaterial(self, matId: int) -> bool:
+		return self._Entity.SetMaterial(matId)
+
+	def SetAngle(self, angle: float) -> bool:
+		return self._Entity.SetAngle(angle)
 
 
 class Beam(Zone):
@@ -5596,6 +9704,56 @@ class Beam(Zone):
 	def Length(self) -> float:
 		return self._Entity.Length
 
+	@property
+	def Phi(self) -> float:
+		return self._Entity.Phi
+
+	@property
+	def K1(self) -> float:
+		return self._Entity.K1
+
+	@property
+	def K2(self) -> float:
+		return self._Entity.K2
+
+	@property
+	def ReferencePlane(self) -> types.ReferencePlaneBeam:
+		return types.ReferencePlaneBeam[self._Entity.ReferencePlane.ToString()]
+
+	@Phi.setter
+	def Phi(self, value: float) -> None:
+		self._Entity.Phi = value
+
+	@K1.setter
+	def K1(self, value: float) -> None:
+		self._Entity.K1 = value
+
+	@K2.setter
+	def K2(self, value: float) -> None:
+		self._Entity.K2 = value
+
+	@ReferencePlane.setter
+	def ReferencePlane(self, value: types.ReferencePlaneBeam) -> None:
+		self._Entity.ReferencePlane = _types.ReferencePlaneBeam(value.value)
+
+
+class ZoneBulkUpdaterBase(BulkUpdaterBase):
+	def __init__(self, zoneBulkUpdaterBase: _api.ZoneBulkUpdaterBase):
+		self._Entity = zoneBulkUpdaterBase
+
+
+class BeamBulkUpdater(ZoneBulkUpdaterBase):
+	def __init__(self, beamBulkUpdater: _api.BeamBulkUpdater):
+		self._Entity = beamBulkUpdater
+
+	def GetBulkUpdater(application: Application, items: list[Beam]) -> BeamBulkUpdater:
+		itemsList = List[_api.Beam]()
+		if items is not None:
+			for thing in items:
+				if thing is not None:
+					itemsList.Add(thing._Entity)
+		return BeamBulkUpdater(_api.BeamBulkUpdater.GetBulkUpdater(application._Entity, itemsList))
+
 
 class Panel(Zone):
 	def __init__(self, panel: _api.Panel):
@@ -5604,3 +9762,203 @@ class Panel(Zone):
 	@property
 	def Area(self) -> float:
 		return self._Entity.Area
+
+	@property
+	def ReferencePlane(self) -> types.ReferencePlanePanel:
+		return types.ReferencePlanePanel[self._Entity.ReferencePlane.ToString()]
+
+	@property
+	def AddedOffset(self) -> float:
+		return self._Entity.AddedOffset
+
+	@property
+	def YSpan(self) -> float:
+		return self._Entity.YSpan
+
+	@property
+	def IsCurved(self) -> bool:
+		return self._Entity.IsCurved
+
+	@property
+	def Radius(self) -> float:
+		return self._Entity.Radius
+
+	@property
+	def IsFullCylinder(self) -> bool:
+		return self._Entity.IsFullCylinder
+
+	@property
+	def BucklingMode(self) -> types.ZoneBucklingMode:
+		return types.ZoneBucklingMode[self._Entity.BucklingMode.ToString()]
+
+	@property
+	def PerformLocalPostbuckling(self) -> bool:
+		return self._Entity.PerformLocalPostbuckling
+
+	@property
+	def A11Required(self) -> float:
+		return self._Entity.A11Required
+
+	@property
+	def A22Required(self) -> float:
+		return self._Entity.A22Required
+
+	@property
+	def A33Required(self) -> float:
+		return self._Entity.A33Required
+
+	@property
+	def D11Required(self) -> float:
+		return self._Entity.D11Required
+
+	@property
+	def D22Required(self) -> float:
+		return self._Entity.D22Required
+
+	@property
+	def D33Required(self) -> float:
+		return self._Entity.D33Required
+
+	@property
+	def A11Auto(self) -> float:
+		return self._Entity.A11Auto
+
+	@property
+	def A22Auto(self) -> float:
+		return self._Entity.A22Auto
+
+	@property
+	def A33Auto(self) -> float:
+		return self._Entity.A33Auto
+
+	@property
+	def D11Auto(self) -> float:
+		return self._Entity.D11Auto
+
+	@property
+	def D22Auto(self) -> float:
+		return self._Entity.D22Auto
+
+	@property
+	def D33Auto(self) -> float:
+		return self._Entity.D33Auto
+
+	@property
+	def Ey(self) -> float:
+		return self._Entity.Ey
+
+	@property
+	def Kx(self) -> float:
+		return self._Entity.Kx
+
+	@property
+	def Ky(self) -> float:
+		return self._Entity.Ky
+
+	@ReferencePlane.setter
+	def ReferencePlane(self, value: types.ReferencePlanePanel) -> None:
+		self._Entity.ReferencePlane = _types.ReferencePlanePanel(value.value)
+
+	@AddedOffset.setter
+	def AddedOffset(self, value: float) -> None:
+		self._Entity.AddedOffset = value
+
+	@YSpan.setter
+	def YSpan(self, value: float) -> None:
+		self._Entity.YSpan = value
+
+	@IsCurved.setter
+	def IsCurved(self, value: bool) -> None:
+		self._Entity.IsCurved = value
+
+	@Radius.setter
+	def Radius(self, value: float) -> None:
+		self._Entity.Radius = value
+
+	@IsFullCylinder.setter
+	def IsFullCylinder(self, value: bool) -> None:
+		self._Entity.IsFullCylinder = value
+
+	@BucklingMode.setter
+	def BucklingMode(self, value: types.ZoneBucklingMode) -> None:
+		self._Entity.BucklingMode = _types.ZoneBucklingMode(value.value)
+
+	@PerformLocalPostbuckling.setter
+	def PerformLocalPostbuckling(self, value: bool) -> None:
+		self._Entity.PerformLocalPostbuckling = value
+
+	@A11Required.setter
+	def A11Required(self, value: float) -> None:
+		self._Entity.A11Required = value
+
+	@A22Required.setter
+	def A22Required(self, value: float) -> None:
+		self._Entity.A22Required = value
+
+	@A33Required.setter
+	def A33Required(self, value: float) -> None:
+		self._Entity.A33Required = value
+
+	@D11Required.setter
+	def D11Required(self, value: float) -> None:
+		self._Entity.D11Required = value
+
+	@D22Required.setter
+	def D22Required(self, value: float) -> None:
+		self._Entity.D22Required = value
+
+	@D33Required.setter
+	def D33Required(self, value: float) -> None:
+		self._Entity.D33Required = value
+
+	@Ey.setter
+	def Ey(self, value: float) -> None:
+		self._Entity.Ey = value
+
+	@Kx.setter
+	def Kx(self, value: float) -> None:
+		self._Entity.Kx = value
+
+	@Ky.setter
+	def Ky(self, value: float) -> None:
+		self._Entity.Ky = value
+
+
+class PanelBulkUpdater(ZoneBulkUpdaterBase):
+	def __init__(self, panelBulkUpdater: _api.PanelBulkUpdater):
+		self._Entity = panelBulkUpdater
+
+	def GetBulkUpdater(application: Application, items: list[Panel]) -> PanelBulkUpdater:
+		itemsList = List[_api.Panel]()
+		if items is not None:
+			for thing in items:
+				if thing is not None:
+					itemsList.Add(thing._Entity)
+		return PanelBulkUpdater(_api.PanelBulkUpdater.GetBulkUpdater(application._Entity, itemsList))
+
+
+class PanelSegmentBulkUpdater(ZoneBulkUpdaterBase):
+	def __init__(self, panelSegmentBulkUpdater: _api.PanelSegmentBulkUpdater):
+		self._Entity = panelSegmentBulkUpdater
+
+	def GetBulkUpdater(application: Application, items: list[PanelSegment]) -> PanelSegmentBulkUpdater:
+		itemsList = List[_api.PanelSegment]()
+		if items is not None:
+			for thing in items:
+				if thing is not None:
+					itemsList.Add(thing._Entity)
+		return PanelSegmentBulkUpdater(_api.PanelSegmentBulkUpdater.GetBulkUpdater(application._Entity, itemsList))
+
+
+class ZoneBulkUpdater(ZoneBulkUpdaterBase):
+	def __init__(self, zoneBulkUpdater: _api.ZoneBulkUpdater):
+		self._Entity = zoneBulkUpdater
+
+	def GetBulkUpdater(application: Application, items: list[Zone]) -> ZoneBulkUpdater:
+		itemsList = List[_api.Zone]()
+		if items is not None:
+			for thing in items:
+				if thing is not None:
+					itemsList.Add(thing._Entity)
+		return ZoneBulkUpdater(_api.ZoneBulkUpdater.GetBulkUpdater(application._Entity, itemsList))
+
