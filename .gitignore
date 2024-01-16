@@ -5,3 +5,5 @@ setup*twine.bat
 .vscode/
 
 .vs/
+
+__pycache__
