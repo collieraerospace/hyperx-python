@@ -1,4 +1,16 @@
+from __future__ import annotations
+from ...library import _api, _types
+
+from typing import TypeVar, Generic, overload
 from enum import Enum
+from System.Collections.Generic import List, IEnumerable, Dictionary, HashSet
+from System.Threading.Tasks import Task
+from System import Guid, DateTime
+
+from abc import ABC, abstractmethod
+
+T = TypeVar('T')
+
 
 class AnalysisId(Enum):
 	UNKNOWN = 0
@@ -323,6 +335,18 @@ class BeamPanelFamily(Enum):
 	RectangularBeam = 8
 	CircularBeam = 9
 
+class HeightSizingVariable(Enum):
+	Invalid = 0
+	TotalPanelHeight = 1
+	StiffenerHeight = 2
+	WebHeight = 3
+
+class MaterialMode(Enum):
+	none = 0
+	Metal = 1
+	Composite = 2
+	Any = 3
+
 class ToolingSelectionType(Enum):
 	'''
 	Defines which selection a given tooling constraint is currently set to.
@@ -515,6 +539,35 @@ class FemType(Enum):
 	Ply = 100
 	MPC = 101
 
+class ConstraintType(Enum):
+	UNKNOWN = 0
+	Displacement = 1
+	Buckling = 2
+	Moment = 3
+	Frequency = 4
+
+class DegreeOfFreedom(Enum):
+	T1 = 0
+	T2 = 1
+	T3 = 2
+	R1 = 3
+	R2 = 4
+	R3 = 5
+	Tmag = 6
+	Rmag = 7
+
+class DisplacementShapeType(Enum):
+	Unknown = 0
+	Sphere = 1
+	Cylinder = 2
+	Plane = 3
+
+class StiffnessCriteriaType(Enum):
+	Displacement = 0
+	Rotation = 1
+	Buckling = 2
+	Frequency = 3
+
 class JointConceptId(Enum):
 	Unassigned = 0
 	Clevis = 2
@@ -573,6 +626,10 @@ class BoundaryConditionType(Enum):
 	Displacement = 2
 	Free = 3
 	Fixed = 4
+
+class ForceTransformType(Enum):
+	HyperXConvention = 1
+	SolverConvention = 2
 
 class LoadCaseType(Enum):
 	Static = 1
@@ -832,6 +889,15 @@ class PlyStiffenerSubType(Enum):
 	BottomCover = 9
 	TopCover = 10
 
+class StiffenerLaminateLayerLocation(Enum):
+	Base = 1
+	Plank = 2
+	FootCharge = 3
+	WebCharge = 4
+	CapCharge = 5
+	BottomCover = 6
+	TopCover = 7
+
 class StiffenerProfile(Enum):
 	Corrugated = 1
 	IPanel = 2
@@ -1062,4 +1128,111 @@ class ZoneBucklingMode(Enum):
 	InternalY = 2
 	ExternalX = 3
 	ExternalY = 4
+
+class SimpleStatus:
+	'''
+	Lots of methods need to return a Success state and an associated Message.
+	'''
+	def __init__(self, simpleStatus: _types.SimpleStatus):
+		self._Entity = simpleStatus
+
+	def Create_SimpleStatus_success_message(success: bool, message: str):
+		return SimpleStatus(_api.SimpleStatus(success, message))
+
+	def Create_SimpleStatus_tupleInput(tupleInput: tuple[bool, str]):
+		return SimpleStatus(_api.SimpleStatus(tupleInput._Entity))
+
+	@property
+	def Success(self) -> bool:
+		return self._Entity.Success
+
+	@property
+	def Message(self) -> str:
+		return self._Entity.Message
+
+	def ToString(self) -> str:
+		return self._Entity.ToString()
+
+	def GetHashCode(self) -> int:
+		return self._Entity.GetHashCode()
+
+	@overload
+	def Equals(self, obj) -> bool: ...
+
+	@overload
+	def Equals(self, other) -> bool: ...
+
+	def Equals(self, item1 = None) -> bool:
+		if isinstance(item1, SimpleStatus):
+			return self._Entity.Equals(_types.SimpleStatus(item1.value))
+
+		return self._Entity.Equals(item1)
+
+	def __eq__(self, other):
+		return self.Equals(other)
+
+	def __ne__(self, other):
+		return not self.Equals(other)
+
+
+class DesignLink:
+	def __init__(self, designLink: _types.DesignLink):
+		self._Entity = designLink
+
+	def Create_DesignLink(designId: int, familyId: BeamPanelFamily, conceptId: int, linkedVariableId: int):
+		return DesignLink(_api.DesignLink(designId, _types.BeamPanelFamily(familyId.value), conceptId, linkedVariableId))
+
+	@property
+	def DesignId(self) -> int:
+		return self._Entity.DesignId
+
+	@property
+	def FamilyId(self) -> BeamPanelFamily:
+		return BeamPanelFamily[self._Entity.FamilyId.ToString()]
+
+	@property
+	def ConceptId(self) -> int:
+		return self._Entity.ConceptId
+
+	@property
+	def LinkedVariableId(self) -> int:
+		return self._Entity.LinkedVariableId
+
+	def Equals(self, obj) -> bool:
+		return self._Entity.Equals(obj._Entity)
+
+	def GetHashCode(self) -> int:
+		return self._Entity.GetHashCode()
+
+
+class HyperFeaSolver:
+	def __init__(self, hyperFeaSolver: _types.HyperFeaSolver):
+		self._Entity = hyperFeaSolver
+
+	def Create_HyperFeaSolver(projectModelFormat: ProjectModelFormat, solverPath: str, arguments: str):
+		return HyperFeaSolver(_api.HyperFeaSolver(_types.ProjectModelFormat(projectModelFormat.value), solverPath, arguments))
+
+	@property
+	def ProjectModelFormat(self) -> ProjectModelFormat:
+		return ProjectModelFormat[self._Entity.ProjectModelFormat.ToString()]
+
+	@property
+	def SolverPath(self) -> str:
+		return self._Entity.SolverPath
+
+	@property
+	def Arguments(self) -> str:
+		return self._Entity.Arguments
+
+	@ProjectModelFormat.setter
+	def ProjectModelFormat(self, value: ProjectModelFormat) -> None:
+		self._Entity.ProjectModelFormat = _types.ProjectModelFormat(value.value)
+
+	@SolverPath.setter
+	def SolverPath(self, value: str) -> None:
+		self._Entity.SolverPath = value
+
+	@Arguments.setter
+	def Arguments(self, value: str) -> None:
+		self._Entity.Arguments = value
 

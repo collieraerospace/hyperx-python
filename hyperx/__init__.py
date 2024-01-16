@@ -4,7 +4,6 @@
 
 """
 HyperX Scripting Library
-~~~~~~~~~~~~~~~~~~~~~~~~
 
 The HyperX python package is a library, written in python, for python developers.
 
