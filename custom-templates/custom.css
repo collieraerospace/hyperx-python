@@ -1,0 +1,12 @@
+details {
+    display: block;
+    padding-block: 0.25rem;
+}
+details>summary {
+    padding-left: 1.75rem;
+    list-style: none;
+    display: block;
+}
+details[open] summary:after {
+    display: block;
+  }
