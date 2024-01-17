@@ -865,6 +865,11 @@ class LaminateFamilySettingType(Enum):
 	Allowed = 1
 	Required = 2
 
+class LaminateFamilyType(Enum):
+	Unknown = 0
+	Traditional = 1
+	DoubleDouble = 2
+
 class PlyDropPattern(Enum):
 	none = 0
 	Hourglass = 1
