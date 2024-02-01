@@ -31,7 +31,7 @@ class AnalysisResultToReturn(Enum):
 
 class CollectionModificationStatus(Enum):
 	'''
-	Indicates that whether a collection was manipulated successfully.
+	Indicates whether a collection was manipulated successfully.
 	'''
 	Success = 1
 	DuplicateIdFailure = 2
@@ -46,7 +46,7 @@ class CreateDatabaseStatus(Enum):
 
 class MaterialCreationStatus(Enum):
 	'''
-	Indicates that whether a Material was created successfully. 
+	Indicates whether a material was created successfully. 
             If not, this indicates why the material was not created.
 	'''
 	Success = 1
@@ -81,8 +81,8 @@ class DbTemperatureUnit(Enum):
 
 class ProjectCreationStatus(Enum):
 	'''
-	Indicates that whether a Material was created successfully. 
-            If not, this indicates why the material was not created.
+	Indicates whether a project was created successfully. 
+            If not, this indicates why the project was not created.
 	'''
 	Success = 1
 	Failure = 2
@@ -90,8 +90,8 @@ class ProjectCreationStatus(Enum):
 
 class ProjectDeletionStatus(Enum):
 	'''
-	Indicates that whether a Material was created successfully. 
-            If not, this indicates why the material was not created.
+	Indicates whether a project was deleted successfully. 
+            If not, this indicates why the project was not deleted.
 	'''
 	Success = 1
 	Failure = 2
@@ -307,6 +307,10 @@ class FailureObjectGroup(IdNameEntity):
 		self._Entity = failureObjectGroup
 
 	@property
+	def ObjectGroup(self) -> types.ObjectGroup:
+		return types.ObjectGroup[self._Entity.ObjectGroup.ToString()]
+
+	@property
 	def IsEnabled(self) -> bool:
 		return self._Entity.IsEnabled
 
@@ -490,19 +494,25 @@ class FailureObjectGroupCol(IdNameEntityCol[FailureObjectGroup]):
 		return tuple([FailureObjectGroup(failureObjectGroupCol) for failureObjectGroupCol in self._Entity])
 
 	@overload
+	def Get(self, objectGroup: types.ObjectGroup) -> FailureObjectGroup: ...
+
+	@overload
 	def Get(self, name: str) -> FailureObjectGroup: ...
 
 	@overload
 	def Get(self, id: int) -> FailureObjectGroup: ...
 
 	def Get(self, item1 = None) -> FailureObjectGroup:
+		if isinstance(item1, types.ObjectGroup):
+			return FailureObjectGroup(self._Entity.Get(_types.ObjectGroup(item1.value)))
+
 		if isinstance(item1, str):
 			return FailureObjectGroup(super().Get(item1))
 
 		if isinstance(item1, int):
 			return FailureObjectGroup(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return self._Entity.Get(_types.ObjectGroup(item1.value))
 
 	def __getitem__(self, index: int):
 		return self.FailureObjectGroupColList[index]
@@ -1652,6 +1662,12 @@ class ZoneBase(ZoneJointEntity):
 	@Dmid.setter
 	def Dmid(self, value: float) -> None:
 		self._Entity.Dmid = value
+
+	def GetObjectName(self, objectId: types.FamilyObjectUID) -> str:
+		return self._Entity.GetObjectName(_types.FamilyObjectUID(objectId.value))
+
+	def GetConceptName(self) -> str:
+		return self._Entity.GetConceptName()
 
 	def GetZoneDesignResults(self, solutionId: int = 1) -> ZoneDesignResultCol:
 		return ZoneDesignResultCol(self._Entity.GetZoneDesignResults(solutionId))
@@ -6668,42 +6684,6 @@ class Project:
 
 	def Dispose(self) -> None:
 		return self._Entity.Dispose()
-
-	def GetConceptName(self, zoneId: int) -> str:
-		return self._Entity.GetConceptName(zoneId)
-
-	def GetJointAnalysisResults(self, joints: list[Joint] = None, analysisResultType: AnalysisResultToReturn = AnalysisResultToReturn.Minimum) -> dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]]:
-		jointsList = List[_api.Joint]()
-		if joints is not None:
-			for thing in joints:
-				if thing is not None:
-					jointsList.Add(thing._Entity)
-		result = self._Entity.GetJointAnalysisResults(joints if joints is None else jointsList, _api.AnalysisResultToReturn(analysisResultType.value))
-		thisClass = type(result).__name__
-		givenClass = dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]]
-		for subclass in dict[int, dict[types.JointObject, dict[types.AnalysisId, tuple[float, types.MarginCode]]]].__subclasses__():
-			if subclass.__name__ == thisClass:
-				givenClass = subclass
-		return givenClass(result)
-
-	def GetObjectName(self, zoneId: int, objectId: int) -> str:
-		return self._Entity.GetObjectName(zoneId, objectId)
-
-	def GetZoneConceptAnalysisResults(self, zones: list[Zone] = None, analysisResultType: AnalysisResultToReturn = AnalysisResultToReturn.Minimum) -> dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]]:
-		zonesList = List[_api.Zone]()
-		if zones is not None:
-			for thing in zones:
-				if thing is not None:
-					zonesList.Add(thing._Entity)
-		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self._Entity.GetZoneConceptAnalysisResults(zones if zones is None else zonesList, _api.AnalysisResultToReturn(analysisResultType.value)))
-
-	def GetZoneObjectAnalysisResults(self, zones: list[Zone] = None, analysisResultType: AnalysisResultToReturn = AnalysisResultToReturn.Minimum) -> dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]]:
-		zonesList = List[_api.Zone]()
-		if zones is not None:
-			for thing in zones:
-				if thing is not None:
-					zonesList.Add(thing._Entity)
-		return dict[Zone, dict[tuple[int, int], tuple[float, types.MarginCode]]](self._Entity.GetZoneObjectAnalysisResults(zones if zones is None else zonesList, _api.AnalysisResultToReturn(analysisResultType.value)))
 
 	def ImportFem(self) -> None:
 		return self._Entity.ImportFem()

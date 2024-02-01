@@ -1036,6 +1036,23 @@ class JointObject(Enum):
 	EdgeAllowableSheet = 12
 	Rivet = 13
 
+class ObjectGroup(Enum):
+	EntireConcept = 0
+	LaminateSkinTopFacesheet = 1
+	Web = 2
+	Foot = 3
+	CapCrown = 4
+	SpacingSpan = 5
+	Core = 6
+	Wall = 7
+	Fastener = 11
+	Sheet = 12
+	Doubler = 13
+	Rivet = 14
+	Adhesive = 15
+	MiddleStack = 16
+	BottomFacesheet = 17
+
 class VariableParameter(Enum):
 	none = 0
 	BottomFaceThicknessMaterial = 1
