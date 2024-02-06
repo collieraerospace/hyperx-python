@@ -121,6 +121,8 @@ class RundeckBulkUpdateStatus(Enum):
 	InputFilePathAlreadyExists = 4
 	ResultFilePathAlreadyExists = 5
 	InvalidPathCount = 6
+	RundeckBulkUpdateFailure = 7
+	SuccessButIncompatibleFem = 8
 
 class RundeckCreationStatus(Enum):
 	Success = 1
@@ -133,6 +135,8 @@ class RundeckRemoveStatus(Enum):
 	CannotRemoveLastRundeck = 3
 	CannotDeletePrimaryRundeck = 4
 	RundeckNotFound = 5
+	RundeckRemoveFailure = 6
+	SuccessButIncompatibleFem = 7
 
 class RundeckUpdateStatus(Enum):
 	Success = 1
@@ -144,6 +148,7 @@ class RundeckUpdateStatus(Enum):
 	RundeckCommitFailure = 7
 	InputPathDoesNotExist = 8
 	ResultPathDoesNotExist = 9
+	SuccessButIncompatibleFem = 10
 
 class ZoneCreationStatus(Enum):
 	'''
