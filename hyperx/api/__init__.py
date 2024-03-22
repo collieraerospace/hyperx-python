@@ -38,6 +38,8 @@ class CollectionModificationStatus(Enum):
 	EntityMissingAddFailure = 3
 	EntityMissingRemovalFailure = 4
 	FemConnectionFailure = 5
+	RunSetUsageFailure = 6
+	EntityRemovalDependencyFailure = 7
 
 class CreateDatabaseStatus(Enum):
 	Success = 1
@@ -517,7 +519,7 @@ class FailureObjectGroupCol(IdNameEntityCol[FailureObjectGroup]):
 		if isinstance(item1, int):
 			return FailureObjectGroup(super().Get(item1))
 
-		return self._Entity.Get(_types.ObjectGroup(item1.value))
+		return FailureObjectGroup(self._Entity.Get(_types.ObjectGroup(item1.value)))
 
 	def __getitem__(self, index: int):
 		return self.FailureObjectGroupColList[index]
@@ -551,7 +553,13 @@ class FailureSettingCol(IdNameEntityCol[FailureSetting]):
 		if isinstance(item1, int):
 			return FailureSetting(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		result = self._Entity.Get(item1)
+		thisClass = type(result).__name__
+		givenClass = FailureSetting
+		for subclass in FailureSetting.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	def __getitem__(self, index: int):
 		return self.FailureSettingColList[index]
@@ -636,7 +644,7 @@ class FailureCriterionCol(IdNameEntityCol[FailureCriterion]):
 		if isinstance(item1, int):
 			return FailureCriterion(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return FailureCriterion(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.FailureCriterionColList[index]
@@ -699,7 +707,7 @@ class FailureModeCol(IdNameEntityCol[FailureMode]):
 		if isinstance(item1, str) and isinstance(item2, str):
 			return FailureMode(self._Entity.CreateFailureMode(item1, item2))
 
-		return self._Entity.CreateFailureMode(item1, item2)
+		return FailureMode(self._Entity.CreateFailureMode(item1, item2))
 
 	def Get(self, item1 = None) -> FailureMode:
 		if isinstance(item1, str):
@@ -708,7 +716,7 @@ class FailureModeCol(IdNameEntityCol[FailureMode]):
 		if isinstance(item1, int):
 			return FailureMode(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return FailureMode(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.FailureModeColList[index]
@@ -745,7 +753,7 @@ class AnalysisProperty(AssignablePropertyWithFamilyCategory):
 		if isinstance(item1, int):
 			return self._Entity.AddFailureMode(item1)
 
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			idsList = MakeCSharpIntList(item1)
 			idsEnumerable = IEnumerable(idsList)
 			return self._Entity.AddFailureMode(idsEnumerable)
@@ -756,7 +764,7 @@ class AnalysisProperty(AssignablePropertyWithFamilyCategory):
 		if isinstance(item1, int):
 			return self._Entity.RemoveFailureMode(item1)
 
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			idsList = MakeCSharpIntList(item1)
 			idsEnumerable = IEnumerable(idsList)
 			return self._Entity.RemoveFailureMode(idsEnumerable)
@@ -925,7 +933,7 @@ class DesignLoadSubcaseMultiplierCol(IdNameEntityCol[DesignLoadSubcaseMultiplier
 		if isinstance(item1, int):
 			return DesignLoadSubcaseMultiplier(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return DesignLoadSubcaseMultiplier(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.DesignLoadSubcaseMultiplierColList[index]
@@ -1388,7 +1396,13 @@ class JointDesignResultCol(IdEntityCol[JointDesignResult]):
 		if isinstance(item1, int):
 			return JointDesignResult(super().Get(item1))
 
-		return self._Entity.Get(_types.JointSelectionId(item1.value))
+		result = self._Entity.Get(_types.JointSelectionId(item1.value))
+		thisClass = type(result).__name__
+		givenClass = JointDesignResult
+		for subclass in JointDesignResult.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	def __getitem__(self, index: int):
 		return self.JointDesignResultColList[index]
@@ -1452,7 +1466,7 @@ class ZoneDesignResultCol(IdEntityCol[ZoneDesignResult]):
 		if isinstance(item1, int):
 			return ZoneDesignResult(super().Get(item1))
 
-		return self._Entity.Get(_types.VariableParameter(item1.value))
+		return ZoneDesignResult(self._Entity.Get(_types.VariableParameter(item1.value)))
 
 	def __getitem__(self, index: int):
 		return self.ZoneDesignResultColList[index]
@@ -1840,7 +1854,7 @@ class JointCol(EntityWithAssignablePropertiesCol[Joint]):
 		if isinstance(item1, int):
 			return Joint(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return Joint(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.JointColList[index]
@@ -1874,7 +1888,7 @@ class PanelSegmentCol(EntityWithAssignablePropertiesCol[PanelSegment]):
 		if isinstance(item1, int):
 			return PanelSegment(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return PanelSegment(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.PanelSegmentColList[index]
@@ -1908,7 +1922,13 @@ class ZoneCol(EntityWithAssignablePropertiesCol[Zone]):
 		if isinstance(item1, int):
 			return Zone(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		result = self._Entity.Get(item1)
+		thisClass = type(result).__name__
+		givenClass = Zone
+		for subclass in Zone.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	def __getitem__(self, index: int):
 		return self.ZoneColList[index]
@@ -2032,7 +2052,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, Joint):
 			return CollectionModificationStatus[self._Entity.AddJoint(item1._Entity).ToString()]
 
-		return self._Entity.AddJoint(item1)
+		return CollectionModificationStatus[self._Entity.AddJoint(item1).ToString()]
 
 	def RemoveJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -2041,10 +2061,10 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, Joint):
 			return CollectionModificationStatus[self._Entity.RemoveJoint(item1._Entity).ToString()]
 
-		return self._Entity.RemoveJoint(item1)
+		return CollectionModificationStatus[self._Entity.RemoveJoint(item1).ToString()]
 
 	def RemoveJoints(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			jointIdsList = MakeCSharpIntList(item1)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveJoints(jointIdsEnumerable).ToString()]
@@ -2052,7 +2072,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, JointCol):
 			return CollectionModificationStatus[self._Entity.RemoveJoints(item1._Entity).ToString()]
 
-		return self._Entity.RemoveJoints(item1)
+		return CollectionModificationStatus[self._Entity.RemoveJoints(item1).ToString()]
 
 	def AddZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -2061,15 +2081,15 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, Zone):
 			return CollectionModificationStatus[self._Entity.AddZone(item1._Entity).ToString()]
 
-		return self._Entity.AddZone(item1)
+		return CollectionModificationStatus[self._Entity.AddZone(item1).ToString()]
 
 	def AddZones(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			idsList = MakeCSharpIntList(item1)
 			idsEnumerable = IEnumerable(idsList)
 			return CollectionModificationStatus[self._Entity.AddZones(idsEnumerable).ToString()]
 
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], Zone):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], Zone):
 			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
@@ -2078,7 +2098,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 			zonesEnumerable = IEnumerable(zonesList)
 			return CollectionModificationStatus[self._Entity.AddZones(zonesEnumerable).ToString()]
 
-		return self._Entity.AddZones(item1)
+		return CollectionModificationStatus[self._Entity.AddZones(item1).ToString()]
 
 	def RemoveZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -2087,10 +2107,10 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, Zone):
 			return CollectionModificationStatus[self._Entity.RemoveZone(item1._Entity).ToString()]
 
-		return self._Entity.RemoveZone(item1)
+		return CollectionModificationStatus[self._Entity.RemoveZone(item1).ToString()]
 
 	def RemoveZones(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveZones(zoneIdsEnumerable).ToString()]
@@ -2098,7 +2118,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, ZoneCol):
 			return CollectionModificationStatus[self._Entity.RemoveZones(item1._Entity).ToString()]
 
-		return self._Entity.RemoveZones(item1)
+		return CollectionModificationStatus[self._Entity.RemoveZones(item1).ToString()]
 
 	def AddPanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -2107,7 +2127,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, PanelSegment):
 			return CollectionModificationStatus[self._Entity.AddPanelSegment(item1._Entity).ToString()]
 
-		return self._Entity.AddPanelSegment(item1)
+		return CollectionModificationStatus[self._Entity.AddPanelSegment(item1).ToString()]
 
 	def RemovePanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -2116,10 +2136,10 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, PanelSegment):
 			return CollectionModificationStatus[self._Entity.RemovePanelSegment(item1._Entity).ToString()]
 
-		return self._Entity.RemovePanelSegment(item1)
+		return CollectionModificationStatus[self._Entity.RemovePanelSegment(item1).ToString()]
 
 	def RemovePanelSegments(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			segmentIdsList = MakeCSharpIntList(item1)
 			segmentIdsEnumerable = IEnumerable(segmentIdsList)
 			return CollectionModificationStatus[self._Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
@@ -2127,7 +2147,7 @@ class ZoneJointContainer(IdNameEntityRenameable):
 		if isinstance(item1, PanelSegmentCol):
 			return CollectionModificationStatus[self._Entity.RemovePanelSegments(item1._Entity).ToString()]
 
-		return self._Entity.RemovePanelSegments(item1)
+		return CollectionModificationStatus[self._Entity.RemovePanelSegments(item1).ToString()]
 
 
 class AutomatedConstraint(IdNameEntityRenameable):
@@ -2552,7 +2572,7 @@ class AutomatedConstraintCol(IdNameEntityCol[AutomatedConstraint]):
 		if isinstance(item1, str):
 			return BucklingAutomatedConstraint(self._Entity.GetBuckling(item1))
 
-		return self._Entity.GetBuckling(item1)
+		return BucklingAutomatedConstraint(self._Entity.GetBuckling(item1))
 
 	def GetFrequency(self, item1 = None) -> FrequencyAutomatedConstraint:
 		if isinstance(item1, int):
@@ -2561,7 +2581,7 @@ class AutomatedConstraintCol(IdNameEntityCol[AutomatedConstraint]):
 		if isinstance(item1, str):
 			return FrequencyAutomatedConstraint(self._Entity.GetFrequency(item1))
 
-		return self._Entity.GetFrequency(item1)
+		return FrequencyAutomatedConstraint(self._Entity.GetFrequency(item1))
 
 	def GetRotation(self, item1 = None) -> RotationAutomatedConstraint:
 		if isinstance(item1, int):
@@ -2570,7 +2590,7 @@ class AutomatedConstraintCol(IdNameEntityCol[AutomatedConstraint]):
 		if isinstance(item1, str):
 			return RotationAutomatedConstraint(self._Entity.GetRotation(item1))
 
-		return self._Entity.GetRotation(item1)
+		return RotationAutomatedConstraint(self._Entity.GetRotation(item1))
 
 	def GetDisplacement(self, item1 = None) -> DisplacementAutomatedConstraint:
 		if isinstance(item1, int):
@@ -2579,7 +2599,7 @@ class AutomatedConstraintCol(IdNameEntityCol[AutomatedConstraint]):
 		if isinstance(item1, str):
 			return DisplacementAutomatedConstraint(self._Entity.GetDisplacement(item1))
 
-		return self._Entity.GetDisplacement(item1)
+		return DisplacementAutomatedConstraint(self._Entity.GetDisplacement(item1))
 
 	def Get(self, item1 = None) -> AutomatedConstraint:
 		if isinstance(item1, str):
@@ -2588,7 +2608,13 @@ class AutomatedConstraintCol(IdNameEntityCol[AutomatedConstraint]):
 		if isinstance(item1, int):
 			return AutomatedConstraint(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		result = self._Entity.Get(item1)
+		thisClass = type(result).__name__
+		givenClass = AutomatedConstraint
+		for subclass in AutomatedConstraint.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	def __getitem__(self, index: int):
 		return self.AutomatedConstraintColList[index]
@@ -2665,7 +2691,7 @@ class ManualConstraintCol(IdNameEntityCol[ManualConstraint]):
 		if isinstance(item1, str):
 			return FrequencyManualConstraint(self._Entity.GetFrequency(item1))
 
-		return self._Entity.GetFrequency(item1)
+		return FrequencyManualConstraint(self._Entity.GetFrequency(item1))
 
 	def GetBuckling(self, item1 = None) -> BucklingManualConstraint:
 		if isinstance(item1, int):
@@ -2674,7 +2700,7 @@ class ManualConstraintCol(IdNameEntityCol[ManualConstraint]):
 		if isinstance(item1, str):
 			return BucklingManualConstraint(self._Entity.GetBuckling(item1))
 
-		return self._Entity.GetBuckling(item1)
+		return BucklingManualConstraint(self._Entity.GetBuckling(item1))
 
 	def GetDisplacement(self, item1 = None) -> DisplacementManualConstraint:
 		if isinstance(item1, int):
@@ -2683,7 +2709,7 @@ class ManualConstraintCol(IdNameEntityCol[ManualConstraint]):
 		if isinstance(item1, str):
 			return DisplacementManualConstraint(self._Entity.GetDisplacement(item1))
 
-		return self._Entity.GetDisplacement(item1)
+		return DisplacementManualConstraint(self._Entity.GetDisplacement(item1))
 
 	def GetStaticMoment(self, item1 = None) -> StaticMomentManualConstraint:
 		if isinstance(item1, int):
@@ -2692,7 +2718,7 @@ class ManualConstraintCol(IdNameEntityCol[ManualConstraint]):
 		if isinstance(item1, str):
 			return StaticMomentManualConstraint(self._Entity.GetStaticMoment(item1))
 
-		return self._Entity.GetStaticMoment(item1)
+		return StaticMomentManualConstraint(self._Entity.GetStaticMoment(item1))
 
 	def DeleteConstraint(self, item1 = None) -> bool:
 		if isinstance(item1, str):
@@ -2710,7 +2736,7 @@ class ManualConstraintCol(IdNameEntityCol[ManualConstraint]):
 		if isinstance(item1, int):
 			return ManualConstraint(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return ManualConstraint(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.ManualConstraintColList[index]
@@ -2736,8 +2762,8 @@ class HyperFea:
 		result = self._Entity.AutomatedConstraints
 		return AutomatedConstraintCol(result) if result is not None else None
 
-	def RunIterations(self, numberOfIterations: int, startWithSizing: bool, deleteElementOptimizationPlies: bool) -> None:
-		return self._Entity.RunIterations(numberOfIterations, startWithSizing, deleteElementOptimizationPlies)
+	def RunIterations(self, numberOfIterations: int, startWithSizing: bool) -> None:
+		return self._Entity.RunIterations(numberOfIterations, startWithSizing)
 
 	def SetupSolver(self, solverPath: str, arguments: str) -> types.SimpleStatus:
 		return types.SimpleStatus(self._Entity.SetupSolver(solverPath, arguments))
@@ -4061,7 +4087,7 @@ class StiffenerLaminate(LaminateBase):
 		if isinstance(item1, types.StiffenerLaminateLayerLocation) and isinstance(item2, str) and isinstance(item3, float) and isinstance(item4, float):
 			return StiffenerLaminateLayer(self._Entity.AddLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4))
 
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, str) and isinstance(item3, float) and isinstance(item4, float):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, str) and isinstance(item3, float) and isinstance(item4, float):
 			locationsList = List[_types.StiffenerLaminateLayerLocation]()
 			if item1 is not None:
 				for thing in item1:
@@ -4070,13 +4096,13 @@ class StiffenerLaminate(LaminateBase):
 			locationsEnumerable = IEnumerable(locationsList)
 			return StiffenerLaminateLayer(self._Entity.AddLayer(locationsEnumerable, item2, item3, item4))
 
-		return self._Entity.AddLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4)
+		return StiffenerLaminateLayer(self._Entity.AddLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4))
 
 	def InsertLayer(self, item1 = None, item2 = None, item3 = None, item4 = None, item5 = None) -> StiffenerLaminateLayer:
 		if isinstance(item1, types.StiffenerLaminateLayerLocation) and isinstance(item2, int) and isinstance(item3, str) and isinstance(item4, float) and isinstance(item5, float):
 			return StiffenerLaminateLayer(self._Entity.InsertLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4, item5))
 
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, int) and isinstance(item3, str) and isinstance(item4, float) and isinstance(item5, float):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, int) and isinstance(item3, str) and isinstance(item4, float) and isinstance(item5, float):
 			locationsList = List[_types.StiffenerLaminateLayerLocation]()
 			if item1 is not None:
 				for thing in item1:
@@ -4085,7 +4111,7 @@ class StiffenerLaminate(LaminateBase):
 			locationsEnumerable = IEnumerable(locationsList)
 			return StiffenerLaminateLayer(self._Entity.InsertLayer(locationsEnumerable, item2, item3, item4, item5))
 
-		return self._Entity.InsertLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4, item5)
+		return StiffenerLaminateLayer(self._Entity.InsertLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4, item5))
 
 
 class OrthotropicCorrectionFactorBase(ABC):
@@ -5544,6 +5570,9 @@ class SectionCut(IdNameEntity):
 		elementsList = MakeCSharpIntList(elements)
 		return self._Entity.SetElements(elementsList)
 
+	def SetElementsByIntersection(self) -> None:
+		return self._Entity.SetElementsByIntersection()
+
 
 class Set(ZoneJointContainer):
 	def __init__(self, set: _api.Set):
@@ -5631,7 +5660,7 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, int):
 			return CollectionModificationStatus(super().AddJoint(item1))
 
-		return self._Entity.AddJoint(item1._Entity)
+		return CollectionModificationStatus[self._Entity.AddJoint(item1._Entity).ToString()]
 
 	def AddPanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, PanelSegment):
@@ -5640,10 +5669,10 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, int):
 			return CollectionModificationStatus(super().AddPanelSegment(item1))
 
-		return self._Entity.AddPanelSegment(item1._Entity)
+		return CollectionModificationStatus[self._Entity.AddPanelSegment(item1._Entity).ToString()]
 
 	def AddZones(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], Zone):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], Zone):
 			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
@@ -5652,13 +5681,13 @@ class Set(ZoneJointContainer):
 			zonesEnumerable = IEnumerable(zonesList)
 			return CollectionModificationStatus[self._Entity.AddZones(zonesEnumerable).ToString()]
 
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			return CollectionModificationStatus(super().AddZones(item1))
 
-		return self._Entity.AddZones(item1)
+		return CollectionModificationStatus[self._Entity.AddZones(item1).ToString()]
 
 	def RemoveJoints(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			jointIdsList = MakeCSharpIntList(item1)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveJoints(jointIdsEnumerable).ToString()]
@@ -5666,10 +5695,10 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, JointCol):
 			return CollectionModificationStatus(super().RemoveJoints(item1))
 
-		return self._Entity.RemoveJoints(item1)
+		return CollectionModificationStatus[self._Entity.RemoveJoints(item1).ToString()]
 
 	def RemovePanelSegments(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			segmentIdsList = MakeCSharpIntList(item1)
 			segmentIdsEnumerable = IEnumerable(segmentIdsList)
 			return CollectionModificationStatus[self._Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
@@ -5677,10 +5706,10 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, PanelSegmentCol):
 			return CollectionModificationStatus(super().RemovePanelSegments(item1))
 
-		return self._Entity.RemovePanelSegments(item1)
+		return CollectionModificationStatus[self._Entity.RemovePanelSegments(item1).ToString()]
 
 	def RemoveZones(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveZones(zoneIdsEnumerable).ToString()]
@@ -5688,7 +5717,7 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, ZoneCol):
 			return CollectionModificationStatus(super().RemoveZones(item1))
 
-		return self._Entity.RemoveZones(item1)
+		return CollectionModificationStatus[self._Entity.RemoveZones(item1).ToString()]
 
 	def RemoveJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -5697,7 +5726,7 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, Joint):
 			return CollectionModificationStatus(super().RemoveJoint(item1))
 
-		return self._Entity.RemoveJoint(item1)
+		return CollectionModificationStatus[self._Entity.RemoveJoint(item1).ToString()]
 
 	def AddZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -5706,7 +5735,7 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, Zone):
 			return CollectionModificationStatus(super().AddZone(item1))
 
-		return self._Entity.AddZone(item1)
+		return CollectionModificationStatus[self._Entity.AddZone(item1).ToString()]
 
 	def RemoveZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -5715,7 +5744,7 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, Zone):
 			return CollectionModificationStatus(super().RemoveZone(item1))
 
-		return self._Entity.RemoveZone(item1)
+		return CollectionModificationStatus[self._Entity.RemoveZone(item1).ToString()]
 
 	def RemovePanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -5724,7 +5753,7 @@ class Set(ZoneJointContainer):
 		if isinstance(item1, PanelSegment):
 			return CollectionModificationStatus(super().RemovePanelSegment(item1))
 
-		return self._Entity.RemovePanelSegment(item1)
+		return CollectionModificationStatus[self._Entity.RemovePanelSegment(item1).ToString()]
 
 
 class PlyCol(IdNameEntityCol[Ply]):
@@ -5764,7 +5793,7 @@ class PlyCol(IdNameEntityCol[Ply]):
 		if isinstance(item1, int):
 			return Ply(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return Ply(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.PlyColList[index]
@@ -5903,7 +5932,7 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, int):
 			return CollectionModificationStatus(super().AddJoint(item1))
 
-		return self._Entity.AddJoint(item1._Entity)
+		return CollectionModificationStatus[self._Entity.AddJoint(item1._Entity).ToString()]
 
 	def AddPanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, PanelSegment):
@@ -5912,10 +5941,10 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, int):
 			return CollectionModificationStatus(super().AddPanelSegment(item1))
 
-		return self._Entity.AddPanelSegment(item1._Entity)
+		return CollectionModificationStatus[self._Entity.AddPanelSegment(item1._Entity).ToString()]
 
 	def AddZones(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], Zone):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], Zone):
 			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
@@ -5924,13 +5953,13 @@ class Structure(ZoneJointContainer):
 			zonesEnumerable = IEnumerable(zonesList)
 			return CollectionModificationStatus[self._Entity.AddZones(zonesEnumerable).ToString()]
 
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			return CollectionModificationStatus(super().AddZones(item1))
 
-		return self._Entity.AddZones(item1)
+		return CollectionModificationStatus[self._Entity.AddZones(item1).ToString()]
 
 	def Remove(self, item1 = None, item2 = None, item3 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int) and isinstance(item2, tuple) and len(item2) > 0 and isinstance(item2[0], int) and isinstance(item3, tuple) and len(item3) > 0 and isinstance(item3[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int) and isinstance(item2, tuple) and item2 and isinstance(item2[0], int) and isinstance(item3, tuple) and item3 and isinstance(item3[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			jointIdsList = MakeCSharpIntList(item2)
@@ -5939,17 +5968,17 @@ class Structure(ZoneJointContainer):
 			panelSegmentIdsEnumerable = IEnumerable(panelSegmentIdsList)
 			return CollectionModificationStatus[self._Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable, panelSegmentIdsEnumerable).ToString()]
 
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int) and isinstance(item2, tuple) and len(item2) > 0 and isinstance(item2[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int) and isinstance(item2, tuple) and item2 and isinstance(item2[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			jointIdsList = MakeCSharpIntList(item2)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
 			return CollectionModificationStatus[self._Entity.Remove(zoneIdsEnumerable, jointIdsEnumerable).ToString()]
 
-		return self._Entity.Remove(item1, item2, item3)
+		return CollectionModificationStatus[self._Entity.Remove(item1, item2, item3).ToString()]
 
 	def RemoveJoints(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			jointIdsList = MakeCSharpIntList(item1)
 			jointIdsEnumerable = IEnumerable(jointIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveJoints(jointIdsEnumerable).ToString()]
@@ -5957,10 +5986,10 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, JointCol):
 			return CollectionModificationStatus(super().RemoveJoints(item1))
 
-		return self._Entity.RemoveJoints(item1)
+		return CollectionModificationStatus[self._Entity.RemoveJoints(item1).ToString()]
 
 	def RemovePanelSegments(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			segmentIdsList = MakeCSharpIntList(item1)
 			segmentIdsEnumerable = IEnumerable(segmentIdsList)
 			return CollectionModificationStatus[self._Entity.RemovePanelSegments(segmentIdsEnumerable).ToString()]
@@ -5968,10 +5997,10 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, PanelSegmentCol):
 			return CollectionModificationStatus(super().RemovePanelSegments(item1))
 
-		return self._Entity.RemovePanelSegments(item1)
+		return CollectionModificationStatus[self._Entity.RemovePanelSegments(item1).ToString()]
 
 	def RemoveZones(self, item1 = None) -> CollectionModificationStatus:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			zoneIdsEnumerable = IEnumerable(zoneIdsList)
 			return CollectionModificationStatus[self._Entity.RemoveZones(zoneIdsEnumerable).ToString()]
@@ -5979,7 +6008,7 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, ZoneCol):
 			return CollectionModificationStatus(super().RemoveZones(item1))
 
-		return self._Entity.RemoveZones(item1)
+		return CollectionModificationStatus[self._Entity.RemoveZones(item1).ToString()]
 
 	def RemoveJoint(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -5988,7 +6017,7 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, Joint):
 			return CollectionModificationStatus(super().RemoveJoint(item1))
 
-		return self._Entity.RemoveJoint(item1)
+		return CollectionModificationStatus[self._Entity.RemoveJoint(item1).ToString()]
 
 	def AddZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -5997,7 +6026,7 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, Zone):
 			return CollectionModificationStatus(super().AddZone(item1))
 
-		return self._Entity.AddZone(item1)
+		return CollectionModificationStatus[self._Entity.AddZone(item1).ToString()]
 
 	def RemoveZone(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -6006,7 +6035,7 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, Zone):
 			return CollectionModificationStatus(super().RemoveZone(item1))
 
-		return self._Entity.RemoveZone(item1)
+		return CollectionModificationStatus[self._Entity.RemoveZone(item1).ToString()]
 
 	def RemovePanelSegment(self, item1 = None) -> CollectionModificationStatus:
 		if isinstance(item1, int):
@@ -6015,7 +6044,7 @@ class Structure(ZoneJointContainer):
 		if isinstance(item1, PanelSegment):
 			return CollectionModificationStatus(super().RemovePanelSegment(item1))
 
-		return self._Entity.RemovePanelSegment(item1)
+		return CollectionModificationStatus[self._Entity.RemovePanelSegment(item1).ToString()]
 
 
 class AnalysisPropertyCol(IdNameEntityCol[AnalysisProperty]):
@@ -6058,7 +6087,7 @@ class AnalysisPropertyCol(IdNameEntityCol[AnalysisProperty]):
 		if isinstance(item1, int):
 			return AnalysisProperty(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return AnalysisProperty(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.AnalysisPropertyColList[index]
@@ -6101,7 +6130,13 @@ class DesignPropertyCol(IdNameEntityCol[DesignProperty]):
 		if isinstance(item1, int):
 			return DesignProperty(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		result = self._Entity.Get(item1)
+		thisClass = type(result).__name__
+		givenClass = DesignProperty
+		for subclass in DesignProperty.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	def __getitem__(self, index: int):
 		return self.DesignPropertyColList[index]
@@ -6159,7 +6194,13 @@ class LoadPropertyCol(IdNameEntityCol[LoadProperty]):
 		if isinstance(item1, int):
 			return LoadProperty(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		result = self._Entity.Get(item1)
+		thisClass = type(result).__name__
+		givenClass = LoadProperty
+		for subclass in LoadProperty.__subclasses__():
+			if subclass.__name__ == thisClass:
+				givenClass = subclass
+		return givenClass(result)
 
 	def __getitem__(self, index: int):
 		return self.LoadPropertyColList[index]
@@ -6193,7 +6234,7 @@ class DesignLoadCol(IdNameEntityCol[DesignLoad]):
 		if isinstance(item1, int):
 			return DesignLoad(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return DesignLoad(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.DesignLoadColList[index]
@@ -6241,7 +6282,7 @@ class DiscreteFieldCol(IdNameEntityCol[DiscreteField]):
 		if isinstance(item1, int):
 			return DiscreteField(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return DiscreteField(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.DiscreteFieldColList[index]
@@ -6371,7 +6412,7 @@ class SectionCutCol(IdNameEntityCol[SectionCut]):
 		if isinstance(item1, int):
 			return SectionCut(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return SectionCut(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.SectionCutColList[index]
@@ -6408,7 +6449,7 @@ class SetCol(ZoneJointContainerCol[Set]):
 		if isinstance(item1, int):
 			return Set(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return Set(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.SetColList[index]
@@ -6466,7 +6507,7 @@ class StructureCol(ZoneJointContainerCol[Structure]):
 		if isinstance(item1, int):
 			return Structure(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return Structure(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.StructureColList[index]
@@ -6702,14 +6743,21 @@ class Project:
 	def SetFemUnits(self, femForceId: DbForceUnit, femLengthId: DbLengthUnit, femMassId: DbMassUnit, femTemperatureId: DbTemperatureUnit) -> SetUnitsStatus:
 		return SetUnitsStatus[self._Entity.SetFemUnits(_api.DbForceUnit(femForceId.value), _api.DbLengthUnit(femLengthId.value), _api.DbMassUnit(femMassId.value), _api.DbTemperatureUnit(femTemperatureId.value)).ToString()]
 
-	def SizeJoints(self, joints: list[Joint] = None) -> tuple[bool, str, set[int]]:
+	def SizeJoints(self, joints: list[Joint] = None) -> types.SimpleStatus:
 		jointsList = List[_api.Joint]()
 		if joints is not None:
 			for thing in joints:
 				if thing is not None:
 					jointsList.Add(thing._Entity)
-		result = self._Entity.SizeJoints(joints if joints is None else jointsList)
-		return tuple([result.Item1, result.Item2, result.Item3])
+		return types.SimpleStatus(self._Entity.SizeJoints(joints if joints is None else jointsList))
+
+	def GetJointsWithoutResults(self, joints: list[Joint]) -> set[int]:
+		jointsList = List[_api.Joint]()
+		if joints is not None:
+			for thing in joints:
+				if thing is not None:
+					jointsList.Add(thing._Entity)
+		return set[int](self._Entity.GetJointsWithoutResults(jointsList))
 
 	@overload
 	def AnalyzeZones(self, zones: list[Zone] = None) -> types.SimpleStatus: ...
@@ -6764,7 +6812,7 @@ class Project:
 		return self._Entity.RegeneratePfem()
 
 	def AnalyzeZones(self, item1 = None) -> types.SimpleStatus:
-		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], Zone):
+		if isinstance(item1, list) and item1 and isinstance(item1[0], Zone):
 			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
@@ -6772,14 +6820,14 @@ class Project:
 						zonesList.Add(thing._Entity)
 			return types.SimpleStatus(self._Entity.AnalyzeZones(item1 if item1 is None else zonesList))
 
-		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, list) and item1 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			return types.SimpleStatus(self._Entity.AnalyzeZones(zoneIdsList))
 
-		return self._Entity.AnalyzeZones(item1)
+		return types.SimpleStatus(self._Entity.AnalyzeZones(item1))
 
 	def SizeZones(self, item1 = None) -> types.SimpleStatus:
-		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], Zone):
+		if isinstance(item1, list) and item1 and isinstance(item1[0], Zone):
 			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
@@ -6787,14 +6835,14 @@ class Project:
 						zonesList.Add(thing._Entity)
 			return types.SimpleStatus(self._Entity.SizeZones(item1 if item1 is None else zonesList))
 
-		if isinstance(item1, list) and len(item1) > 0 and isinstance(item1[0], int):
+		if isinstance(item1, list) and item1 and isinstance(item1[0], int):
 			zoneIdsList = MakeCSharpIntList(item1)
 			return types.SimpleStatus(self._Entity.SizeZones(zoneIdsList))
 
-		return self._Entity.SizeZones(item1)
+		return types.SimpleStatus(self._Entity.SizeZones(item1))
 
 	def ExportCad(self, item1 = None, item2 = None) -> None:
-		if isinstance(item1, tuple) and len(item1) > 0 and isinstance(item1[0], int) and isinstance(item2, str):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], int) and isinstance(item2, str):
 			cadIdsList = MakeCSharpIntList(item1)
 			cadIdsEnumerable = IEnumerable(cadIdsList)
 			return self._Entity.ExportCad(cadIdsEnumerable, item2)
@@ -6832,7 +6880,7 @@ class FailureModeCategoryCol(IdNameEntityCol[FailureModeCategory]):
 		if isinstance(item1, int):
 			return FailureModeCategory(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return FailureModeCategory(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.FailureModeCategoryColList[index]
@@ -6974,7 +7022,7 @@ class LaminateFamilyCol(IdNameEntityCol[LaminateFamily]):
 		if isinstance(item1, int):
 			return LaminateFamily(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return LaminateFamily(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.LaminateFamilyColList[index]
@@ -7132,7 +7180,7 @@ class PluginPackageCol(IdNameEntityCol[PluginPackage]):
 		if isinstance(item1, int):
 			return PluginPackage(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return PluginPackage(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.PluginPackageColList[index]
@@ -7166,7 +7214,7 @@ class ProjectInfoCol(IdNameEntityCol[ProjectInfo]):
 		if isinstance(item1, int):
 			return ProjectInfo(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return ProjectInfo(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.ProjectInfoColList[index]
@@ -7189,6 +7237,14 @@ class Application:
 	'''
 	def __init__(self, application: _api.Application):
 		self._Entity = application
+
+	@property
+	def UnitSystem(self) -> UnitSystem:
+		'''
+		Unit system specified when starting a scripting Application.
+		'''
+		result = self._Entity.UnitSystem
+		return UnitSystem(result) if result is not None else None
 
 	@property
 	def CompilationDate(self) -> str:
@@ -7407,7 +7463,7 @@ class SizingMaterialCol(IdEntityCol[SizingMaterial]):
 		if isinstance(item1, int):
 			return SizingMaterial(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return SizingMaterial(self._Entity.Get(item1))
 
 	def Contains(self, item1 = None) -> bool:
 		if isinstance(item1, str):
@@ -7724,7 +7780,7 @@ class DesignVariable(IdEntity):
 		return self._Entity.RemoveAnalysisMaterial()
 
 	def AddMaterials(self, item1 = None) -> None:
-		if isinstance(item1, set):
+		if isinstance(item1, set) and item1 and isinstance(list(item1)[0], int):
 			materialIdsSet = HashSet[int]()
 			if item1 is not None:
 				for thing in item1:
@@ -7732,7 +7788,7 @@ class DesignVariable(IdEntity):
 						materialIdsSet.Add(thing)
 			return self._Entity.AddMaterials(materialIdsSet)
 
-		if isinstance(item1, set):
+		if isinstance(item1, set) and item1 and isinstance(list(item1)[0], str):
 			materialNamesSet = HashSet[str]()
 			if item1 is not None:
 				for thing in item1:
@@ -7765,7 +7821,7 @@ class ToolingConstraintCol(IdNameEntityCol[ToolingConstraint]):
 		if isinstance(item1, int):
 			return ToolingConstraint(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return ToolingConstraint(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.ToolingConstraintColList[index]
@@ -7799,7 +7855,7 @@ class DesignVariableCol(IdEntityCol[DesignVariable]):
 		if isinstance(item1, int):
 			return DesignVariable(super().Get(item1))
 
-		return self._Entity.Get(_types.VariableParameter(item1.value))
+		return DesignVariable(self._Entity.Get(_types.VariableParameter(item1.value)))
 
 	def __getitem__(self, index: int):
 		return self.DesignVariableColList[index]
@@ -8633,7 +8689,7 @@ class LoadPropertyUserFeaBeamRowCol(LoadPropertyUserFeaRowCol[LoadPropertyUserFe
 		if isinstance(item1, int):
 			return LoadPropertyUserFeaBeamRow(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return LoadPropertyUserFeaBeamRow(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.LoadPropertyUserFeaBeamRowColList[index]
@@ -8692,7 +8748,7 @@ class LoadPropertyUserFeaJointRowCol(LoadPropertyUserFeaRowCol[LoadPropertyUserF
 		if isinstance(item1, int):
 			return LoadPropertyUserFeaJointRow(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return LoadPropertyUserFeaJointRow(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.LoadPropertyUserFeaJointRowColList[index]
@@ -8751,7 +8807,7 @@ class LoadPropertyUserFeaPanelRowCol(LoadPropertyUserFeaRowCol[LoadPropertyUserF
 		if isinstance(item1, int):
 			return LoadPropertyUserFeaPanelRow(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return LoadPropertyUserFeaPanelRow(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.LoadPropertyUserFeaPanelRowColList[index]
@@ -8981,7 +9037,7 @@ class LoadPropertyUserGeneralBeamRowCol(LoadPropertyUserGeneralRowCol[LoadProper
 		if isinstance(item1, int):
 			return LoadPropertyUserGeneralBeamDoubleRow(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return LoadPropertyUserGeneralBeamDoubleRow(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.LoadPropertyUserGeneralBeamRowColList[index]
@@ -9435,7 +9491,7 @@ class LoadPropertyUserGeneralPanelRowCol(LoadPropertyUserGeneralRowCol[LoadPrope
 		if isinstance(item1, int):
 			return LoadPropertyUserGeneralPanelDoubleRow(super().Get(item1))
 
-		return self._Entity.Get(item1)
+		return LoadPropertyUserGeneralPanelDoubleRow(self._Entity.Get(item1))
 
 	def __getitem__(self, index: int):
 		return self.LoadPropertyUserGeneralPanelRowColList[index]
@@ -9840,6 +9896,10 @@ class Panel(Zone):
 	def Ky(self) -> float:
 		return self._Entity.Ky
 
+	@property
+	def HoneycombCoreAngle(self) -> float:
+		return self._Entity.HoneycombCoreAngle
+
 	@ReferencePlane.setter
 	def ReferencePlane(self, value: types.ReferencePlanePanel) -> None:
 		self._Entity.ReferencePlane = _types.ReferencePlanePanel(value.value)
@@ -9907,6 +9967,10 @@ class Panel(Zone):
 	@Ky.setter
 	def Ky(self, value: float) -> None:
 		self._Entity.Ky = value
+
+	@HoneycombCoreAngle.setter
+	def HoneycombCoreAngle(self, value: float) -> None:
+		self._Entity.HoneycombCoreAngle = value
 
 
 class PanelBulkUpdater(ZoneBulkUpdaterBase):
