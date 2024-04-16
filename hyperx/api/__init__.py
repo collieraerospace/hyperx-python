@@ -405,6 +405,9 @@ class FailureSetting(IdNameEntity):
 		return self._Entity.SetBoolValue(value)
 
 	def SetSelectionValue(self, index: int) -> None:
+		'''
+		Set enum value by index.
+		'''
 		return self._Entity.SetSelectionValue(index)
 
 
@@ -777,6 +780,9 @@ class DesignProperty(AssignablePropertyWithFamilyCategory):
 		self._Entity = designProperty
 
 	def Copy(self, newName: str = None) -> DesignProperty:
+		'''
+		Creates a copy of this DesignProperty.
+		'''
 		result = self._Entity.Copy(newName)
 		thisClass = type(result).__name__
 		givenClass = DesignProperty
@@ -1109,9 +1115,15 @@ class DiscreteField(IdNameEntityRenameable):
 		return [int32 for int32 in self._Entity.RowIds]
 
 	def AddColumn(self, name: str) -> int:
+		'''
+		Create a new column with the given name. Returns the Id of the newly created column
+		'''
 		return self._Entity.AddColumn(name)
 
 	def AddPointRow(self, pointId: Vector3d) -> None:
+		'''
+		Create an empty row in a point-based table.
+		'''
 		return self._Entity.AddPointRow(pointId._Entity)
 
 	@overload
@@ -1148,12 +1160,21 @@ class DiscreteField(IdNameEntityRenameable):
 		return self._Entity.DeleteAllRows()
 
 	def DeleteColumn(self, columnId: int) -> None:
+		'''
+		Delete a specified column for this discrete field. Columns are 1-indexed.
+		'''
 		return self._Entity.DeleteColumn(columnId)
 
 	def DeletePointRow(self, pointId: Vector3d) -> None:
+		'''
+		Delete a specific row for a point-based table.
+		'''
 		return self._Entity.DeletePointRow(pointId._Entity)
 
 	def DeleteRow(self, entityId: int) -> None:
+		'''
+		Delete a specific row for a non-point-based table.
+		'''
 		return self._Entity.DeleteRow(entityId)
 
 	def DeleteRowsAndColumns(self) -> None:
@@ -1299,6 +1320,9 @@ class EntityWithAssignableProperties(IdNameEntityRenameable):
 		return PropertyAssignmentStatus[self._Entity.AssignLoadProperty(id).ToString()]
 
 	def AssignProperty(self, property: AssignableProperty) -> PropertyAssignmentStatus:
+		'''
+		Assign a Property to this entity.
+		'''
 		return PropertyAssignmentStatus[self._Entity.AssignProperty(property._Entity).ToString()]
 
 
@@ -1689,9 +1713,15 @@ class ZoneBase(ZoneJointEntity):
 		return self._Entity.GetConceptName()
 
 	def GetZoneDesignResults(self, solutionId: int = 1) -> ZoneDesignResultCol:
+		'''
+		Returns a collection of Zone Design Results for a Solution Id (default 1)
+		'''
 		return ZoneDesignResultCol(self._Entity.GetZoneDesignResults(solutionId))
 
 	def RenumberZone(self, newId: int) -> ZoneIdUpdateStatus:
+		'''
+		Attempt to update a zone's ID.
+		'''
 		return ZoneIdUpdateStatus[self._Entity.RenumberZone(newId).ToString()]
 
 	def GetAllResults(self) -> AnalysisResultCol:
@@ -2660,12 +2690,21 @@ class ManualConstraintCol(IdNameEntityCol[ManualConstraint]):
 	def GetStaticMoment(self, name: str) -> StaticMomentManualConstraint: ...
 
 	def AddFrequencyConstraint(self, setName: str, limit: float, name: str = None) -> FrequencyManualConstraint:
+		'''
+		Add a Manual Constraint of type Frequency.
+		'''
 		return FrequencyManualConstraint(self._Entity.AddFrequencyConstraint(setName, limit, name))
 
 	def AddBucklingConstraint(self, setName: str, limit: float, name: str = None) -> BucklingManualConstraint:
+		'''
+		Add a Manual Constraint of type Buckling.
+		'''
 		return BucklingManualConstraint(self._Entity.AddBucklingConstraint(setName, limit, name))
 
 	def AddStaticMomentManualConstraint(self, setName: str, limit: float, name: str = None) -> StaticMomentManualConstraint:
+		'''
+		Add a Manual Constraint of type Static Moment.
+		'''
 		return StaticMomentManualConstraint(self._Entity.AddStaticMomentManualConstraint(setName, limit, name))
 
 	def AddDisplacementConstraint(self, setName: str, gridIds: list[int], limit: float, name: str = None) -> DisplacementManualConstraint:
@@ -2763,9 +2802,15 @@ class HyperFea:
 		return AutomatedConstraintCol(result) if result is not None else None
 
 	def RunIterations(self, numberOfIterations: int, startWithSizing: bool) -> None:
+		'''
+		Run HyperFEA.
+		'''
 		return self._Entity.RunIterations(numberOfIterations, startWithSizing)
 
 	def SetupSolver(self, solverPath: str, arguments: str) -> types.SimpleStatus:
+		'''
+		Setup FEA solver.
+		'''
 		return types.SimpleStatus(self._Entity.SetupSolver(solverPath, arguments))
 
 	def TestSolver(self) -> types.SimpleStatus:
@@ -3008,9 +3053,16 @@ class Foam:
 		return FoamTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, ftu, fcu, fsu, ef, ffu, k, c))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
+		'''
+		Deletes a temperature-dependent property for a material.
+		'''
 		return self._Entity.DeleteTemperatureProperty(temperature)
 
 	def GetTemperature(self, lookupTemperature: float) -> FoamTemperature:
+		'''
+		Retrieve a Temperature from this material's temperature-dependent properties. Allows a degree of tolerance to avoid issues with floating point numbers.
+		:param LookupTemperature: Temperature to search for.
+		'''
 		return FoamTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def Save(self) -> None:
@@ -3287,9 +3339,16 @@ class Honeycomb:
 		return HoneycombTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, gw, gl, ftu, fcus, fcub, fcuc, fsuw, fsul, sScfl, sScfh, k1, k2, k3, c))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
+		'''
+		Deletes a temperature-dependent property for a material.
+		'''
 		return self._Entity.DeleteTemperatureProperty(temperature)
 
 	def GetTemperature(self, lookupTemperature: float) -> HoneycombTemperature:
+		'''
+		Retrieve a Temperature from this material's temperature-dependent properties. Allows a degree of tolerance to avoid issues with floating point numbers.
+		:param LookupTemperature: Temperature to search for.
+		'''
 		return HoneycombTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def Save(self) -> None:
@@ -3702,9 +3761,16 @@ class Isotropic:
 		return IsotropicTemperature(self._Entity.AddTemperatureProperty(temperature, et, ec, g, ftuL, ftyL, fcyL, ftuLT, ftyLT, fcyLT, fsu, alpha, n, f02, k, c, fbru15, fbry15, fbru20, fbry20, etyL, ecyL, etyLT, ecyLT, esu, fpadh, fsadh, esadh, cd, ffwt, ffxz, ffyz, ftFatigue, fcFatigue))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
+		'''
+		Deletes a temperature-dependent property for a material.
+		'''
 		return self._Entity.DeleteTemperatureProperty(temperature)
 
 	def GetTemperature(self, lookupTemperature: float) -> IsotropicTemperature:
+		'''
+		Retrieve a Temperature from this material's temperature-dependent properties. Allows a degree of tolerance to avoid issues with floating point numbers.
+		:param LookupTemperature: Temperature to search for.
+		'''
 		return IsotropicTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def Save(self) -> None:
@@ -3892,6 +3958,9 @@ class LaminateLayerBase(ABC):
 		self._Entity.Angle = value
 
 	def SetThickness(self, thickness: float) -> None:
+		'''
+		Set the thickness of a layer.
+		'''
 		return self._Entity.SetThickness(thickness)
 
 	@overload
@@ -3978,6 +4047,9 @@ class Laminate(LaminateBase):
 		return LaminateLayer(self._Entity.InsertLayer(layerId, materialName, angle, thickness))
 
 	def RemoveLayer(self, layerId: int) -> bool:
+		'''
+		Removes a layer from the laminate.
+		'''
 		return self._Entity.RemoveLayer(layerId)
 
 	def Save(self) -> None:
@@ -4026,9 +4098,15 @@ class StiffenerLaminateLayer(LaminateLayerBase):
 		self._Entity.Angle = value
 
 	def AddLayerLocation(self, location: types.StiffenerLaminateLayerLocation) -> None:
+		'''
+		Add a layer location to this layer.
+		'''
 		return self._Entity.AddLayerLocation(_types.StiffenerLaminateLayerLocation(location.value))
 
 	def RemoveLayerLocation(self, location: types.StiffenerLaminateLayerLocation) -> bool:
+		'''
+		Remove a layer location from LayerLocations.
+		'''
 		return self._Entity.RemoveLayerLocation(_types.StiffenerLaminateLayerLocation(location.value))
 
 	@overload
@@ -4075,6 +4153,10 @@ class StiffenerLaminate(LaminateBase):
 	def InsertLayer(self, locations: tuple[types.StiffenerLaminateLayerLocation], layerId: int, materialName: str, angle: float, thickness: float = None) -> StiffenerLaminateLayer: ...
 
 	def RemoveLayer(self, layerId: int) -> bool:
+		'''
+		Remove a layer by layerId.
+            Note, layerId is 1 indexed.
+		'''
 		return self._Entity.RemoveLayer(layerId)
 
 	def Save(self) -> None:
@@ -4243,6 +4325,11 @@ class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
 		return orthotropicCorrectionValuesDict
 
 	def AddCorrectionFactorValue(self, equationParameterName: types.EquationParameterId, valueToAdd: float) -> OrthotropicCorrectionFactorValue:
+		'''
+		Add a correction factor value for a given correction factor.
+		:param equationParameterName: This represents the parameter of the equation that should be changed.
+		:param valueToAdd: This is the value that will be assigned to the chosen parameter.
+		'''
 		return OrthotropicCorrectionFactorValue(self._Entity.AddCorrectionFactorValue(_types.EquationParameterId(equationParameterName.value), valueToAdd))
 
 
@@ -4322,6 +4409,9 @@ class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
 	def SetIndependentValue(self, correctionPointId: int, cid: types.CorrectionIndependentDefinition, value: int) -> None: ...
 
 	def SetKValue(self, correctionPointId: int, value: float) -> None:
+		'''
+		Set the dependent value for a specified row.
+		'''
 		return self._Entity.SetKValue(correctionPointId, value)
 
 	def SetIndependentValue(self, item1 = None, item2 = None, item3 = None) -> None:
@@ -4783,12 +4873,24 @@ class OrthotropicTemperature:
 		self._Entity.TTc = value
 
 	def AddCurvePoint(self, property: types.AllowablePropertyName, x: float, y: float) -> OrthotropicAllowableCurvePoint:
+		'''
+		Add a curve point to a laminate allowable curve.
+		:param x: x represents an x-value (for a non-polynomial method) or an allowable polynomial coefficient (represented by an enum).
+		'''
 		return OrthotropicAllowableCurvePoint(self._Entity.AddCurvePoint(_types.AllowablePropertyName(property.value), x, y))
 
 	def DeleteCurvePoint(self, property: types.AllowablePropertyName, x: float) -> bool:
+		'''
+		Deletes a temperature-dependent property for a material.
+		:param x: x represents an x-value (for a non-polynomial method) or an allowable polynomial coefficient (represented by an enum).
+		'''
 		return self._Entity.DeleteCurvePoint(_types.AllowablePropertyName(property.value), x)
 
 	def GetCurvePoint(self, property: types.AllowablePropertyName, x: float) -> OrthotropicAllowableCurvePoint:
+		'''
+		Retrieve an allowable curve point from this temperature's allowable curve points.
+		:param x: x represents an x-value (for a non-polynomial method) or an allowable polynomial coefficient (represented by an enum).
+		'''
 		return OrthotropicAllowableCurvePoint(self._Entity.GetCurvePoint(_types.AllowablePropertyName(property.value), x))
 
 
@@ -4989,12 +5091,22 @@ class Orthotropic:
 		self._Entity.BucklingStiffnessKnockdown = value
 
 	def AddTemperatureProperty(self, temperature: float, et1: float, et2: float, vt12: float, ec1: float, ec2: float, vc12: float, g12: float, ftu1: float, ftu2: float, fcu1: float, fcu2: float, fsu12: float, alpha1: float, alpha2: float, etu1: float, etu2: float, ecu1: float, ecu2: float, esu12: float) -> OrthotropicTemperature:
+		'''
+		Adds a temperature-dependent property for a material.
+		'''
 		return OrthotropicTemperature(self._Entity.AddTemperatureProperty(temperature, et1, et2, vt12, ec1, ec2, vc12, g12, ftu1, ftu2, fcu1, fcu2, fsu12, alpha1, alpha2, etu1, etu2, ecu1, ecu2, esu12))
 
 	def DeleteTemperatureProperty(self, temperature: float) -> bool:
+		'''
+		Deletes a temperature-dependent property for a material.
+		'''
 		return self._Entity.DeleteTemperatureProperty(temperature)
 
 	def GetTemperature(self, lookupTemperature: float) -> OrthotropicTemperature:
+		'''
+		Retrieve a Temperature from this material's temperature-dependent properties. Allows a degree of tolerance to avoid issues with floating point numbers.
+		:param LookupTemperature: Temperature to search for.
+		'''
 		return OrthotropicTemperature(self._Entity.GetTemperature(lookupTemperature))
 
 	def IsEffectiveLaminate(self) -> bool:
@@ -5004,21 +5116,50 @@ class Orthotropic:
 		return self._Entity.IsEffectiveLaminate()
 
 	def HasLaminateAllowable(self, property: types.AllowablePropertyName) -> bool:
+		'''
+		Returns true if this material has a specified laminate allowable property.
+		'''
 		return self._Entity.HasLaminateAllowable(_types.AllowablePropertyName(property.value))
 
 	def AddLaminateAllowable(self, property: types.AllowablePropertyName, method: types.AllowableMethodName) -> OrthotropicLaminateAllowable:
+		'''
+		Adds a laminate allowable to this material.
+            An orthotropic material can only have one laminate allowable of each property (as specified by the property argument).
+		:param property: The strain or stress property for a laminate allowable.
+		:param method: The method for a laminate allowable (AML, Percent 0/45, Polynomial).
+		'''
 		return OrthotropicLaminateAllowable(self._Entity.AddLaminateAllowable(_types.AllowablePropertyName(property.value), _types.AllowableMethodName(method.value)))
 
 	def GetLaminateAllowable(self, lookupAllowableProperty: types.AllowablePropertyName) -> OrthotropicLaminateAllowable:
+		'''
+		Retrieve a Laminate allowable from this material's laminate allowables.
+		:param LookupAllowableProperty: Laminate allowable property to search for.
+		'''
 		return OrthotropicLaminateAllowable(self._Entity.GetLaminateAllowable(_types.AllowablePropertyName(lookupAllowableProperty.value)))
 
 	def AddEquationCorrectionFactor(self, propertyId: types.CorrectionProperty, correctionId: types.CorrectionId, equationId: types.CorrectionEquation) -> OrthotropicEquationCorrectionFactor:
+		'''
+		Adds an equation-based correction factor for this material.
+		:param propertyId: The ID of the property to be affected by the correction factor. Specified with a CorrectionPropertyName enum.
+		:param correctionId: The ID for the type of correction factor to be applied. Specified with a CorrectionIDName enum.
+		:param equationId: The ID for the type of correction factor equation to use. Specified with a CorrectionEquationName enum.
+		'''
 		return OrthotropicEquationCorrectionFactor(self._Entity.AddEquationCorrectionFactor(_types.CorrectionProperty(propertyId.value), _types.CorrectionId(correctionId.value), _types.CorrectionEquation(equationId.value)))
 
 	def GetEquationCorrectionFactor(self, property: types.CorrectionProperty, correction: types.CorrectionId) -> OrthotropicEquationCorrectionFactor:
+		'''
+		Retrieve a Correction Factor from this material's correction factors.
+		:param property: CorrectionPropertyName to search for.
+		:param correction: CorrectionIDName to search for.
+		'''
 		return OrthotropicEquationCorrectionFactor(self._Entity.GetEquationCorrectionFactor(_types.CorrectionProperty(property.value), _types.CorrectionId(correction.value)))
 
 	def GetTabularCorrectionFactor(self, property: types.CorrectionProperty, correction: types.CorrectionId) -> OrthotropicTabularCorrectionFactor:
+		'''
+		Retrieve a Correction Factor from this material's correction factors.
+		:param property: CorrectionPropertyName to search for.
+		:param correction: CorrectionIDName to search for.
+		'''
 		return OrthotropicTabularCorrectionFactor(self._Entity.GetTabularCorrectionFactor(_types.CorrectionProperty(property.value), _types.CorrectionId(correction.value)))
 
 	def Save(self) -> None:
@@ -5239,9 +5380,17 @@ class Rundeck(IdEntity):
 		return self._Entity.ResultFilePath
 
 	def SetInputFilePath(self, filepath: str) -> RundeckUpdateStatus:
+		'''
+		The rundeck's input file path will point to the provided file path
+		:param filepath: The path to the rundeck
+		'''
 		return RundeckUpdateStatus[self._Entity.SetInputFilePath(filepath).ToString()]
 
 	def SetResultFilePath(self, filepath: str) -> RundeckUpdateStatus:
+		'''
+		The rundeck's result file path will point to the provided file path
+		:param filepath: The path to the result file
+		'''
 		return RundeckUpdateStatus[self._Entity.SetResultFilePath(filepath).ToString()]
 
 
@@ -5775,6 +5924,9 @@ class PlyCol(IdNameEntityCol[Ply]):
 		return self._Entity.DeleteAll()
 
 	def ExportToCSV(self, filepath: str) -> None:
+		'''
+		This feature is in development and may not work as expected. Use at your own risk!
+		'''
 		return self._Entity.ExportToCSV(filepath)
 
 	def ImportCSV(self, filepath: str) -> None:
@@ -5830,6 +5982,9 @@ class Structure(ZoneJointContainer):
 		return ZoneCol(result) if result is not None else None
 
 	def ExportVCP(self, fileName: str) -> None:
+		'''
+		Export VCP with this structure's element centroids.
+		'''
 		return self._Entity.ExportVCP(fileName)
 
 	def AddElements(self, elementIds: tuple[int]) -> CollectionModificationStatus:
@@ -6057,6 +6212,9 @@ class AnalysisPropertyCol(IdNameEntityCol[AnalysisProperty]):
 		return tuple([AnalysisProperty(analysisPropertyCol) for analysisPropertyCol in self._Entity])
 
 	def CreateAnalysisProperty(self, type: types.FamilyCategory, name: str = None) -> AnalysisProperty:
+		'''
+		Create an AnalysisProperty.
+		'''
 		return AnalysisProperty(self._Entity.CreateAnalysisProperty(_types.FamilyCategory(type.value), name))
 
 	@overload
@@ -6109,6 +6267,9 @@ class DesignPropertyCol(IdNameEntityCol[DesignProperty]):
 		return tuple([DesignProperty(designPropertyCol) for designPropertyCol in self._Entity])
 
 	def CreateDesignProperty(self, familyConcept: types.FamilyConceptUID, materialMode: types.MaterialMode = types.MaterialMode.Any, name: str = None) -> DesignProperty:
+		'''
+		Create a DesignProperty.
+		'''
 		result = self._Entity.CreateDesignProperty(_types.FamilyConceptUID(familyConcept.value), _types.MaterialMode(materialMode.value), name)
 		thisClass = type(result).__name__
 		givenClass = DesignProperty
@@ -6158,6 +6319,9 @@ class LoadPropertyCol(IdNameEntityCol[LoadProperty]):
 		return tuple([LoadProperty(loadPropertyCol) for loadPropertyCol in self._Entity])
 
 	def CreateLoadProperty(self, loadPropertyType: types.LoadPropertyType, category: types.FamilyCategory, name: str = None) -> LoadProperty:
+		'''
+		Create a new load property.
+		'''
 		result = self._Entity.CreateLoadProperty(_types.LoadPropertyType(loadPropertyType.value), _types.FamilyCategory(category.value), name)
 		thisClass = type(result).__name__
 		givenClass = LoadProperty
@@ -6256,12 +6420,22 @@ class DiscreteFieldCol(IdNameEntityCol[DiscreteField]):
 		return tuple([DiscreteField(discreteFieldCol) for discreteFieldCol in self._Entity])
 
 	def Create(self, entityType: types.DiscreteFieldPhysicalEntityType, dataType: types.DiscreteFieldDataType, name: str = None) -> DiscreteField:
+		'''
+		Create a new DiscreteField.
+		'''
 		return DiscreteField(self._Entity.Create(_types.DiscreteFieldPhysicalEntityType(entityType.value), _types.DiscreteFieldDataType(dataType.value), name))
 
 	def CreateFromVCP(self, filepath: str) -> list[DiscreteField]:
+		'''
+		Create a list of DiscreteFields from VCP.
+		'''
 		return [DiscreteField(discreteField) for discreteField in self._Entity.CreateFromVCP(filepath)]
 
 	def Delete(self, id: int) -> CollectionModificationStatus:
+		'''
+		In the event of getting a CollectionModificationStatus.EntityMissingRemovalFailure,
+            note that the discrete field is associated with a ply, and therefore cannot be deleted.
+		'''
 		return CollectionModificationStatus[self._Entity.Delete(id).ToString()]
 
 	def CreateByPointMapToElements(self, elementIds: list[int], discreteFieldIds: list[int], suffix: str = None, tolerance: float = None) -> list[DiscreteField]:
@@ -6349,12 +6523,26 @@ class RundeckCol(IdEntityCol[Rundeck]):
 		return tuple([Rundeck(rundeckCol) for rundeckCol in self._Entity])
 
 	def AddRundeck(self, inputPath: str, resultPath: str = None) -> Rundeck:
+		'''
+		The specified rundeck at the given filepath will be added to the project's
+            collection of rundecks
+		:param inputPath: The path to the rundeck
+		:param resultPath: The path to the rundeck's corresponding result file
+		'''
 		return Rundeck(self._Entity.AddRundeck(inputPath, resultPath))
 
 	def ReassignPrimary(self, id: int) -> RundeckUpdateStatus:
+		'''
+		The specified rundeck will be updated to become the new primary rundeck.
+		'''
 		return RundeckUpdateStatus[self._Entity.ReassignPrimary(id).ToString()]
 
 	def RemoveRundeck(self, id: int) -> RundeckRemoveStatus:
+		'''
+		The specified rundeck at the given filepath will be removed from the project's
+            collection of rundecks
+		:param id: The id of the rundeck to remove
+		'''
 		return RundeckRemoveStatus[self._Entity.RemoveRundeck(id).ToString()]
 
 	def UpdateAllRundecks(self, newPaths: list[RundeckPathPair]) -> RundeckBulkUpdateStatus:
@@ -6372,6 +6560,9 @@ class RundeckCol(IdEntityCol[Rundeck]):
 		return [RundeckPathPair(rundeckPathPair) for rundeckPathPair in self._Entity.GetRundeckPathSetters()]
 
 	def ReplaceStringInAllPaths(self, stringToReplace: str, newString: str) -> RundeckBulkUpdateStatus:
+		'''
+		Replace a given string with a new string in every rundeck path. This is useful when pointing to rundecks of the same name in a new directory.
+		'''
 		return RundeckBulkUpdateStatus[self._Entity.ReplaceStringInAllPaths(stringToReplace, newString).ToString()]
 
 	def __getitem__(self, index: int):
@@ -6434,6 +6625,10 @@ class SetCol(ZoneJointContainerCol[Set]):
 		return tuple([Set(setCol) for setCol in self._Entity])
 
 	def Create(self, name: str = None) -> Set:
+		'''
+		Attempt to create a new Set.
+		:param name: The name of the set to be created.
+		'''
 		return Set(self._Entity.Create(name))
 
 	@overload
@@ -6471,6 +6666,11 @@ class StructureCol(ZoneJointContainerCol[Structure]):
 		return tuple([Structure(structureCol) for structureCol in self._Entity])
 
 	def Create(self, name: str = None) -> Structure:
+		'''
+		Attempt to create a new structure.
+            If the specified name is already used, it will be deconflicted.
+		:param name: The name of the structure to be created.
+		'''
 		return Structure(self._Entity.Create(name))
 
 	@overload
@@ -6648,9 +6848,17 @@ class Project:
 		return list[str](self._Entity.GetDashboardCompanies())
 
 	def GetDashboardPrograms(self, companyName: str) -> list[str]:
+		'''
+		This method fetches an array of Dashboard program names that are available to the user who is currently logged in. The URL and authentication token are taken from the last
+            Dashboard login made through HyperX.
+		'''
 		return list[str](self._Entity.GetDashboardPrograms(companyName))
 
 	def GetDashboardTags(self, companyName: str) -> list[str]:
+		'''
+		This method fetches an array of Dashboard tags that are available to the user who is currently logged in. The URL and authentication token are taken from the last
+            Dashboard login made through HyperX.
+		'''
 		return list[str](self._Entity.GetDashboardTags(companyName))
 
 	def Dispose(self) -> None:
@@ -6660,6 +6868,10 @@ class Project:
 		return self._Entity.ImportFem()
 
 	def ImportFeaResults(self, alwaysImport: bool = False) -> str:
+		'''
+		Manually import design loads.
+		:param alwaysImport: If true, loads are imported even if loads have already previously been imported.
+		'''
 		return self._Entity.ImportFeaResults(alwaysImport)
 
 	def SetFemFormat(self, femFormat: types.ProjectModelFormat) -> None:
@@ -6697,6 +6909,9 @@ class Project:
 	def SizeZones(self, zoneIds: list[int]) -> types.SimpleStatus: ...
 
 	def CreateNonFeaZone(self, category: types.FamilyCategory, name: str = None) -> Zone:
+		'''
+		Create a non-FEA zone by name and category.
+		'''
 		result = self._Entity.CreateNonFeaZone(_types.FamilyCategory(category.value), name)
 		thisClass = type(result).__name__
 		givenClass = Zone
@@ -6721,6 +6936,9 @@ class Project:
 		return self._Entity.ExportFem(destinationFolder)
 
 	def ImportCad(self, filePath: str) -> None:
+		'''
+		Import CAD from a file.
+		'''
 		return self._Entity.ImportCad(filePath)
 
 	@overload
@@ -6829,9 +7047,15 @@ class FoamCol(Generic[T]):
 		return self._Entity.Count()
 
 	def Get(self, materialName: str) -> Foam:
+		'''
+		Look up an Foam material by its name.
+		'''
 		return Foam(self._Entity.Get(materialName))
 
 	def Contains(self, materialName: str) -> bool:
+		'''
+		Check if an foam material exists in this collection.
+		'''
 		return self._Entity.Contains(materialName)
 
 	def Create(self, materialFamilyName: str, density: float, newMaterialName: str = None, femId: int = None) -> Foam:
@@ -6841,6 +7065,10 @@ class FoamCol(Generic[T]):
 		return Foam(self._Entity.Copy(fmToCopyName, newMaterialName, femId))
 
 	def Delete(self, materialName: str) -> bool:
+		'''
+		Delete a foam material by name.
+            Returns false if the method the material is not found.
+		'''
 		return self._Entity.Delete(materialName)
 
 	def __getitem__(self, index: int):
@@ -6865,9 +7093,15 @@ class HoneycombCol(Generic[T]):
 		return self._Entity.Count()
 
 	def Get(self, materialName: str) -> Honeycomb:
+		'''
+		Look up an Honeycomb material by its name.
+		'''
 		return Honeycomb(self._Entity.Get(materialName))
 
 	def Contains(self, materialName: str) -> bool:
+		'''
+		Check if an honeycomb material exists in this collection.
+		'''
 		return self._Entity.Contains(materialName)
 
 	def Create(self, materialFamilyName: str, density: float, newMaterialName: str = None, femId: int = None) -> Honeycomb:
@@ -6877,6 +7111,10 @@ class HoneycombCol(Generic[T]):
 		return Honeycomb(self._Entity.Copy(honeyToCopyName, newMaterialName, femId))
 
 	def Delete(self, materialName: str) -> bool:
+		'''
+		Delete a honeycomb material by name.
+            Returns false if the method the material is not found.
+		'''
 		return self._Entity.Delete(materialName)
 
 	def __getitem__(self, index: int):
@@ -6901,9 +7139,15 @@ class IsotropicCol(Generic[T]):
 		return self._Entity.Count()
 
 	def Get(self, materialName: str) -> Isotropic:
+		'''
+		Look up an Isotropic material by its name.
+		'''
 		return Isotropic(self._Entity.Get(materialName))
 
 	def Contains(self, materialName: str) -> bool:
+		'''
+		Check if an isotropic material exists in this collection.
+		'''
 		return self._Entity.Contains(materialName)
 
 	def Create(self, materialFamilyName: str, density: float, newMaterialName: str = None, femId: int = None) -> Isotropic:
@@ -6913,6 +7157,10 @@ class IsotropicCol(Generic[T]):
 		return Isotropic(self._Entity.Copy(isoToCopyName, newMaterialName, femId))
 
 	def Delete(self, materialName: str) -> bool:
+		'''
+		Delete an isotropic material by name.
+            Returns false if the method the material is not found.
+		'''
 		return self._Entity.Delete(materialName)
 
 	def __getitem__(self, index: int):
@@ -6971,6 +7219,9 @@ class LaminateCol(Generic[T]):
 		return self._Entity.Count()
 
 	def Get(self, laminateName: str) -> LaminateBase:
+		'''
+		Look up a Laminate by its name.
+		'''
 		result = self._Entity.Get(laminateName)
 		thisClass = type(result).__name__
 		givenClass = LaminateBase
@@ -6983,12 +7234,21 @@ class LaminateCol(Generic[T]):
 		return self._Entity.Contains(laminateName)
 
 	def CreateLaminate(self, materialFamily: str, laminateName: str = None) -> Laminate:
+		'''
+		Create laminate.
+		'''
 		return Laminate(self._Entity.CreateLaminate(materialFamily, laminateName))
 
 	def CreateStiffenerLaminate(self, materialFamily: str, stiffenerProfile: types.StiffenerProfile, laminateName: str = None) -> StiffenerLaminate:
+		'''
+		Create a stiffener laminate.
+		'''
 		return StiffenerLaminate(self._Entity.CreateStiffenerLaminate(materialFamily, _types.StiffenerProfile(stiffenerProfile.value), laminateName))
 
 	def Copy(self, laminateToCopyName: str, newLaminateName: str = None) -> LaminateBase:
+		'''
+		Copy a laminate material by name.
+		'''
 		result = self._Entity.Copy(laminateToCopyName, newLaminateName)
 		thisClass = type(result).__name__
 		givenClass = LaminateBase
@@ -6998,12 +7258,22 @@ class LaminateCol(Generic[T]):
 		return givenClass(result)
 
 	def Delete(self, name: str) -> bool:
+		'''
+		Delete a laminate material by name.
+            Returns false if the material is not found or removed.
+		'''
 		return self._Entity.Delete(name)
 
 	def GetLaminate(self, name: str) -> Laminate:
+		'''
+		Get a laminate by name.
+		'''
 		return Laminate(self._Entity.GetLaminate(name))
 
 	def GetStiffenerLaminate(self, name: str) -> StiffenerLaminate:
+		'''
+		Get a stiffener laminate by name.
+		'''
 		return StiffenerLaminate(self._Entity.GetStiffenerLaminate(name))
 
 	def __getitem__(self, index: int):
@@ -7028,9 +7298,15 @@ class OrthotropicCol(Generic[T]):
 		return self._Entity.Count()
 
 	def Get(self, materialName: str) -> Orthotropic:
+		'''
+		Look up an Orthotropic material by its name.
+		'''
 		return Orthotropic(self._Entity.Get(materialName))
 
 	def Contains(self, materialName: str) -> bool:
+		'''
+		Check if an orthotropic material exists in this collection.
+		'''
 		return self._Entity.Contains(materialName)
 
 	def Create(self, materialFamilyName: str, thickness: float, density: float, newMaterialName: str = None, femId: int = None) -> Orthotropic:
@@ -7040,6 +7316,10 @@ class OrthotropicCol(Generic[T]):
 		return Orthotropic(self._Entity.Copy(orthoToCopyName, newMaterialName, femId))
 
 	def Delete(self, materialName: str) -> bool:
+		'''
+		Delete an orthotropic material by name.
+            Returns false if the method the material is not found.
+		'''
 		return self._Entity.Delete(materialName)
 
 	def __getitem__(self, index: int):
@@ -7062,6 +7342,9 @@ class PluginPackageCol(IdNameEntityCol[PluginPackage]):
 		return tuple([PluginPackage(pluginPackageCol) for pluginPackageCol in self._Entity])
 
 	def AddPluginPackage(self, path: str) -> PluginPackage:
+		'''
+		Add a plugin package by path.
+		'''
 		return PluginPackage(self._Entity.AddPluginPackage(path))
 
 	@overload
@@ -7284,15 +7567,36 @@ class Application:
 		self._Entity.UserName = value
 
 	def CloseDatabase(self, delay: int = 0) -> None:
+		'''
+		Close the currently open database if one exists.
+		:param delay: Delay closing the connection for this many seconds.
+		'''
 		return self._Entity.CloseDatabase(delay)
 
 	def CopyProject(self, projectId: int, newName: str = None, copyDesignProperties: bool = True, copyAnalysisProperties: bool = True, copyLoadProperties: bool = True, copyWorkingFolder: bool = True) -> ProjectInfo:
+		'''
+		Copy a project
+		:param projectId: Id of the project to copy
+		:param newName: Name for the new project
+		:param copyDesignProperties: Flag indicating whether design properties should be copied in the new project
+		:param copyAnalysisProperties: Flag indicating whether analysis properties should be copied in the new project
+		:param copyLoadProperties: Flag indicating whether load properties should be copied in the new project
+		:param copyWorkingFolder: Flag indicating whether working folder should be copied
+		'''
 		return ProjectInfo(self._Entity.CopyProject(projectId, newName, copyDesignProperties, copyAnalysisProperties, copyLoadProperties, copyWorkingFolder))
 
 	def CreateDatabaseFromTemplate(self, templateName: str, newPath: str) -> None:
+		'''
+		Create a new database.
+		:param templateName: The name of the template to base this database on.
+		:param newPath: The path to the new database.
+		'''
 		return self._Entity.CreateDatabaseFromTemplate(templateName, newPath)
 
 	def CreateProject(self, projectName: str = None) -> ProjectInfo:
+		'''
+		Create a Project.
+		'''
 		return ProjectInfo(self._Entity.CreateProject(projectName))
 
 	def DeleteProject(self, projectName: str) -> ProjectDeletionStatus:
@@ -7312,18 +7616,38 @@ class Application:
 		return dict[int, AnalysisDefinition](self._Entity.GetAnalyses())
 
 	def Login(self, userName: str, password: str = "") -> None:
+		'''
+		Login to the Scripting API with a specified username and password.
+		:param userName: Username to login with.
+		:param password: Password to log in with
+		'''
 		return self._Entity.Login(userName, password)
 
 	def Migrate(self, databasePath: str) -> str:
+		'''
+		Migrate the database to the latest version.
+		'''
 		return self._Entity.Migrate(databasePath)
 
 	def CheckDatabaseIsUpToDate(self, databasePath: str) -> bool:
+		'''
+		Returns true if the database version matches the version of this scripting API.
+            Otherwise returns false.
+		'''
 		return self._Entity.CheckDatabaseIsUpToDate(databasePath)
 
 	def OpenDatabase(self, databasePath: str) -> None:
+		'''
+		Open a database to manipulate with the API.
+		:param databasePath: File path to the DB.
+		'''
 		return self._Entity.OpenDatabase(databasePath)
 
 	def SelectProject(self, projectName: str) -> Project:
+		'''
+		Select the active project.
+            Activating a project will deactivate the current project (if present).
+		'''
 		return Project(self._Entity.SelectProject(projectName))
 
 
@@ -7582,6 +7906,9 @@ class ZoneOverrideCol(IdEntityCol[ZoneOverride]):
 		return tuple([ZoneOverride(zoneOverrideCol) for zoneOverrideCol in self._Entity])
 
 	def Get(self, zoneNumber: int) -> ZoneOverride:
+		'''
+		Get override for a zone by the zone number
+		'''
 		return ZoneOverride(self._Entity.Get(zoneNumber))
 
 	def __getitem__(self, index: int):
@@ -7957,6 +8284,9 @@ class LoadPropertyUserFeaBeamRow(LoadPropertyUserBeamRow):
 		self._Entity = loadPropertyUserFeaBeamRow
 
 	def SetName(self, name: str) -> None:
+		'''
+		Set the name for the scenario
+		'''
 		return self._Entity.SetName(name)
 
 
@@ -8047,6 +8377,9 @@ class LoadPropertyUserFeaJointRow(LoadPropertyUserPanelJointRow):
 		self._Entity = loadPropertyUserFeaJointRow
 
 	def SetName(self, name: str) -> None:
+		'''
+		Set the name for the scenario
+		'''
 		return self._Entity.SetName(name)
 
 
@@ -8068,6 +8401,9 @@ class LoadPropertyUserFeaPanelRow(LoadPropertyUserPanelJointRow):
 		self._Entity = loadPropertyUserFeaPanelRow
 
 	def SetName(self, name: str) -> None:
+		'''
+		Set the name for the scenario
+		'''
 		return self._Entity.SetName(name)
 
 
@@ -8535,6 +8871,9 @@ class LoadPropertyUserFeaRowCol(IdNameEntityCol, Generic[T]):
 		return tuple([givenClass(loadPropertyUserFeaRowCol) for loadPropertyUserFeaRowCol in self._Entity])
 
 	def AddScenario(self, name: str = None) -> T:
+		'''
+		Adds a load scenario with default values.
+		'''
 		return self._Entity.AddScenario(name)
 
 	@overload
@@ -8754,6 +9093,9 @@ class LoadPropertyUserFeaPanel(LoadProperty):
 		return LoadPropertyUserFeaPanelRowCol(result) if result is not None else None
 
 	def SetIsZeroCurvature(self, isZeroCurvature: bool) -> None:
+		'''
+		Is there an enum for this?
+		'''
 		return self._Entity.SetIsZeroCurvature(isZeroCurvature)
 
 
@@ -8782,6 +9124,9 @@ class LoadPropertyUserGeneralDoubleRow(IdNameEntity):
 		return givenClass(result) if result is not None else None
 
 	def SetName(self, name: str) -> None:
+		'''
+		Update name for the scenario
+		'''
 		return self._Entity.SetName(name)
 
 
@@ -8842,27 +9187,51 @@ class LoadPropertyUserGeneralBeamDoubleRow(LoadPropertyUserGeneralDoubleRow):
 		return types.BoundaryConditionType[self._Entity.TorqueType.ToString()]
 
 	def SetM1AType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set M1A type for the scenario
+		'''
 		return self._Entity.SetM1AType(_types.BoundaryConditionType(type.value))
 
 	def SetM2AType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set M2A type for the scenario
+		'''
 		return self._Entity.SetM2AType(_types.BoundaryConditionType(type.value))
 
 	def SetM1BType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set M1B type for the scenario
+		'''
 		return self._Entity.SetM1BType(_types.BoundaryConditionType(type.value))
 
 	def SetM2BType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set M2B type for the scenario
+		'''
 		return self._Entity.SetM2BType(_types.BoundaryConditionType(type.value))
 
 	def SetV1Type(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set V1 type for the scenario
+		'''
 		return self._Entity.SetV1Type(_types.BoundaryConditionType(type.value))
 
 	def SetV2Type(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set V2 type for the scenario
+		'''
 		return self._Entity.SetV2Type(_types.BoundaryConditionType(type.value))
 
 	def SetAxialType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set Axial type for the scenario
+		'''
 		return self._Entity.SetAxialType(_types.BoundaryConditionType(type.value))
 
 	def SetTorqueType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set torque type for the scenario
+		'''
 		return self._Entity.SetTorqueType(_types.BoundaryConditionType(type.value))
 
 
@@ -8883,6 +9252,9 @@ class LoadPropertyUserGeneralRowCol(IdNameEntityCol, Generic[T]):
 		return tuple([givenClass(loadPropertyUserGeneralRowCol) for loadPropertyUserGeneralRowCol in self._Entity])
 
 	def AddScenario(self, name: str = None) -> T:
+		'''
+		Add scenario.
+		'''
 		return self._Entity.AddScenario(name)
 
 	@overload
@@ -9109,6 +9481,9 @@ class LoadPropertyUserGeneralBoltedRowCol(IdEntityCol[LoadPropertyUserGeneralBol
 		return self._Entity.AddScenario()
 
 	def DeleteScenario(self, scenarioId: int) -> bool:
+		'''
+		Delete a load scenario by id
+		'''
 		return self._Entity.DeleteScenario(scenarioId)
 
 	def __getitem__(self, index: int):
@@ -9355,27 +9730,51 @@ class LoadPropertyUserGeneralPanelDoubleRow(LoadPropertyUserGeneralDoubleRow):
 		return types.BoundaryConditionType[self._Entity.QyType.ToString()]
 
 	def SetNxType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set Nx type for the scenario
+		'''
 		return self._Entity.SetNxType(_types.BoundaryConditionType(type.value))
 
 	def SetNyType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set Ny type for the scenario
+		'''
 		return self._Entity.SetNyType(_types.BoundaryConditionType(type.value))
 
 	def SetNxyType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set Nxy type for the scenario
+		'''
 		return self._Entity.SetNxyType(_types.BoundaryConditionType(type.value))
 
 	def SetMxType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set Mx type for the scenario
+		'''
 		return self._Entity.SetMxType(_types.BoundaryConditionType(type.value))
 
 	def SetMyType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set My type for the scenario
+		'''
 		return self._Entity.SetMyType(_types.BoundaryConditionType(type.value))
 
 	def SetMxyType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set Mxy type for the scenario
+		'''
 		return self._Entity.SetMxyType(_types.BoundaryConditionType(type.value))
 
 	def SetQxType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set Qx type for the scenario
+		'''
 		return self._Entity.SetQxType(_types.BoundaryConditionType(type.value))
 
 	def SetQyType(self, type: types.BoundaryConditionType) -> None:
+		'''
+		Set Qy type for the scenario
+		'''
 		return self._Entity.SetQyType(_types.BoundaryConditionType(type.value))
 
 
@@ -9446,6 +9845,9 @@ class LoadPropertyUserGeneralPanel(LoadProperty):
 		self._Entity.IsIncludingThermal = value
 
 	def SetIsZeroCurvature(self, isZeroCurvature: bool) -> None:
+		'''
+		Is there an enum for this?
+		'''
 		return self._Entity.SetIsZeroCurvature(isZeroCurvature)
 
 
@@ -9521,6 +9923,13 @@ class Environment(ABC):
 		self._Entity = environment
 
 	def SetLocation(location: str) -> None:
+		'''
+		Set the directory location of the HyperX binaries.
+            * This method is *not* required for Python and IronPython client application.
+            * This method is required for C# and VB.NET clients as these applications
+              need HyperX.Scripting.dll alongside its binaries.
+		:param location: Path to the binaries.
+		'''
 		return _api.Environment.SetLocation(location)
 
 	def Initialize() -> None:
@@ -9656,9 +10065,15 @@ class LaminatePlyData:
 		return self._Entity.IsInCap
 
 	def SetMaterial(self, matId: int) -> bool:
+		'''
+		Sets the material of a ply to the matId. This includes: PlyMaterialId and PlyMaterialType, and updates Thickness and IsFabric
+		'''
 		return self._Entity.SetMaterial(matId)
 
 	def SetAngle(self, angle: float) -> bool:
+		'''
+		Sets the angle of a ply
+		'''
 		return self._Entity.SetAngle(angle)
 
 
