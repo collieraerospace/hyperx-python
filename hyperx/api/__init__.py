@@ -6,7 +6,7 @@ from typing import TypeVar, Generic, overload
 from enum import Enum
 from System.Collections.Generic import List, IEnumerable, Dictionary, HashSet
 from System.Threading.Tasks import Task
-from System import Guid, DateTime, Action
+from System import Guid, DateTime, Action, Double, String, Nullable
 
 from abc import ABC, abstractmethod
 
@@ -230,7 +230,8 @@ class Margin:
 
 	@property
 	def MarginCode(self) -> types.MarginCode:
-		return types.MarginCode[self._Entity.MarginCode.ToString()]
+		result = self._Entity.MarginCode
+		return types.MarginCode[result.ToString()] if result is not None else None
 
 
 class AnalysisResult(ABC):
@@ -245,7 +246,8 @@ class AnalysisResult(ABC):
 		'''
 		Limit vs Ultimate loads.
 		'''
-		return types.LimitUltimate[self._Entity.LimitUltimate.ToString()]
+		result = self._Entity.LimitUltimate
+		return types.LimitUltimate[result.ToString()] if result is not None else None
 
 	@property
 	def LoadCaseId(self) -> int:
@@ -274,7 +276,8 @@ class JointAnalysisResult(AnalysisResult):
 		'''
 		Enum identifying the possible entities within a joint
 		'''
-		return types.JointObject[self._Entity.ObjectId.ToString()]
+		result = self._Entity.ObjectId
+		return types.JointObject[result.ToString()] if result is not None else None
 
 
 class ZoneAnalysisConceptResult(AnalysisResult):
@@ -283,7 +286,8 @@ class ZoneAnalysisConceptResult(AnalysisResult):
 
 	@property
 	def ConceptId(self) -> types.FamilyConceptUID:
-		return types.FamilyConceptUID[self._Entity.ConceptId.ToString()]
+		result = self._Entity.ConceptId
+		return types.FamilyConceptUID[result.ToString()] if result is not None else None
 
 
 class ZoneAnalysisObjectResult(AnalysisResult):
@@ -292,7 +296,8 @@ class ZoneAnalysisObjectResult(AnalysisResult):
 
 	@property
 	def ObjectId(self) -> types.FamilyObjectUID:
-		return types.FamilyObjectUID[self._Entity.ObjectId.ToString()]
+		result = self._Entity.ObjectId
+		return types.FamilyObjectUID[result.ToString()] if result is not None else None
 
 
 class AssignableProperty(IdNameEntity):
@@ -306,7 +311,8 @@ class AssignablePropertyWithFamilyCategory(AssignableProperty):
 
 	@property
 	def FamilyCategory(self) -> types.FamilyCategory:
-		return types.FamilyCategory[self._Entity.FamilyCategory.ToString()]
+		result = self._Entity.FamilyCategory
+		return types.FamilyCategory[result.ToString()] if result is not None else None
 
 
 class FailureObjectGroup(IdNameEntity):
@@ -315,7 +321,8 @@ class FailureObjectGroup(IdNameEntity):
 
 	@property
 	def ObjectGroup(self) -> types.ObjectGroup:
-		return types.ObjectGroup[self._Entity.ObjectGroup.ToString()]
+		result = self._Entity.ObjectGroup
+		return types.ObjectGroup[result.ToString()] if result is not None else None
 
 	@property
 	def IsEnabled(self) -> bool:
@@ -326,7 +333,8 @@ class FailureObjectGroup(IdNameEntity):
 		'''
 		Limit vs Ultimate loads.
 		'''
-		return types.LimitUltimate[self._Entity.LimitUltimate.ToString()]
+		result = self._Entity.LimitUltimate
+		return types.LimitUltimate[result.ToString()] if result is not None else None
 
 	@property
 	def RequiredMargin(self) -> float:
@@ -358,7 +366,8 @@ class FailureSetting(IdNameEntity):
 
 	@property
 	def DataType(self) -> types.UserConstantDataType:
-		return types.UserConstantDataType[self._Entity.DataType.ToString()]
+		result = self._Entity.DataType
+		return types.UserConstantDataType[result.ToString()] if result is not None else None
 
 	@property
 	def DefaultValue(self) -> str:
@@ -428,7 +437,7 @@ class IdEntityCol(Generic[T], ABC):
 
 	@property
 	def Ids(self) -> tuple[int]:
-		return tuple([int(int32) for int32 in self._Entity.Ids])
+		return tuple([int32 for int32 in self._Entity.Ids])
 
 	def Contains(self, id: int) -> bool:
 		return self._Entity.Contains(id)
@@ -467,7 +476,7 @@ class IdNameEntityCol(IdEntityCol, Generic[T]):
 
 	@property
 	def Names(self) -> tuple[str]:
-		return tuple([str(string) for string in self._Entity.Names])
+		return tuple([string for string in self._Entity.Names])
 
 	@overload
 	def Get(self, name: str) -> T: ...
@@ -551,10 +560,22 @@ class FailureSettingCol(IdNameEntityCol[FailureSetting]):
 
 	def Get(self, item1 = None) -> FailureSetting:
 		if isinstance(item1, str):
-			return FailureSetting(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = FailureSetting
+			for subclass in FailureSetting.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		if isinstance(item1, int):
-			return FailureSetting(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = FailureSetting
+			for subclass in FailureSetting.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		result = self._Entity.Get(item1)
 		thisClass = type(result).__name__
@@ -562,7 +583,7 @@ class FailureSettingCol(IdNameEntityCol[FailureSetting]):
 		for subclass in FailureSetting.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def __getitem__(self, index: int):
 		return self.FailureSettingColList[index]
@@ -588,7 +609,8 @@ class FailureCriterion(IdNameEntity):
 
 	@property
 	def LimitUltimate(self) -> types.LimitUltimate:
-		return types.LimitUltimate[self._Entity.LimitUltimate.ToString()]
+		result = self._Entity.LimitUltimate
+		return types.LimitUltimate[result.ToString()] if result is not None else None
 
 	@property
 	def ObjectGroups(self) -> FailureObjectGroupCol:
@@ -789,7 +811,7 @@ class DesignProperty(AssignablePropertyWithFamilyCategory):
 		for subclass in DesignProperty.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 
 class LoadProperty(AssignableProperty):
@@ -798,11 +820,13 @@ class LoadProperty(AssignableProperty):
 
 	@property
 	def Category(self) -> types.FamilyCategory:
-		return types.FamilyCategory[self._Entity.Category.ToString()]
+		result = self._Entity.Category
+		return types.FamilyCategory[result.ToString()] if result is not None else None
 
 	@property
 	def Type(self) -> types.LoadPropertyType:
-		return types.LoadPropertyType[self._Entity.Type.ToString()]
+		result = self._Entity.Type
+		return types.LoadPropertyType[result.ToString()] if result is not None else None
 
 	@property
 	def IsZeroCurvature(self) -> bool:
@@ -867,7 +891,8 @@ class DesignLoadSubcase(IdNameEntity):
 
 	@property
 	def SolutionType(self) -> types.FeaSolutionType:
-		return types.FeaSolutionType[self._Entity.SolutionType.ToString()]
+		result = self._Entity.SolutionType
+		return types.FeaSolutionType[result.ToString()] if result is not None else None
 
 
 class DesignLoadSubcaseMultiplier(IdNameEntity):
@@ -910,7 +935,8 @@ class DesignLoadSubcaseTemperature(IdNameEntity):
 		'''
 		Load Case Setting selection for analysis and initial temperature.
 		'''
-		return types.TemperatureChoiceType[self._Entity.TemperatureChoiceType.ToString()]
+		result = self._Entity.TemperatureChoiceType
+		return types.TemperatureChoiceType[result.ToString()] if result is not None else None
 
 	@property
 	def Value(self) -> float:
@@ -1010,7 +1036,8 @@ class ZoneDesignResult(IdEntity):
 
 	@property
 	def VariableParameter(self) -> types.VariableParameter:
-		return types.VariableParameter[self._Entity.VariableParameter.ToString()]
+		result = self._Entity.VariableParameter
+		return types.VariableParameter[result.ToString()] if result is not None else None
 
 	@property
 	def Value(self) -> float:
@@ -1022,7 +1049,8 @@ class ZoneDesignResult(IdEntity):
 
 	@property
 	def MaterialType(self) -> types.MaterialType:
-		return types.MaterialType[self._Entity.MaterialType.ToString()]
+		result = self._Entity.MaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 
 class Vector3d:
@@ -1051,14 +1079,14 @@ class Vector3d:
 	def Equals(self, other) -> bool: ...
 
 	@overload
-	def Equals(self, obj) -> bool: ...
-
-	def GetHashCode(self) -> int:
-		return self._Entity.GetHashCode()
+	def Equals(self, obj: object) -> bool: ...
 
 	def Equals(self, item1 = None) -> bool:
 		if isinstance(item1, Vector3d):
 			return self._Entity.Equals(item1._Entity)
+
+		if isinstance(item1, object):
+			return self._Entity.Equals(item1)
 
 		return self._Entity.Equals(item1._Entity)
 
@@ -1067,6 +1095,9 @@ class Vector3d:
 
 	def __ne__(self, other):
 		return not self.Equals(other)
+
+	def __hash__(self) -> int:
+		return self._Entity.GetHashCode()
 
 
 class DiscreteField(IdNameEntityRenameable):
@@ -1093,14 +1124,16 @@ class DiscreteField(IdNameEntityRenameable):
 		'''
 		Defines the type of data stored in a Discrete Field. Such as Vector, Scalar, String.
 		'''
-		return types.DiscreteFieldDataType[self._Entity.DataType.ToString()]
+		result = self._Entity.DataType
+		return types.DiscreteFieldDataType[result.ToString()] if result is not None else None
 
 	@property
 	def PhysicalEntityType(self) -> types.DiscreteFieldPhysicalEntityType:
 		'''
 		Defines the type of physical entity that a Discrete Field applies to, such as zone, element, joint, etc.
 		'''
-		return types.DiscreteFieldPhysicalEntityType[self._Entity.PhysicalEntityType.ToString()]
+		result = self._Entity.PhysicalEntityType
+		return types.DiscreteFieldPhysicalEntityType[result.ToString()] if result is not None else None
 
 	@property
 	def PointIds(self) -> list[Vector3d]:
@@ -1185,12 +1218,12 @@ class DiscreteField(IdNameEntityRenameable):
 
 	def ReadNumericCell(self, item1 = None, item2 = None) -> float:
 		if isinstance(item1, int) and isinstance(item2, int):
-			return self._Entity.ReadNumericCell(item1, item2)
+			return float(self._Entity.ReadNumericCell(item1, item2))
 
 		if isinstance(item1, Vector3d) and isinstance(item2, int):
-			return self._Entity.ReadNumericCell(item1._Entity, item2)
+			return float(self._Entity.ReadNumericCell(item1._Entity, item2))
 
-		return self._Entity.ReadNumericCell(item1, item2)
+		return float(self._Entity.ReadNumericCell(item1, item2))
 
 	def ReadStringCell(self, item1 = None, item2 = None) -> str:
 		if isinstance(item1, int) and isinstance(item2, int):
@@ -1202,10 +1235,10 @@ class DiscreteField(IdNameEntityRenameable):
 		return self._Entity.ReadStringCell(item1, item2)
 
 	def SetNumericValue(self, item1 = None, item2 = None, item3 = None) -> None:
-		if isinstance(item1, int) and isinstance(item2, int) and isinstance(item3, float):
+		if isinstance(item1, int) and isinstance(item2, int) and isinstance(item3, float) and (isinstance(item3, float) or isinstance(item3, int)):
 			return self._Entity.SetNumericValue(item1, item2, item3)
 
-		if isinstance(item1, Vector3d) and isinstance(item2, int) and isinstance(item3, float):
+		if isinstance(item1, Vector3d) and isinstance(item2, int) and isinstance(item3, float) and (isinstance(item3, float) or isinstance(item3, int)):
 			return self._Entity.SetNumericValue(item1._Entity, item2, item3)
 
 		return self._Entity.SetNumericValue(item1, item2, item3)
@@ -1292,22 +1325,22 @@ class EntityWithAssignableProperties(IdNameEntityRenameable):
 
 	@property
 	def AssignedDesignProperty(self) -> DesignProperty:
-		thisClass = type(self._Entity.AssignedDesignProperty).__name__
+		result = self._Entity.AssignedDesignProperty
+		thisClass = type(result).__name__
 		givenClass = DesignProperty
 		for subclass in DesignProperty.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		result = self._Entity.AssignedDesignProperty
 		return givenClass(result) if result is not None else None
 
 	@property
 	def AssignedLoadProperty(self) -> LoadProperty:
-		thisClass = type(self._Entity.AssignedLoadProperty).__name__
+		result = self._Entity.AssignedLoadProperty
+		thisClass = type(result).__name__
 		givenClass = LoadProperty
 		for subclass in LoadProperty.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		result = self._Entity.AssignedLoadProperty
 		return givenClass(result) if result is not None else None
 
 	def AssignAnalysisProperty(self, id: int) -> PropertyAssignmentStatus:
@@ -1373,7 +1406,7 @@ class ZoneJointEntity(EntityWithAssignableProperties):
 		for subclass in AnalysisResult.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	@abstractmethod
 	def GetAllResults(self) -> AnalysisResultCol:
@@ -1406,7 +1439,7 @@ class JointDesignResultCol(IdEntityCol[JointDesignResult]):
 			for subclass in JointDesignResult.__subclasses__():
 				if subclass.__name__ == thisClass:
 					givenClass = subclass
-			return givenClass(result)
+			return givenClass(result) if result is not None else None
 
 		if isinstance(item1, types.JointRangeId):
 			result = self._Entity.Get(_types.JointRangeId(item1.value))
@@ -1415,10 +1448,16 @@ class JointDesignResultCol(IdEntityCol[JointDesignResult]):
 			for subclass in JointDesignResult.__subclasses__():
 				if subclass.__name__ == thisClass:
 					givenClass = subclass
-			return givenClass(result)
+			return givenClass(result) if result is not None else None
 
 		if isinstance(item1, int):
-			return JointDesignResult(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = JointDesignResult
+			for subclass in JointDesignResult.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		result = self._Entity.Get(_types.JointSelectionId(item1.value))
 		thisClass = type(result).__name__
@@ -1426,7 +1465,7 @@ class JointDesignResultCol(IdEntityCol[JointDesignResult]):
 		for subclass in JointDesignResult.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def __getitem__(self, index: int):
 		return self.JointDesignResultColList[index]
@@ -1462,7 +1501,7 @@ class Joint(ZoneJointEntity):
 		for subclass in AnalysisResult.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def GetMinimumMargin(self) -> Margin:
 		return Margin(self._Entity.GetMinimumMargin())
@@ -1734,7 +1773,7 @@ class ZoneBase(ZoneJointEntity):
 		for subclass in AnalysisResult.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def GetMinimumMargin(self) -> Margin:
 		return Margin(self._Entity.GetMinimumMargin())
@@ -1773,15 +1812,16 @@ class PanelSegment(ZoneBase):
 
 	@property
 	def Skins(self) -> tuple[types.DiscreteDefinitionType]:
-		return tuple([types.DiscreteDefinitionType(discreteDefinitionType) for discreteDefinitionType in self._Entity.Skins])
+		return tuple([types.DiscreteDefinitionType[discreteDefinitionType.ToString()] for discreteDefinitionType in self._Entity.Skins])
 
 	@property
 	def Objects(self) -> tuple[types.DiscreteDefinitionType]:
-		return tuple([types.DiscreteDefinitionType(discreteDefinitionType) for discreteDefinitionType in self._Entity.Objects])
+		return tuple([types.DiscreteDefinitionType[discreteDefinitionType.ToString()] for discreteDefinitionType in self._Entity.Objects])
 
 	@property
 	def DiscreteTechnique(self) -> types.DiscreteTechnique:
-		return types.DiscreteTechnique[self._Entity.DiscreteTechnique.ToString()]
+		result = self._Entity.DiscreteTechnique
+		return types.DiscreteTechnique[result.ToString()] if result is not None else None
 
 	@property
 	def LeftSkinZoneId(self) -> int:
@@ -1947,10 +1987,22 @@ class ZoneCol(EntityWithAssignablePropertiesCol[Zone]):
 
 	def Get(self, item1 = None) -> Zone:
 		if isinstance(item1, str):
-			return Zone(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = Zone
+			for subclass in Zone.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		if isinstance(item1, int):
-			return Zone(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = Zone
+			for subclass in Zone.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		result = self._Entity.Get(item1)
 		thisClass = type(result).__name__
@@ -1958,7 +2010,7 @@ class ZoneCol(EntityWithAssignablePropertiesCol[Zone]):
 		for subclass in Zone.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def __getitem__(self, index: int):
 		return self.ZoneColList[index]
@@ -2186,7 +2238,8 @@ class AutomatedConstraint(IdNameEntityRenameable):
 
 	@property
 	def ConstraintType(self) -> types.StiffnessCriteriaType:
-		return types.StiffnessCriteriaType[self._Entity.ConstraintType.ToString()]
+		result = self._Entity.ConstraintType
+		return types.StiffnessCriteriaType[result.ToString()] if result is not None else None
 
 	@property
 	def Set(self) -> str:
@@ -2249,7 +2302,8 @@ class StaticAutomatedConstraint(AutomatedConstraint):
 
 	@property
 	def Orientation(self) -> types.DisplacementShapeType:
-		return types.DisplacementShapeType[self._Entity.Orientation.ToString()]
+		result = self._Entity.Orientation
+		return types.DisplacementShapeType[result.ToString()] if result is not None else None
 
 	@property
 	def HasVector(self) -> bool:
@@ -2329,7 +2383,8 @@ class ManualConstraint(IdNameEntityRenameable):
 
 	@property
 	def ConstraintType(self) -> types.ConstraintType:
-		return types.ConstraintType[self._Entity.ConstraintType.ToString()]
+		result = self._Entity.ConstraintType
+		return types.ConstraintType[result.ToString()] if result is not None else None
 
 	@property
 	def Set(self) -> str:
@@ -2468,7 +2523,8 @@ class DisplacementManualConstraint(ManualConstraintWithDesignLoad):
 
 	@property
 	def DOF(self) -> types.DegreeOfFreedom:
-		return types.DegreeOfFreedom[self._Entity.DOF.ToString()]
+		result = self._Entity.DOF
+		return types.DegreeOfFreedom[result.ToString()] if result is not None else None
 
 	@property
 	def Nodes(self) -> list[int]:
@@ -2633,10 +2689,22 @@ class AutomatedConstraintCol(IdNameEntityCol[AutomatedConstraint]):
 
 	def Get(self, item1 = None) -> AutomatedConstraint:
 		if isinstance(item1, str):
-			return AutomatedConstraint(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = AutomatedConstraint
+			for subclass in AutomatedConstraint.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		if isinstance(item1, int):
-			return AutomatedConstraint(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = AutomatedConstraint
+			for subclass in AutomatedConstraint.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		result = self._Entity.Get(item1)
 		thisClass = type(result).__name__
@@ -2644,7 +2712,7 @@ class AutomatedConstraintCol(IdNameEntityCol[AutomatedConstraint]):
 		for subclass in AutomatedConstraint.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def __getitem__(self, index: int):
 		return self.AutomatedConstraintColList[index]
@@ -3854,7 +3922,8 @@ class LaminateFamily(IdNameEntity):
 
 	@property
 	def PlankSetting(self) -> types.LaminateFamilySettingType:
-		return types.LaminateFamilySettingType[self._Entity.PlankSetting.ToString()]
+		result = self._Entity.PlankSetting
+		return types.LaminateFamilySettingType[result.ToString()] if result is not None else None
 
 	@property
 	def PlankMinRatio(self) -> float:
@@ -3866,7 +3935,8 @@ class LaminateFamily(IdNameEntity):
 
 	@property
 	def FootChargeSetting(self) -> types.LaminateFamilySettingType:
-		return types.LaminateFamilySettingType[self._Entity.FootChargeSetting.ToString()]
+		result = self._Entity.FootChargeSetting
+		return types.LaminateFamilySettingType[result.ToString()] if result is not None else None
 
 	@property
 	def FootChargeMinRatio(self) -> float:
@@ -3878,7 +3948,8 @@ class LaminateFamily(IdNameEntity):
 
 	@property
 	def WebChargeSetting(self) -> types.LaminateFamilySettingType:
-		return types.LaminateFamilySettingType[self._Entity.WebChargeSetting.ToString()]
+		result = self._Entity.WebChargeSetting
+		return types.LaminateFamilySettingType[result.ToString()] if result is not None else None
 
 	@property
 	def WebChargeMinRatio(self) -> float:
@@ -3890,7 +3961,8 @@ class LaminateFamily(IdNameEntity):
 
 	@property
 	def CapChargeSetting(self) -> types.LaminateFamilySettingType:
-		return types.LaminateFamilySettingType[self._Entity.CapChargeSetting.ToString()]
+		result = self._Entity.CapChargeSetting
+		return types.LaminateFamilySettingType[result.ToString()] if result is not None else None
 
 	@property
 	def CapChargeMinRatio(self) -> float:
@@ -3902,7 +3974,8 @@ class LaminateFamily(IdNameEntity):
 
 	@property
 	def CapCoverSetting(self) -> types.LaminateFamilySettingType:
-		return types.LaminateFamilySettingType[self._Entity.CapCoverSetting.ToString()]
+		result = self._Entity.CapCoverSetting
+		return types.LaminateFamilySettingType[result.ToString()] if result is not None else None
 
 	@property
 	def CapCoverMinRatio(self) -> float:
@@ -3914,11 +3987,13 @@ class LaminateFamily(IdNameEntity):
 
 	@property
 	def DropPattern(self) -> types.PlyDropPattern:
-		return types.PlyDropPattern[self._Entity.DropPattern.ToString()]
+		result = self._Entity.DropPattern
+		return types.PlyDropPattern[result.ToString()] if result is not None else None
 
 	@property
 	def LaminateStiffenerProfile(self) -> types.StiffenerProfile:
-		return types.StiffenerProfile[self._Entity.LaminateStiffenerProfile.ToString()]
+		result = self._Entity.LaminateStiffenerProfile
+		return types.StiffenerProfile[result.ToString()] if result is not None else None
 
 
 class LaminateLayerBase(ABC):
@@ -3938,7 +4013,8 @@ class LaminateLayerBase(ABC):
 		'''
 		Represents a material's type.
 		'''
-		return types.MaterialType[self._Entity.LayerMaterialType.ToString()]
+		result = self._Entity.LayerMaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 	@property
 	def Angle(self) -> float:
@@ -3995,7 +4071,8 @@ class LaminateLayer(LaminateLayerBase):
 		'''
 		Represents a material's type.
 		'''
-		return types.MaterialType[self._Entity.LayerMaterialType.ToString()]
+		result = self._Entity.LayerMaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 	@property
 	def Angle(self) -> float:
@@ -4079,7 +4156,8 @@ class StiffenerLaminateLayer(LaminateLayerBase):
 		'''
 		Represents a material's type.
 		'''
-		return types.MaterialType[self._Entity.LayerMaterialType.ToString()]
+		result = self._Entity.LayerMaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 	@property
 	def Angle(self) -> float:
@@ -4138,7 +4216,8 @@ class StiffenerLaminate(LaminateBase):
 
 	@property
 	def LaminateStiffenerProfile(self) -> types.StiffenerProfile:
-		return types.StiffenerProfile[self._Entity.LaminateStiffenerProfile.ToString()]
+		result = self._Entity.LaminateStiffenerProfile
+		return types.StiffenerProfile[result.ToString()] if result is not None else None
 
 	@overload
 	def AddLayer(self, location: types.StiffenerLaminateLayerLocation, materialName: str, angle: float, thickness: float = None) -> StiffenerLaminateLayer: ...
@@ -4166,10 +4245,10 @@ class StiffenerLaminate(LaminateBase):
 		return self._Entity.Save()
 
 	def AddLayer(self, item1 = None, item2 = None, item3 = None, item4 = None) -> StiffenerLaminateLayer:
-		if isinstance(item1, types.StiffenerLaminateLayerLocation) and isinstance(item2, str) and isinstance(item3, float) and isinstance(item4, float):
+		if isinstance(item1, types.StiffenerLaminateLayerLocation) and isinstance(item2, str) and isinstance(item3, float) and (isinstance(item3, float) or isinstance(item3, int)) and isinstance(item4, float) and (isinstance(item4, float) or item4 is None or isinstance(item4, int)):
 			return StiffenerLaminateLayer(self._Entity.AddLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4))
 
-		if isinstance(item1, tuple) and item1 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, str) and isinstance(item3, float) and isinstance(item4, float):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, str) and isinstance(item3, float) and (isinstance(item3, float) or isinstance(item3, int)) and isinstance(item4, float) and (isinstance(item4, float) or item4 is None or isinstance(item4, int)):
 			locationsList = List[_types.StiffenerLaminateLayerLocation]()
 			if item1 is not None:
 				for thing in item1:
@@ -4181,10 +4260,10 @@ class StiffenerLaminate(LaminateBase):
 		return StiffenerLaminateLayer(self._Entity.AddLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4))
 
 	def InsertLayer(self, item1 = None, item2 = None, item3 = None, item4 = None, item5 = None) -> StiffenerLaminateLayer:
-		if isinstance(item1, types.StiffenerLaminateLayerLocation) and isinstance(item2, int) and isinstance(item3, str) and isinstance(item4, float) and isinstance(item5, float):
+		if isinstance(item1, types.StiffenerLaminateLayerLocation) and isinstance(item2, int) and isinstance(item3, str) and isinstance(item4, float) and (isinstance(item4, float) or isinstance(item4, int)) and isinstance(item5, float) and (isinstance(item5, float) or item5 is None or isinstance(item5, int)):
 			return StiffenerLaminateLayer(self._Entity.InsertLayer(_types.StiffenerLaminateLayerLocation(item1.value), item2, item3, item4, item5))
 
-		if isinstance(item1, tuple) and item1 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, int) and isinstance(item3, str) and isinstance(item4, float) and isinstance(item5, float):
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], types.StiffenerLaminateLayerLocation) and isinstance(item2, int) and isinstance(item3, str) and isinstance(item4, float) and (isinstance(item4, float) or isinstance(item4, int)) and isinstance(item5, float) and (isinstance(item5, float) or item5 is None or isinstance(item5, int)):
 			locationsList = List[_types.StiffenerLaminateLayerLocation]()
 			if item1 is not None:
 				for thing in item1:
@@ -4208,14 +4287,16 @@ class OrthotropicCorrectionFactorBase(ABC):
 		'''
 		Correction ID for a correction factor. (Columns in HyperX)
 		'''
-		return types.CorrectionId[self._Entity.CorrectionId.ToString()]
+		result = self._Entity.CorrectionId
+		return types.CorrectionId[result.ToString()] if result is not None else None
 
 	@property
 	def PropertyId(self) -> types.CorrectionProperty:
 		'''
 		Property name for a correction factor. (Rows in HyperX)
 		'''
-		return types.CorrectionProperty[self._Entity.PropertyId.ToString()]
+		result = self._Entity.PropertyId
+		return types.CorrectionProperty[result.ToString()] if result is not None else None
 
 
 class OrthotropicCorrectionFactorPoint:
@@ -4233,29 +4314,34 @@ class OrthotropicCorrectionFactorPoint:
 		'''
 		Property name for a correction factor. (Rows in HyperX)
 		'''
-		return types.CorrectionProperty[self._Entity.CorrectionProperty.ToString()]
+		result = self._Entity.CorrectionProperty
+		return types.CorrectionProperty[result.ToString()] if result is not None else None
 
 	@property
 	def CorrectionId(self) -> types.CorrectionId:
 		'''
 		Correction ID for a correction factor. (Columns in HyperX)
 		'''
-		return types.CorrectionId[self._Entity.CorrectionId.ToString()]
+		result = self._Entity.CorrectionId
+		return types.CorrectionId[result.ToString()] if result is not None else None
 
 	@overload
 	def Equals(self, other) -> bool: ...
 
 	@overload
-	def Equals(self, obj) -> bool: ...
-
-	def GetHashCode(self) -> int:
-		return self._Entity.GetHashCode()
+	def Equals(self, obj: object) -> bool: ...
 
 	def Equals(self, item1 = None) -> bool:
 		if isinstance(item1, OrthotropicCorrectionFactorPoint):
 			return self._Entity.Equals(item1._Entity)
 
+		if isinstance(item1, object):
+			return self._Entity.Equals(item1)
+
 		return self._Entity.Equals(item1._Entity)
+
+	def __hash__(self) -> int:
+		return self._Entity.GetHashCode()
 
 
 class OrthotropicCorrectionFactorValue:
@@ -4270,28 +4356,32 @@ class OrthotropicCorrectionFactorValue:
 		'''
 		Property name for a correction factor. (Rows in HyperX)
 		'''
-		return types.CorrectionProperty[self._Entity.Property.ToString()]
+		result = self._Entity.Property
+		return types.CorrectionProperty[result.ToString()] if result is not None else None
 
 	@property
 	def Correction(self) -> types.CorrectionId:
 		'''
 		Correction ID for a correction factor. (Columns in HyperX)
 		'''
-		return types.CorrectionId[self._Entity.Correction.ToString()]
+		result = self._Entity.Correction
+		return types.CorrectionId[result.ToString()] if result is not None else None
 
 	@property
 	def Equation(self) -> types.CorrectionEquation:
 		'''
 		Equation for a correction factor.
 		'''
-		return types.CorrectionEquation[self._Entity.Equation.ToString()]
+		result = self._Entity.Equation
+		return types.CorrectionEquation[result.ToString()] if result is not None else None
 
 	@property
 	def EquationParameter(self) -> types.EquationParameterId:
 		'''
 		Correction factor parameter names.
 		'''
-		return types.EquationParameterId[self._Entity.EquationParameter.ToString()]
+		result = self._Entity.EquationParameter
+		return types.EquationParameterId[result.ToString()] if result is not None else None
 
 	@property
 	def Value(self) -> float:
@@ -4314,7 +4404,8 @@ class OrthotropicEquationCorrectionFactor(OrthotropicCorrectionFactorBase):
 		'''
 		Equation for a correction factor.
 		'''
-		return types.CorrectionEquation[self._Entity.Equation.ToString()]
+		result = self._Entity.Equation
+		return types.CorrectionEquation[result.ToString()] if result is not None else None
 
 	@property
 	def OrthotropicCorrectionValues(self) -> dict[types.EquationParameterId, OrthotropicCorrectionFactorValue]:
@@ -4357,7 +4448,8 @@ class TabularCorrectionFactorIndependentValue:
 		'''
 		Defines the type of the independent values on a tabular correction factor row.
 		'''
-		return types.CorrectionValueType[self._Entity.ValueType.ToString()]
+		result = self._Entity.ValueType
+		return types.CorrectionValueType[result.ToString()] if result is not None else None
 
 
 class TabularCorrectionFactorRow:
@@ -4397,7 +4489,7 @@ class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
 
 	@property
 	def CorrectionIndependentDefinitions(self) -> set[types.CorrectionIndependentDefinition]:
-		return {types.CorrectionIndependentDefinition(correctionIndependentDefinition) for correctionIndependentDefinition in self._Entity.CorrectionIndependentDefinitions}
+		return {types.CorrectionIndependentDefinition[correctionIndependentDefinition.ToString()] for correctionIndependentDefinition in self._Entity.CorrectionIndependentDefinitions}
 
 	@overload
 	def SetIndependentValue(self, correctionPointId: int, cid: types.CorrectionIndependentDefinition, value: float) -> None: ...
@@ -4415,7 +4507,7 @@ class OrthotropicTabularCorrectionFactor(OrthotropicCorrectionFactorBase):
 		return self._Entity.SetKValue(correctionPointId, value)
 
 	def SetIndependentValue(self, item1 = None, item2 = None, item3 = None) -> None:
-		if isinstance(item1, int) and isinstance(item2, types.CorrectionIndependentDefinition) and isinstance(item3, float):
+		if isinstance(item1, int) and isinstance(item2, types.CorrectionIndependentDefinition) and isinstance(item3, float) and (isinstance(item3, float) or isinstance(item3, int)):
 			return self._Entity.SetIndependentValue(item1, _types.CorrectionIndependentDefinition(item2.value), item3)
 
 		if isinstance(item1, int) and isinstance(item2, types.CorrectionIndependentDefinition) and isinstance(item3, bool):
@@ -4439,7 +4531,8 @@ class OrthotropicAllowableCurvePoint:
 		'''
 		Property name for a laminate allowable.
 		'''
-		return types.AllowablePropertyName[self._Entity.Property_ID.ToString()]
+		result = self._Entity.Property_ID
+		return types.AllowablePropertyName[result.ToString()] if result is not None else None
 
 	@property
 	def Temperature(self) -> float:
@@ -4531,14 +4624,16 @@ class OrthotropicLaminateAllowable:
 		'''
 		Property name for a laminate allowable.
 		'''
-		return types.AllowablePropertyName[self._Entity.Property_ID.ToString()]
+		result = self._Entity.Property_ID
+		return types.AllowablePropertyName[result.ToString()] if result is not None else None
 
 	@property
 	def Method_ID(self) -> types.AllowableMethodName:
 		'''
 		Method name for a laminate allowable.
 		'''
-		return types.AllowableMethodName[self._Entity.Method_ID.ToString()]
+		result = self._Entity.Method_ID
+		return types.AllowableMethodName[result.ToString()] if result is not None else None
 
 	@Property_ID.setter
 	def Property_ID(self, value: types.AllowablePropertyName) -> None:
@@ -5191,14 +5286,14 @@ class Vector2d:
 	def Equals(self, other) -> bool: ...
 
 	@overload
-	def Equals(self, obj) -> bool: ...
-
-	def GetHashCode(self) -> int:
-		return self._Entity.GetHashCode()
+	def Equals(self, obj: object) -> bool: ...
 
 	def Equals(self, item1 = None) -> bool:
 		if isinstance(item1, Vector2d):
 			return self._Entity.Equals(item1._Entity)
+
+		if isinstance(item1, object):
+			return self._Entity.Equals(item1)
 
 		return self._Entity.Equals(item1._Entity)
 
@@ -5207,6 +5302,9 @@ class Vector2d:
 
 	def __ne__(self, other):
 		return not self.Equals(other)
+
+	def __hash__(self) -> int:
+		return self._Entity.GetHashCode()
 
 
 class ElementSet(IdNameEntity):
@@ -5236,7 +5334,8 @@ class FemProperty(IdNameEntity):
 
 	@property
 	def FemType(self) -> types.FemType:
-		return types.FemType[self._Entity.FemType.ToString()]
+		result = self._Entity.FemType
+		return types.FemType[result.ToString()] if result is not None else None
 
 
 class ElementSetCol(IdEntityCol[ElementSet]):
@@ -5453,7 +5552,8 @@ class SectionCut(IdNameEntity):
 		'''
 		Centroid vs Origin
 		'''
-		return types.SectionCutPropertyLocation[self._Entity.ReferencePoint.ToString()]
+		result = self._Entity.ReferencePoint
+		return types.SectionCutPropertyLocation[result.ToString()] if result is not None else None
 
 	@property
 	def HorizontalVector(self) -> Vector3d:
@@ -5707,13 +5807,13 @@ class SectionCut(IdNameEntity):
 		return BeamLoads(self._Entity.GetBeamLoads(loadCaseId, _types.LoadSubCaseFactor(factor.value)))
 
 	def InclinationAngle(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> float:
-		return self._Entity.InclinationAngle(loadCaseId, _types.LoadSubCaseFactor(factor.value))
+		return float(self._Entity.InclinationAngle(loadCaseId, _types.LoadSubCaseFactor(factor.value)))
 
 	def HorizontalIntercept(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> float:
-		return self._Entity.HorizontalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value))
+		return float(self._Entity.HorizontalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value)))
 
 	def VerticalIntercept(self, loadCaseId: int, factor: types.LoadSubCaseFactor) -> float:
-		return self._Entity.VerticalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value))
+		return float(self._Entity.VerticalIntercept(loadCaseId, _types.LoadSubCaseFactor(factor.value)))
 
 	def SetElements(self, elements: list[int]) -> bool:
 		elementsList = MakeCSharpIntList(elements)
@@ -6015,12 +6115,14 @@ class Structure(ZoneJointContainer):
 		for subclass in Zone.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def CreatePanelSegment(self, discreteTechnique: types.DiscreteTechnique, discreteElementLkp: dict[types.DiscreteDefinitionType, list[int]], name: str = None) -> PanelSegment:
 		discreteElementLkpDict = Dictionary[_types.DiscreteDefinitionType, List[int]]()
 		for kvp in discreteElementLkp:
-			discreteElementLkpDict.Add(_types.DiscreteDefinitionType(kvp.value), MakeCSharpIntList(discreteElementLkp[kvp]))
+			dictValue = discreteElementLkp[kvp]
+			dictValueList = MakeCSharpIntList(dictValue)
+			discreteElementLkpDict.Add(_types.DiscreteDefinitionType(kvp.value), dictValueList)
 		return PanelSegment(self._Entity.CreatePanelSegment(_types.DiscreteTechnique(discreteTechnique.value), discreteElementLkpDict, name))
 
 	@overload
@@ -6276,7 +6378,7 @@ class DesignPropertyCol(IdNameEntityCol[DesignProperty]):
 		for subclass in DesignProperty.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	@overload
 	def Get(self, name: str) -> DesignProperty: ...
@@ -6286,10 +6388,22 @@ class DesignPropertyCol(IdNameEntityCol[DesignProperty]):
 
 	def Get(self, item1 = None) -> DesignProperty:
 		if isinstance(item1, str):
-			return DesignProperty(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = DesignProperty
+			for subclass in DesignProperty.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		if isinstance(item1, int):
-			return DesignProperty(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = DesignProperty
+			for subclass in DesignProperty.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		result = self._Entity.Get(item1)
 		thisClass = type(result).__name__
@@ -6297,7 +6411,7 @@ class DesignPropertyCol(IdNameEntityCol[DesignProperty]):
 		for subclass in DesignProperty.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def __getitem__(self, index: int):
 		return self.DesignPropertyColList[index]
@@ -6328,7 +6442,7 @@ class LoadPropertyCol(IdNameEntityCol[LoadProperty]):
 		for subclass in LoadProperty.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	@overload
 	def DeleteLoadProperty(self, id: int) -> bool: ...
@@ -6353,10 +6467,22 @@ class LoadPropertyCol(IdNameEntityCol[LoadProperty]):
 
 	def Get(self, item1 = None) -> LoadProperty:
 		if isinstance(item1, str):
-			return LoadProperty(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = LoadProperty
+			for subclass in LoadProperty.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		if isinstance(item1, int):
-			return LoadProperty(super().Get(item1))
+			result = super().Get(item1)
+			thisClass = type(result).__name__
+			givenClass = LoadProperty
+			for subclass in LoadProperty.__subclasses__():
+				if subclass.__name__ == thisClass:
+					givenClass = subclass
+			return givenClass(result) if result is not None else None
 
 		result = self._Entity.Get(item1)
 		thisClass = type(result).__name__
@@ -6364,7 +6490,7 @@ class LoadPropertyCol(IdNameEntityCol[LoadProperty]):
 		for subclass in LoadProperty.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def __getitem__(self, index: int):
 		return self.LoadPropertyColList[index]
@@ -6820,7 +6946,8 @@ class Project:
 
 	@property
 	def FemFormat(self) -> types.ProjectModelFormat:
-		return types.ProjectModelFormat[self._Entity.FemFormat.ToString()]
+		result = self._Entity.FemFormat
+		return types.ProjectModelFormat[result.ToString()] if result is not None else None
 
 	def Upload(self, uploadSetName: str, company: str, program: str, tags: list[str], notes: str, zoneIds: set[int], jointIds: set[int]) -> bool:
 		tagsList = List[str]()
@@ -6918,7 +7045,7 @@ class Project:
 		for subclass in Zone.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def ReturnToUnusedFem(self, zoneNumbers: list[int] = None, jointIds: set[int] = None) -> None:
 		zoneNumbersList = MakeCSharpIntList(zoneNumbers)
@@ -7228,7 +7355,7 @@ class LaminateCol(Generic[T]):
 		for subclass in LaminateBase.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def Contains(self, laminateName: str) -> bool:
 		return self._Entity.Contains(laminateName)
@@ -7255,7 +7382,7 @@ class LaminateCol(Generic[T]):
 		for subclass in LaminateBase.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		return givenClass(result)
+		return givenClass(result) if result is not None else None
 
 	def Delete(self, name: str) -> bool:
 		'''
@@ -7452,7 +7579,7 @@ class Application:
 		Unit system specified when starting a scripting Application.
 		'''
 		result = self._Entity.UnitSystem
-		return UnitSystem(result) if result is not None else None
+		return UnitSystem[result.ToString()] if result is not None else None
 
 	@property
 	def CompilationDate(self) -> str:
@@ -7669,7 +7796,8 @@ class SizingMaterial(IdEntity):
 		'''
 		Represents a material's type.
 		'''
-		return types.MaterialType[self._Entity.MaterialType.ToString()]
+		result = self._Entity.MaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 
 class SizingMaterialCol(IdEntityCol[SizingMaterial]):
@@ -7769,7 +7897,8 @@ class ZoneOverride(IdEntity):
 
 	@property
 	def FamilyId(self) -> types.BeamPanelFamily:
-		return types.BeamPanelFamily[self._Entity.FamilyId.ToString()]
+		result = self._Entity.FamilyId
+		return types.BeamPanelFamily[result.ToString()] if result is not None else None
 
 	@property
 	def ConceptId(self) -> int:
@@ -7805,7 +7934,8 @@ class ZoneOverride(IdEntity):
 
 	@property
 	def InputMode(self) -> types.VariableInputMode:
-		return types.VariableInputMode[self._Entity.InputMode.ToString()]
+		result = self._Entity.InputMode
+		return types.VariableInputMode[result.ToString()] if result is not None else None
 
 	@property
 	def SizingMaterials(self) -> SizingMaterialCol:
@@ -7822,7 +7952,8 @@ class ZoneOverride(IdEntity):
 
 	@property
 	def AnalysisMaterialType(self) -> types.MaterialType:
-		return types.MaterialType[self._Entity.AnalysisMaterialType.ToString()]
+		result = self._Entity.AnalysisMaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 	@MinBound.setter
 	def MinBound(self, value: float) -> None:
@@ -7881,7 +8012,8 @@ class ToolingConstraint(IdNameEntity):
 		'''
 		Defines which selection a given tooling constraint is currently set to.
 		'''
-		return types.ToolingSelectionType[self._Entity.ToolingSelectionType.ToString()]
+		result = self._Entity.ToolingSelectionType
+		return types.ToolingSelectionType[result.ToString()] if result is not None else None
 
 	def SetToAnyValue(self) -> None:
 		return self._Entity.SetToAnyValue()
@@ -7931,7 +8063,8 @@ class DesignVariable(IdEntity):
 
 	@property
 	def VariableParameter(self) -> types.VariableParameter:
-		return types.VariableParameter[self._Entity.VariableParameter.ToString()]
+		result = self._Entity.VariableParameter
+		return types.VariableParameter[result.ToString()] if result is not None else None
 
 	@property
 	def AllowMaterials(self) -> bool:
@@ -7963,11 +8096,13 @@ class DesignVariable(IdEntity):
 
 	@property
 	def AnalysisMaterialType(self) -> types.MaterialType:
-		return types.MaterialType[self._Entity.AnalysisMaterialType.ToString()]
+		result = self._Entity.AnalysisMaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 	@property
 	def SizingMaterialType(self) -> types.MaterialType:
-		return types.MaterialType[self._Entity.SizingMaterialType.ToString()]
+		result = self._Entity.SizingMaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 	@property
 	def AnalysisValue(self) -> float:
@@ -8023,7 +8158,7 @@ class DesignVariable(IdEntity):
 		'''
 		Get the material used for analysis, if it exists.
 		'''
-		return self._Entity.GetAnalysisMaterial()
+		return int(self._Entity.GetAnalysisMaterial())
 
 	def RemoveAnalysisMaterial(self) -> None:
 		'''
@@ -8125,7 +8260,8 @@ class ZoneDesignProperty(DesignProperty):
 
 	@property
 	def FamilyId(self) -> types.BeamPanelFamily:
-		return types.BeamPanelFamily[self._Entity.FamilyId.ToString()]
+		result = self._Entity.FamilyId
+		return types.BeamPanelFamily[result.ToString()] if result is not None else None
 
 	@property
 	def ConceptId(self) -> int:
@@ -8133,7 +8269,8 @@ class ZoneDesignProperty(DesignProperty):
 
 	@property
 	def FamilyConceptUID(self) -> types.FamilyConceptUID:
-		return types.FamilyConceptUID[self._Entity.FamilyConceptUID.ToString()]
+		result = self._Entity.FamilyConceptUID
+		return types.FamilyConceptUID[result.ToString()] if result is not None else None
 
 	@property
 	def ToolingConstraints(self) -> ToolingConstraintCol:
@@ -8175,7 +8312,8 @@ class LoadPropertyUserRow(IdNameEntity):
 
 	@property
 	def Type(self) -> types.LoadSetType:
-		return types.LoadSetType[self._Entity.Type.ToString()]
+		result = self._Entity.Type
+		return types.LoadSetType[result.ToString()] if result is not None else None
 
 	@property
 	def ReferenceTemperature(self) -> float:
@@ -8458,35 +8596,43 @@ class LoadPropertyUserGeneralBeamRow(LoadPropertyUserBeamRow):
 
 	@property
 	def M1AType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.M1AType.ToString()]
+		result = self._Entity.M1AType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def M2AType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.M2AType.ToString()]
+		result = self._Entity.M2AType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def M1BType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.M1BType.ToString()]
+		result = self._Entity.M1BType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def M2BType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.M2BType.ToString()]
+		result = self._Entity.M2BType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def V1Type(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.V1Type.ToString()]
+		result = self._Entity.V1Type
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def V2Type(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.V2Type.ToString()]
+		result = self._Entity.V2Type
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def AxialType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.AxialType.ToString()]
+		result = self._Entity.AxialType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def TorqueType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.TorqueType.ToString()]
+		result = self._Entity.TorqueType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@M1A.setter
 	def M1A(self, value: float) -> None:
@@ -8572,35 +8718,43 @@ class LoadPropertyUserGeneralPanelRow(LoadPropertyUserPanelJointRow):
 
 	@property
 	def NxType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.NxType.ToString()]
+		result = self._Entity.NxType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def NyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.NyType.ToString()]
+		result = self._Entity.NyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def NxyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.NxyType.ToString()]
+		result = self._Entity.NxyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def MxType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.MxType.ToString()]
+		result = self._Entity.MxType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def MyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.MyType.ToString()]
+		result = self._Entity.MyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def MxyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.MxyType.ToString()]
+		result = self._Entity.MxyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def QxType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.QxType.ToString()]
+		result = self._Entity.QxType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def QyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.QyType.ToString()]
+		result = self._Entity.QyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@Nx.setter
 	def Nx(self, value: float) -> None:
@@ -8803,7 +8957,8 @@ class LoadPropertyAverage(LoadPropertyFea):
 
 	@property
 	def ElementType(self) -> types.LoadPropertyAverageElementType:
-		return types.LoadPropertyAverageElementType[self._Entity.ElementType.ToString()]
+		result = self._Entity.ElementType
+		return types.LoadPropertyAverageElementType[result.ToString()] if result is not None else None
 
 	@ElementType.setter
 	def ElementType(self, value: types.LoadPropertyAverageElementType) -> None:
@@ -8834,7 +8989,8 @@ class LoadPropertyPeakLoad(LoadPropertyFea):
 
 	@property
 	def ElementScope(self) -> types.LoadPropertyPeakElementScope:
-		return types.LoadPropertyPeakElementScope[self._Entity.ElementScope.ToString()]
+		result = self._Entity.ElementScope
+		return types.LoadPropertyPeakElementScope[result.ToString()] if result is not None else None
 
 	@ElementScope.setter
 	def ElementScope(self, value: types.LoadPropertyPeakElementScope) -> None:
@@ -9105,22 +9261,22 @@ class LoadPropertyUserGeneralDoubleRow(IdNameEntity):
 
 	@property
 	def MechanicalRow(self) -> LoadPropertyUserRow:
-		thisClass = type(self._Entity.MechanicalRow).__name__
+		result = self._Entity.MechanicalRow
+		thisClass = type(result).__name__
 		givenClass = LoadPropertyUserRow
 		for subclass in LoadPropertyUserRow.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		result = self._Entity.MechanicalRow
 		return givenClass(result) if result is not None else None
 
 	@property
 	def ThermalRow(self) -> LoadPropertyUserRow:
-		thisClass = type(self._Entity.ThermalRow).__name__
+		result = self._Entity.ThermalRow
+		thisClass = type(result).__name__
 		givenClass = LoadPropertyUserRow
 		for subclass in LoadPropertyUserRow.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		result = self._Entity.ThermalRow
 		return givenClass(result) if result is not None else None
 
 	def SetName(self, name: str) -> None:
@@ -9136,55 +9292,63 @@ class LoadPropertyUserGeneralBeamDoubleRow(LoadPropertyUserGeneralDoubleRow):
 
 	@property
 	def MechanicalRow(self) -> LoadPropertyUserRow:
-		thisClass = type(self._Entity.MechanicalRow).__name__
+		result = self._Entity.MechanicalRow
+		thisClass = type(result).__name__
 		givenClass = LoadPropertyUserRow
 		for subclass in LoadPropertyUserRow.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		result = self._Entity.MechanicalRow
 		return givenClass(result) if result is not None else None
 
 	@property
 	def ThermalRow(self) -> LoadPropertyUserRow:
-		thisClass = type(self._Entity.ThermalRow).__name__
+		result = self._Entity.ThermalRow
+		thisClass = type(result).__name__
 		givenClass = LoadPropertyUserRow
 		for subclass in LoadPropertyUserRow.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		result = self._Entity.ThermalRow
 		return givenClass(result) if result is not None else None
 
 	@property
 	def M1AType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.M1AType.ToString()]
+		result = self._Entity.M1AType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def M2AType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.M2AType.ToString()]
+		result = self._Entity.M2AType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def M1BType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.M1BType.ToString()]
+		result = self._Entity.M1BType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def M2BType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.M2BType.ToString()]
+		result = self._Entity.M2BType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def V1Type(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.V1Type.ToString()]
+		result = self._Entity.V1Type
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def V2Type(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.V2Type.ToString()]
+		result = self._Entity.V2Type
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def AxialType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.AxialType.ToString()]
+		result = self._Entity.AxialType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def TorqueType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.TorqueType.ToString()]
+		result = self._Entity.TorqueType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	def SetM1AType(self, type: types.BoundaryConditionType) -> None:
 		'''
@@ -9516,7 +9680,8 @@ class LoadPropertyUserGeneralBondedRow(IdEntity):
 
 	@property
 	def JointConceptId(self) -> types.JointConceptId:
-		return types.JointConceptId[self._Entity.JointConceptId.ToString()]
+		result = self._Entity.JointConceptId
+		return types.JointConceptId[result.ToString()] if result is not None else None
 
 	@property
 	def BondedBcId(self) -> int:
@@ -9524,19 +9689,23 @@ class LoadPropertyUserGeneralBondedRow(IdEntity):
 
 	@property
 	def AxialType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.AxialType.ToString()]
+		result = self._Entity.AxialType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def MomentType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.MomentType.ToString()]
+		result = self._Entity.MomentType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def TransverseType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.TransverseType.ToString()]
+		result = self._Entity.TransverseType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def ShearType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.ShearType.ToString()]
+		result = self._Entity.ShearType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def Axial(self) -> float:
@@ -9624,7 +9793,8 @@ class LoadPropertyJoint(IdEntity):
 
 	@property
 	def JConceptId(self) -> types.JointConceptId:
-		return types.JointConceptId[self._Entity.JConceptId.ToString()]
+		result = self._Entity.JConceptId
+		return types.JointConceptId[result.ToString()] if result is not None else None
 
 	@property
 	def Ex(self) -> float:
@@ -9679,55 +9849,63 @@ class LoadPropertyUserGeneralPanelDoubleRow(LoadPropertyUserGeneralDoubleRow):
 
 	@property
 	def MechanicalRow(self) -> LoadPropertyUserRow:
-		thisClass = type(self._Entity.MechanicalRow).__name__
+		result = self._Entity.MechanicalRow
+		thisClass = type(result).__name__
 		givenClass = LoadPropertyUserRow
 		for subclass in LoadPropertyUserRow.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		result = self._Entity.MechanicalRow
 		return givenClass(result) if result is not None else None
 
 	@property
 	def ThermalRow(self) -> LoadPropertyUserRow:
-		thisClass = type(self._Entity.ThermalRow).__name__
+		result = self._Entity.ThermalRow
+		thisClass = type(result).__name__
 		givenClass = LoadPropertyUserRow
 		for subclass in LoadPropertyUserRow.__subclasses__():
 			if subclass.__name__ == thisClass:
 				givenClass = subclass
-		result = self._Entity.ThermalRow
 		return givenClass(result) if result is not None else None
 
 	@property
 	def NxType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.NxType.ToString()]
+		result = self._Entity.NxType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def NyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.NyType.ToString()]
+		result = self._Entity.NyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def NxyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.NxyType.ToString()]
+		result = self._Entity.NxyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def MxType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.MxType.ToString()]
+		result = self._Entity.MxType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def MyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.MyType.ToString()]
+		result = self._Entity.MyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def MxyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.MxyType.ToString()]
+		result = self._Entity.MxyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def QxType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.QxType.ToString()]
+		result = self._Entity.QxType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	@property
 	def QyType(self) -> types.BoundaryConditionType:
-		return types.BoundaryConditionType[self._Entity.QyType.ToString()]
+		result = self._Entity.QyType
+		return types.BoundaryConditionType[result.ToString()] if result is not None else None
 
 	def SetNxType(self, type: types.BoundaryConditionType) -> None:
 		'''
@@ -9857,7 +10035,8 @@ class JointSelectionDesignResult(JointDesignResult):
 
 	@property
 	def JointSelectionId(self) -> types.JointSelectionId:
-		return types.JointSelectionId[self._Entity.JointSelectionId.ToString()]
+		result = self._Entity.JointSelectionId
+		return types.JointSelectionId[result.ToString()] if result is not None else None
 
 
 class JointFastenerDesignResult(JointSelectionDesignResult):
@@ -9886,7 +10065,8 @@ class JointMaterialDesignResult(JointSelectionDesignResult):
 		'''
 		Represents a material's type.
 		'''
-		return types.MaterialType[self._Entity.MaterialType.ToString()]
+		result = self._Entity.MaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 
 class JointRangeDesignResult(JointDesignResult):
@@ -9895,7 +10075,8 @@ class JointRangeDesignResult(JointDesignResult):
 
 	@property
 	def JointRangeId(self) -> types.JointRangeId:
-		return types.JointRangeId[self._Entity.JointRangeId.ToString()]
+		result = self._Entity.JointRangeId
+		return types.JointRangeId[result.ToString()] if result is not None else None
 
 	@property
 	def Value(self) -> float:
@@ -9994,7 +10175,8 @@ class LaminatePlyData:
 		'''
 		Represents a material's type.
 		'''
-		return types.MaterialType[self._Entity.PlyMaterialType.ToString()]
+		result = self._Entity.PlyMaterialType
+		return types.MaterialType[result.ToString()] if result is not None else None
 
 	@property
 	def Angle(self) -> float:
@@ -10026,7 +10208,8 @@ class LaminatePlyData:
 
 	@property
 	def PlyStiffenerSubType(self) -> types.PlyStiffenerSubType:
-		return types.PlyStiffenerSubType[self._Entity.PlyStiffenerSubType.ToString()]
+		result = self._Entity.PlyStiffenerSubType
+		return types.PlyStiffenerSubType[result.ToString()] if result is not None else None
 
 	@property
 	def Object1(self) -> bool:
@@ -10099,7 +10282,8 @@ class Beam(Zone):
 
 	@property
 	def ReferencePlane(self) -> types.ReferencePlaneBeam:
-		return types.ReferencePlaneBeam[self._Entity.ReferencePlane.ToString()]
+		result = self._Entity.ReferencePlane
+		return types.ReferencePlaneBeam[result.ToString()] if result is not None else None
 
 	@Phi.setter
 	def Phi(self, value: float) -> None:
@@ -10146,7 +10330,8 @@ class Panel(Zone):
 
 	@property
 	def ReferencePlane(self) -> types.ReferencePlanePanel:
-		return types.ReferencePlanePanel[self._Entity.ReferencePlane.ToString()]
+		result = self._Entity.ReferencePlane
+		return types.ReferencePlanePanel[result.ToString()] if result is not None else None
 
 	@property
 	def AddedOffset(self) -> float:
@@ -10170,7 +10355,8 @@ class Panel(Zone):
 
 	@property
 	def BucklingMode(self) -> types.ZoneBucklingMode:
-		return types.ZoneBucklingMode[self._Entity.BucklingMode.ToString()]
+		result = self._Entity.BucklingMode
+		return types.ZoneBucklingMode[result.ToString()] if result is not None else None
 
 	@property
 	def PerformLocalPostbuckling(self) -> bool:

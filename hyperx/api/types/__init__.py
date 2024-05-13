@@ -5,7 +5,7 @@ from typing import TypeVar, Generic, overload
 from enum import Enum
 from System.Collections.Generic import List, IEnumerable, Dictionary, HashSet
 from System.Threading.Tasks import Task
-from System import Guid, DateTime
+from System import Guid, DateTime, Double, String, Nullable
 
 from abc import ABC, abstractmethod
 
@@ -1175,16 +1175,16 @@ class SimpleStatus:
 	def ToString(self) -> str:
 		return self._Entity.ToString()
 
-	def GetHashCode(self) -> int:
-		return self._Entity.GetHashCode()
-
 	@overload
-	def Equals(self, obj) -> bool: ...
+	def Equals(self, obj: object) -> bool: ...
 
 	@overload
 	def Equals(self, other) -> bool: ...
 
 	def Equals(self, item1 = None) -> bool:
+		if isinstance(item1, object):
+			return self._Entity.Equals(item1)
+
 		if isinstance(item1, SimpleStatus):
 			return self._Entity.Equals(_types.SimpleStatus(item1.value))
 
@@ -1195,6 +1195,9 @@ class SimpleStatus:
 
 	def __ne__(self, other):
 		return not self.Equals(other)
+
+	def __hash__(self) -> int:
+		return self._Entity.GetHashCode()
 
 
 class DesignLink:
@@ -1210,7 +1213,8 @@ class DesignLink:
 
 	@property
 	def FamilyId(self) -> BeamPanelFamily:
-		return BeamPanelFamily[self._Entity.FamilyId.ToString()]
+		result = self._Entity.FamilyId
+		return BeamPanelFamily[result.ToString()] if result is not None else None
 
 	@property
 	def ConceptId(self) -> int:
@@ -1220,10 +1224,10 @@ class DesignLink:
 	def LinkedVariableId(self) -> int:
 		return self._Entity.LinkedVariableId
 
-	def Equals(self, obj) -> bool:
-		return self._Entity.Equals(obj._Entity)
+	def Equals(self, obj: object) -> bool:
+		return self._Entity.Equals(obj)
 
-	def GetHashCode(self) -> int:
+	def __hash__(self) -> int:
 		return self._Entity.GetHashCode()
 
 
@@ -1236,7 +1240,8 @@ class HyperFeaSolver:
 
 	@property
 	def ProjectModelFormat(self) -> ProjectModelFormat:
-		return ProjectModelFormat[self._Entity.ProjectModelFormat.ToString()]
+		result = self._Entity.ProjectModelFormat
+		return ProjectModelFormat[result.ToString()] if result is not None else None
 
 	@property
 	def SolverPath(self) -> str:
