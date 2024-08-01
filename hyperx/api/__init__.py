@@ -21,13 +21,6 @@ def MakeCSharpIntList(ints: list[int]) -> List[int]:
 	
 	return intsList
 
-'''
-Taken from: https://stackoverflow.com/a/3862957
-'''
-def all_subclasses(cls):
-    return set(cls.__subclasses__()).union(
-        [s for c in cls.__subclasses__() for s in all_subclasses(c)])
-
 class AnalysisResultToReturn(Enum):
 	'''
 	Used to specify which analysis result to return.
@@ -269,7 +262,7 @@ class AnalysisDetail:
 		result = self._Entity.AnalysisDetails
 		return AnalysisDetailCol(result) if result is not None else None
 
-	def GetValue(self) -> object:
+	def GetValue(self) -> T:
 		return self._Entity.GetValue()
 
 
@@ -562,7 +555,7 @@ class IdEntityCol(Generic[T], ABC):
 	def Count(self) -> int:
 		return self._Entity.Count()
 
-	def Get(self, id: int) -> IdEntity:
+	def Get(self, id: int) -> T:
 		return self._Entity.Get(id)
 
 	def __getitem__(self, index: int):
@@ -596,12 +589,12 @@ class IdNameEntityCol(IdEntityCol, Generic[T]):
 		return tuple([string for string in self._Entity.Names])
 
 	@overload
-	def Get(self, name: str) -> IdNameEntity: ...
+	def Get(self, name: str) -> T: ...
 
 	@overload
-	def Get(self, id: int) -> IdNameEntity: ...
+	def Get(self, id: int) -> T: ...
 
-	def Get(self, item1 = None) -> IdNameEntity:
+	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
 			return self._Entity.Get(item1)
 
@@ -1503,56 +1496,6 @@ class FailureModeCategory(IdNameEntity):
 		return self._Entity.PackageId
 
 
-class Folder(IdNameEntity):
-	def __init__(self, folder: _api.Folder):
-		self._Entity = folder
-
-	@property
-	def ParentFolder(self) -> Folder:
-		result = self._Entity.ParentFolder
-		return Folder(result) if result is not None else None
-
-	@property
-	def ChildFolders(self) -> FolderCol:
-		result = self._Entity.ChildFolders
-		return FolderCol(result) if result is not None else None
-
-	@property
-	def Items(self) -> list[IdNameEntity]:
-		result = self._Entity.Items
-		if result.Count > 0:
-			thisClass = type(result[0]).__name__
-			givenClass = IdNameEntity
-			for subclass in all_subclasses(givenClass):
-				if subclass.__name__ == thisClass:
-					givenClass = subclass
-		return [givenClass(idNameEntity) for idNameEntity in result]
-
-	def AddItem(self, item: IdNameEntity) -> None:
-		return self._Entity.AddItem(item._Entity)
-
-	def AddItems(self, items: tuple[IdNameEntity]) -> None:
-		itemsList = List[type(items[0]._Entity)]()
-		if items is not None:
-			for thing in items:
-				if thing is not None:
-					itemsList.Add(thing._Entity)
-		itemsEnumerable = IEnumerable(itemsList)
-		return self._Entity.AddItems(itemsEnumerable)
-
-	def RemoveItem(self, item: IdNameEntity) -> None:
-		return self._Entity.RemoveItem(item._Entity)
-
-	def RemoveItems(self, items: tuple[IdNameEntity]) -> None:
-		itemsList = List[type(items[0]._Entity)]()
-		if items is not None:
-			for thing in items:
-				if thing is not None:
-					itemsList.Add(thing._Entity)
-		itemsEnumerable = IEnumerable(itemsList)
-		return self._Entity.RemoveItems(itemsEnumerable)
-
-
 class EntityWithAssignableProperties(IdNameEntityRenameable):
 	def __init__(self, entityWithAssignableProperties: _api.EntityWithAssignableProperties):
 		self._Entity = entityWithAssignableProperties
@@ -2142,12 +2085,12 @@ class EntityWithAssignablePropertiesCol(IdNameEntityCol, Generic[T]):
 		return PropertyAssignmentStatus[self._Entity.AssignPropertyToAll(property._Entity).ToString()]
 
 	@overload
-	def Get(self, name: str) -> EntityWithAssignableProperties: ...
+	def Get(self, name: str) -> T: ...
 
 	@overload
-	def Get(self, id: int) -> EntityWithAssignableProperties: ...
+	def Get(self, id: int) -> T: ...
 
-	def Get(self, item1 = None) -> EntityWithAssignableProperties:
+	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
 			return super().Get(item1)
 
@@ -5840,11 +5783,6 @@ class SectionCut(IdNameEntity):
 		self._Entity = sectionCut
 
 	@property
-	def ParentFolder(self) -> Folder:
-		result = self._Entity.ParentFolder
-		return Folder(result) if result is not None else None
-
-	@property
 	def ReferencePoint(self) -> types.SectionCutPropertyLocation:
 		'''
 		Centroid vs Origin
@@ -6125,11 +6063,6 @@ class Set(ZoneJointContainer):
 		self._Entity = set
 
 	@property
-	def ParentFolder(self) -> Folder:
-		result = self._Entity.ParentFolder
-		return Folder(result) if result is not None else None
-
-	@property
 	def Joints(self) -> JointCol:
 		result = self._Entity.Joints
 		return JointCol(result) if result is not None else None
@@ -6362,11 +6295,6 @@ class PlyCol(IdNameEntityCol[Ply]):
 class Structure(ZoneJointContainer):
 	def __init__(self, structure: _api.Structure):
 		self._Entity = structure
-
-	@property
-	def ParentFolder(self) -> Folder:
-		result = self._Entity.ParentFolder
-		return Folder(result) if result is not None else None
 
 	@property
 	def Plies(self) -> PlyCol:
@@ -6903,82 +6831,6 @@ class DiscreteFieldCol(IdNameEntityCol[DiscreteField]):
 		return len(self.DiscreteFieldColList)
 
 
-class FolderCol(IdNameEntityCol[Folder]):
-	def __init__(self, folderCol: _api.FolderCol):
-		self._Entity = folderCol
-		self._CollectedClass = Folder
-
-	@property
-	def FolderColList(self) -> tuple[Folder]:
-		if self._Entity.Count() <= 0:
-			return ()
-		thisClass = type(self._Entity._items[0]).__name__
-		givenClass = Folder
-		for subclass in Folder.__subclasses__():
-			if subclass.__name__ == thisClass:
-				givenClass = subclass
-		return tuple([givenClass(folderCol) for folderCol in self._Entity])
-
-	@property
-	def ParentFolder(self) -> Folder:
-		result = self._Entity.ParentFolder
-		return Folder(result) if result is not None else None
-
-	def AddFolder(self, name: str) -> Folder:
-		return Folder(self._Entity.AddFolder(name))
-
-	def AddFolders(self, names: tuple[str]) -> tuple[Folder]:
-		namesList = List[str]()
-		if names is not None:
-			for thing in names:
-				if thing is not None:
-					namesList.Add(thing)
-		namesEnumerable = IEnumerable(namesList)
-		result = self._Entity.AddFolders(namesEnumerable)
-		thisClass = type(result).__name__
-		givenClass = tuple[Folder]
-		for subclass in tuple[Folder].__subclasses__():
-			if subclass.__name__ == thisClass:
-				givenClass = subclass
-		return givenClass(result) if result is not None else None
-
-	def DeleteFolder(self, folder: Folder) -> bool:
-		return self._Entity.DeleteFolder(folder._Entity)
-
-	def DeleteFolders(self, folders: tuple[Folder]) -> bool:
-		foldersList = List[_api.Folder]()
-		if folders is not None:
-			for thing in folders:
-				if thing is not None:
-					foldersList.Add(thing._Entity)
-		foldersEnumerable = IEnumerable(foldersList)
-		return self._Entity.DeleteFolders(foldersEnumerable)
-
-	@overload
-	def Get(self, name: str) -> Folder: ...
-
-	@overload
-	def Get(self, id: int) -> Folder: ...
-
-	def Get(self, item1 = None) -> Folder:
-		if isinstance(item1, str):
-			return Folder(super().Get(item1))
-
-		if isinstance(item1, int):
-			return Folder(super().Get(item1))
-
-		return Folder(self._Entity.Get(item1))
-
-	def __getitem__(self, index: int):
-		return self.FolderColList[index]
-
-	def __iter__(self):
-		yield from self.FolderColList
-
-	def __len__(self):
-		return len(self.FolderColList)
-
-
 class ZoneJointContainerCol(IdNameEntityCol, Generic[T]):
 	def __init__(self, zoneJointContainerCol: _api.ZoneJointContainerCol):
 		self._Entity = zoneJointContainerCol
@@ -6996,16 +6848,16 @@ class ZoneJointContainerCol(IdNameEntityCol, Generic[T]):
 		return tuple([givenClass(zoneJointContainerCol) for zoneJointContainerCol in self._Entity])
 
 	@abstractmethod
-	def Create(self, name: str) -> ZoneJointContainer:
+	def Create(self, name: str) -> T:
 		return self._Entity.Create(name)
 
 	@overload
-	def Get(self, name: str) -> ZoneJointContainer: ...
+	def Get(self, name: str) -> T: ...
 
 	@overload
-	def Get(self, id: int) -> ZoneJointContainer: ...
+	def Get(self, id: int) -> T: ...
 
-	def Get(self, item1 = None) -> ZoneJointContainer:
+	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
 			return super().Get(item1)
 
@@ -7096,11 +6948,6 @@ class SectionCutCol(IdNameEntityCol[SectionCut]):
 	def SectionCutColList(self) -> tuple[SectionCut]:
 		return tuple([SectionCut(sectionCutCol) for sectionCutCol in self._Entity])
 
-	@property
-	def Folders(self) -> FolderCol:
-		result = self._Entity.Folders
-		return FolderCol(result) if result is not None else None
-
 	def Create(self, origin: Vector3d, normal: Vector3d, horizontal: Vector3d, name: str = None) -> SectionCut:
 		return SectionCut(self._Entity.Create(origin._Entity, normal._Entity, horizontal._Entity, name))
 
@@ -7140,11 +6987,6 @@ class SetCol(ZoneJointContainerCol[Set]):
 	@property
 	def SetColList(self) -> tuple[Set]:
 		return tuple([Set(setCol) for setCol in self._Entity])
-
-	@property
-	def Folders(self) -> FolderCol:
-		result = self._Entity.Folders
-		return FolderCol(result) if result is not None else None
 
 	def Create(self, name: str = None) -> Set:
 		'''
@@ -7186,11 +7028,6 @@ class StructureCol(ZoneJointContainerCol[Structure]):
 	@property
 	def StructureColList(self) -> tuple[Structure]:
 		return tuple([Structure(structureCol) for structureCol in self._Entity])
-
-	@property
-	def Folders(self) -> FolderCol:
-		result = self._Entity.Folders
-		return FolderCol(result) if result is not None else None
 
 	def Create(self, name: str = None) -> Structure:
 		'''
@@ -7512,13 +7349,13 @@ class Project:
 		return set[int](self._Entity.GetJointsWithoutResults(jointsEnumerable))
 
 	@overload
-	def AnalyzeZones(self, zones: tuple[ZoneBase] = None) -> types.TernaryStatus: ...
+	def AnalyzeZones(self, zones: tuple[Zone] = None) -> types.TernaryStatus: ...
 
 	@overload
 	def AnalyzeZones(self, zoneIds: tuple[int]) -> types.TernaryStatus: ...
 
 	@overload
-	def SizeZones(self, zones: tuple[ZoneBase] = None) -> types.TernaryStatus: ...
+	def SizeZones(self, zones: tuple[Zone] = None) -> types.TernaryStatus: ...
 
 	@overload
 	def SizeZones(self, zoneIds: tuple[int]) -> types.TernaryStatus: ...
@@ -7568,8 +7405,8 @@ class Project:
 		return self._Entity.RegeneratePfem()
 
 	def AnalyzeZones(self, item1 = None) -> types.TernaryStatus:
-		if isinstance(item1, tuple) and item1 and isinstance(item1[0], ZoneBase):
-			zonesList = List[_api.ZoneBase]()
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], Zone):
+			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
 					if thing is not None:
@@ -7585,8 +7422,8 @@ class Project:
 		return types.TernaryStatus(self._Entity.AnalyzeZones(item1))
 
 	def SizeZones(self, item1 = None) -> types.TernaryStatus:
-		if isinstance(item1, tuple) and item1 and isinstance(item1[0], ZoneBase):
-			zonesList = List[_api.ZoneBase]()
+		if isinstance(item1, tuple) and item1 and isinstance(item1[0], Zone):
+			zonesList = List[_api.Zone]()
 			if item1 is not None:
 				for thing in item1:
 					if thing is not None:
@@ -9560,7 +9397,7 @@ class LoadPropertyUserFeaRowCol(IdNameEntityCol, Generic[T]):
 				givenClass = subclass
 		return tuple([givenClass(loadPropertyUserFeaRowCol) for loadPropertyUserFeaRowCol in self._Entity])
 
-	def AddScenario(self, name: str = None) -> LoadPropertyUserRow:
+	def AddScenario(self, name: str = None) -> T:
 		'''
 		Adds a load scenario with default values.
 		'''
@@ -9573,10 +9410,10 @@ class LoadPropertyUserFeaRowCol(IdNameEntityCol, Generic[T]):
 	def DeleteScenario(self, scenarioName: str) -> bool: ...
 
 	@overload
-	def Get(self, name: str) -> LoadPropertyUserRow: ...
+	def Get(self, name: str) -> T: ...
 
 	@overload
-	def Get(self, id: int) -> LoadPropertyUserRow: ...
+	def Get(self, id: int) -> T: ...
 
 	def DeleteScenario(self, item1 = None) -> bool:
 		if isinstance(item1, int):
@@ -9587,7 +9424,7 @@ class LoadPropertyUserFeaRowCol(IdNameEntityCol, Generic[T]):
 
 		return self._Entity.DeleteScenario(item1)
 
-	def Get(self, item1 = None) -> LoadPropertyUserRow:
+	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
 			return super().Get(item1)
 
@@ -9949,7 +9786,7 @@ class LoadPropertyUserGeneralRowCol(IdNameEntityCol, Generic[T]):
 				givenClass = subclass
 		return tuple([givenClass(loadPropertyUserGeneralRowCol) for loadPropertyUserGeneralRowCol in self._Entity])
 
-	def AddScenario(self, name: str = None) -> LoadPropertyUserGeneralDoubleRow:
+	def AddScenario(self, name: str = None) -> T:
 		'''
 		Add scenario.
 		'''
@@ -9962,10 +9799,10 @@ class LoadPropertyUserGeneralRowCol(IdNameEntityCol, Generic[T]):
 	def DeleteScenario(self, scenarioName: str) -> bool: ...
 
 	@overload
-	def Get(self, name: str) -> LoadPropertyUserGeneralDoubleRow: ...
+	def Get(self, name: str) -> T: ...
 
 	@overload
-	def Get(self, id: int) -> LoadPropertyUserGeneralDoubleRow: ...
+	def Get(self, id: int) -> T: ...
 
 	def DeleteScenario(self, item1 = None) -> bool:
 		if isinstance(item1, int):
@@ -9976,7 +9813,7 @@ class LoadPropertyUserGeneralRowCol(IdNameEntityCol, Generic[T]):
 
 		return self._Entity.DeleteScenario(item1)
 
-	def Get(self, item1 = None) -> LoadPropertyUserGeneralDoubleRow:
+	def Get(self, item1 = None) -> T:
 		if isinstance(item1, str):
 			return super().Get(item1)
 
