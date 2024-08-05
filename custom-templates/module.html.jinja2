@@ -25,9 +25,10 @@
 {% endmacro %}
 
 {% macro docstring(var) %}
-    {# Ignore the Enum docstring and ABC docstring, if a class is an enum and doesn't have its own documentation
+    {# Ignore the Enum, ABC, and Generic docstrings, if a class is an enum and doesn't have its own documentation
     (bit of a hack - "Color.RED" is just some text that is in that docstring which I don't think we'd ever use in practice) #}
-    {% if var.docstring and "Color.RED" not in var.docstring and "Helper class that provides a standard way to create an ABC" not in var.docstring %} 
+    {% if var.docstring and "Color.RED" not in var.docstring and "Helper class that provides a standard way to create an ABC" not in var.docstring
+    and "Abstract base class for generic types" not in var.docstring %} 
         <div class="docstring">{{ var.docstring | to_markdown | to_html | linkify(namespace=var.qualname) }}</div>
     {% endif %}
 {% endmacro %}
