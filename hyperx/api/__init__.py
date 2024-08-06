@@ -7478,6 +7478,9 @@ class Project:
 		return types.SimpleStatus(self._Entity.PackageProject(destinationFilePath, includeFemInputFiles, includeFemOutputFiles, includeWorkingFolder, includeLoadFiles, includePluginPackages, removeAllOtherProjects, deleteUnusedPropertiesAndMaterials, mapFemFilesToRelativePaths, additionalFiles if additionalFiles is None else additionalFilesEnumerable))
 
 	def ImportFem(self) -> None:
+		'''
+		OBSOLETE - Use only for tests. This should not be used in scripts.
+		'''
 		return self._Entity.ImportFem()
 
 	def ImportFeaResults(self, alwaysImport: bool = False) -> str:
