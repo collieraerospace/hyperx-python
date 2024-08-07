@@ -5,7 +5,7 @@ from typing import TypeVar, Generic, overload
 from enum import Enum
 from System.Collections.Generic import List, IEnumerable, Dictionary, HashSet
 from System.Threading.Tasks import Task
-from System import Guid, DateTime, Double, String, Nullable
+from System import Guid, DateTime
 
 from abc import ABC, abstractmethod
 
@@ -264,11 +264,6 @@ class UserConstantDataType(Enum):
 	Boolean = 5
 	Selection = 6
 	Text = 7
-
-class TernaryStatusCode(Enum):
-	Success = 1
-	Warning = 2
-	Error = 3
 
 class FamilyConceptUID(Enum):
 	Unknown = 0
@@ -543,8 +538,6 @@ class FemType(Enum):
 	Spherical = 99
 	Ply = 100
 	MPC = 101
-	CTRIAR = 102
-	CTRIA6 = 103
 
 class ConstraintType(Enum):
 	UNKNOWN = 0
@@ -591,7 +584,7 @@ class JointConceptId(Enum):
 
 class JointRangeId(Enum):
 	Torque = 1
-	FastenerSpacing = 2
+	Spacing = 2
 	FastenerRows = 3
 	LengthOverlap = 4
 	TaperAngle = 5
@@ -611,17 +604,6 @@ class JointRangeId(Enum):
 	NumberOfSteps = 19
 	Sheet3Thickness = 20
 	Sheet4Thickness = 21
-	RivetSpacing = 22
-
-class JointRangeMode(Enum):
-	Torque = 1
-	Length = 2
-	FastenerRows = 3
-	TaperAngle = 4
-	Thickness = 5
-	Allowable = 6
-	NumberOfSteps = 7
-	NxD = 8
 
 class JointSelectionId(Enum):
 	AdhesiveMaterial = 1
@@ -1190,27 +1172,19 @@ class SimpleStatus:
 	def Message(self) -> str:
 		return self._Entity.Message
 
-	@property
-	def NewSuccess(self) -> SimpleStatus:
-		'''
-		Lots of methods need to return a Success state and an associated Message.
-		'''
-		result = self._Entity.NewSuccess
-		return SimpleStatus(result) if result is not None else None
-
 	def ToString(self) -> str:
 		return self._Entity.ToString()
 
+	def GetHashCode(self) -> int:
+		return self._Entity.GetHashCode()
+
 	@overload
-	def Equals(self, obj: object) -> bool: ...
+	def Equals(self, obj) -> bool: ...
 
 	@overload
 	def Equals(self, other) -> bool: ...
 
 	def Equals(self, item1 = None) -> bool:
-		if isinstance(item1, object):
-			return self._Entity.Equals(item1)
-
 		if isinstance(item1, SimpleStatus):
 			return self._Entity.Equals(_types.SimpleStatus(item1.value))
 
@@ -1221,59 +1195,6 @@ class SimpleStatus:
 
 	def __ne__(self, other):
 		return not self.Equals(other)
-
-	def __hash__(self) -> int:
-		return self._Entity.GetHashCode()
-
-
-class TernaryStatus(SimpleStatus):
-	def __init__(self, ternaryStatus: _types.TernaryStatus):
-		self._Entity = ternaryStatus
-
-	def Create_TernaryStatus(status: TernaryStatusCode, message: str):
-		return TernaryStatus(_api.TernaryStatus(_types.TernaryStatusCode(status.value), message))
-
-	@property
-	def Success(self) -> bool:
-		return self._Entity.Success
-
-	@property
-	def Status(self) -> TernaryStatusCode:
-		result = self._Entity.Status
-		return TernaryStatusCode[result.ToString()] if result is not None else None
-
-	def ToString(self) -> str:
-		return self._Entity.ToString()
-
-	@overload
-	def Equals(self, obj: object) -> bool: ...
-
-	@overload
-	def Equals(self, other: SimpleStatus) -> bool: ...
-
-	@overload
-	def Equals(self, other) -> bool: ...
-
-	def Equals(self, item1 = None) -> bool:
-		if isinstance(item1, object):
-			return self._Entity.Equals(item1)
-
-		if isinstance(item1, SimpleStatus):
-			return self._Entity.Equals(_types.SimpleStatus(item1.value))
-
-		if isinstance(item1, TernaryStatus):
-			return self._Entity.Equals(_types.TernaryStatus(item1.value))
-
-		return self._Entity.Equals(item1)
-
-	def __eq__(self, other):
-		return self.Equals(other)
-
-	def __ne__(self, other):
-		return not self.Equals(other)
-
-	def __hash__(self) -> int:
-		return self._Entity.GetHashCode()
 
 
 class DesignLink:
@@ -1289,8 +1210,7 @@ class DesignLink:
 
 	@property
 	def FamilyId(self) -> BeamPanelFamily:
-		result = self._Entity.FamilyId
-		return BeamPanelFamily[result.ToString()] if result is not None else None
+		return BeamPanelFamily[self._Entity.FamilyId.ToString()]
 
 	@property
 	def ConceptId(self) -> int:
@@ -1300,44 +1220,10 @@ class DesignLink:
 	def LinkedVariableId(self) -> int:
 		return self._Entity.LinkedVariableId
 
-	@DesignId.setter
-	def DesignId(self, value: int) -> None:
-		self._Entity.DesignId = value
+	def Equals(self, obj) -> bool:
+		return self._Entity.Equals(obj._Entity)
 
-	@FamilyId.setter
-	def FamilyId(self, value: BeamPanelFamily) -> None:
-		self._Entity.FamilyId = _types.BeamPanelFamily(value.value)
-
-	@ConceptId.setter
-	def ConceptId(self, value: int) -> None:
-		self._Entity.ConceptId = value
-
-	@LinkedVariableId.setter
-	def LinkedVariableId(self, value: int) -> None:
-		self._Entity.LinkedVariableId = value
-
-	@overload
-	def Equals(self, obj: object) -> bool: ...
-
-	@overload
-	def Equals(self, other) -> bool: ...
-
-	def Equals(self, item1 = None) -> bool:
-		if isinstance(item1, object):
-			return self._Entity.Equals(item1)
-
-		if isinstance(item1, DesignLink):
-			return self._Entity.Equals(_types.DesignLink(item1.value))
-
-		return self._Entity.Equals(item1)
-
-	def __eq__(self, other):
-		return self.Equals(other)
-
-	def __ne__(self, other):
-		return not self.Equals(other)
-
-	def __hash__(self) -> int:
+	def GetHashCode(self) -> int:
 		return self._Entity.GetHashCode()
 
 
@@ -1350,8 +1236,7 @@ class HyperFeaSolver:
 
 	@property
 	def ProjectModelFormat(self) -> ProjectModelFormat:
-		result = self._Entity.ProjectModelFormat
-		return ProjectModelFormat[result.ToString()] if result is not None else None
+		return ProjectModelFormat[self._Entity.ProjectModelFormat.ToString()]
 
 	@property
 	def SolverPath(self) -> str:
