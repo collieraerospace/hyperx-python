@@ -71,137 +71,20 @@
         <div class="docstring"><p>Utility methods.</p>
 </div>
 
-                        <input id="mod-utils-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-
-                        <label class="view-source-button" for="mod-utils-view-source"><span>View Source</span></label>
-
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="sd">Utility methods.</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">import</span> <span class="nn">os</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">import</span> <span class="nn">csv</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Generator</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="kn">import</span> <span class="nn">errno</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="kn">from</span> <span class="nn">..api</span> <span class="kn">import</span> <span class="n">Application</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span> <span class="nn">..library</span> <span class="kn">import</span> <span class="n">_api</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="k">def</span> <span class="nf">Open</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Application</span><span class="p">:</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Opens a HyperX database for script access.&#39;&#39;&#39;</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="n">hdbPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">):</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>        <span class="n">hdbPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">):</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="n">_api</span><span class="o">.</span><span class="n">Environment</span><span class="o">.</span><span class="n">Initialize</span><span class="p">()</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="n">database</span> <span class="o">=</span> <span class="n">_api</span><span class="o">.</span><span class="n">Application</span><span class="p">()</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="n">database</span><span class="o">.</span><span class="n">OpenDatabase</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>    <span class="k">return</span> <span class="n">Application</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="nd">@contextmanager</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="k">def</span> <span class="nf">OpenManagedDatabase</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Application</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Opens a HyperX database for script access in with statement context managers.&#39;&#39;&#39;</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="n">app</span> <span class="o">=</span> <span class="n">Open</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="k">yield</span> <span class="n">app</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="k">finally</span><span class="p">:</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="n">app</span><span class="o">.</span><span class="n">CloseDatabase</span><span class="p">()</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="k">def</span> <span class="nf">OpenWithDefault</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Opens a file in the default application for its file extension.&#39;&#39;&#39;</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;explorer.exe &quot;</span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>    <span class="n">CallExternalProcess</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="k">def</span> <span class="nf">CallExternalProcess</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Calls an external process and returns stdout as a string.&#39;&#39;&#39;</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>    <span class="n">stdout_value</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>    <span class="k">return</span> <span class="n">stdout_value</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="k">def</span> <span class="nf">WriteCsv</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="n">headers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outputDir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="sd">    Write tabular data to a csv file.</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a><span class="sd">    Returns the path that the file was written to.</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="sd">    &#39;&#39;&#39;</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>    <span class="n">filename</span> <span class="o">=</span> <span class="n">ScrubFileName</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>  
-</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">outputDir</span><span class="p">)</span> <span class="o">/</span> <span class="n">filename</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>
-</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>    <span class="c1"># Excel will lock a file when it is opened but we still need to write out our data</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>    <span class="n">stem</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">stem</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>            <span class="c1"># Note: newline=&#39;&#39; required to not add `\r\r\r`` as newline on windows.</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>            <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>            <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_stem</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">stem</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>            <span class="k">continue</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>            <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>            <span class="k">break</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>
-</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>
-</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a>
-</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a><span class="k">def</span> <span class="nf">ScrubFileName</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Removes invalid characters from a windows file name.&#39;&#39;&#39;</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a>    <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a>    <span class="n">filename</span> <span class="o">=</span> <span class="n">RemoveCharacters</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">/:*?&quot;&lt;&gt;|&#39;</span><span class="p">)</span> <span class="c1"># ref explorer.exe</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a>    <span class="k">return</span> <span class="n">filename</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos">90</span></a>
-</span><span id="L-91"><a href="#L-91"><span class="linenos">91</span></a>
-</span><span id="L-92"><a href="#L-92"><span class="linenos">92</span></a><span class="k">def</span> <span class="nf">RemoveCharacters</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">chars</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos">93</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Removes a set of characters from a string.&#39;&#39;&#39;</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos">94</span></a>    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">chars</span><span class="p">:</span>
-</span><span id="L-95"><a href="#L-95"><span class="linenos">95</span></a>        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span id="L-96"><a href="#L-96"><span class="linenos">96</span></a>    <span class="k">return</span> <span class="n">s</span>
-</span></pre></div>
-
-
+                
+                
+                
             </section>
                 <section id="Open">
-                            <input id="Open-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
+                    <div class="attr function">
             
         <span class="def">def</span>
         <span class="name">Open</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">hdbPath</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span></span><span class="return-annotation">) -> <span class="n"><a href="../api.html#Application">hyperx.api.Application</a></span>:</span></span>
 
-                <label class="view-source-button" for="Open-view-source"><span>View Source</span></label>
-
+        
     </div>
     <a class="headerlink" href="#Open"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Open-18"><a href="#Open-18"><span class="linenos">18</span></a><span class="k">def</span> <span class="nf">Open</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Application</span><span class="p">:</span>
-</span><span id="Open-19"><a href="#Open-19"><span class="linenos">19</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Opens a HyperX database for script access.&#39;&#39;&#39;</span>
-</span><span id="Open-20"><a href="#Open-20"><span class="linenos">20</span></a>    <span class="n">hdbPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="Open-21"><a href="#Open-21"><span class="linenos">21</span></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">):</span>
-</span><span id="Open-22"><a href="#Open-22"><span class="linenos">22</span></a>        <span class="n">hdbPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="Open-23"><a href="#Open-23"><span class="linenos">23</span></a>    
-</span><span id="Open-24"><a href="#Open-24"><span class="linenos">24</span></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">):</span>
-</span><span id="Open-25"><a href="#Open-25"><span class="linenos">25</span></a>        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="Open-26"><a href="#Open-26"><span class="linenos">26</span></a>
-</span><span id="Open-27"><a href="#Open-27"><span class="linenos">27</span></a>    <span class="n">_api</span><span class="o">.</span><span class="n">Environment</span><span class="o">.</span><span class="n">Initialize</span><span class="p">()</span>
-</span><span id="Open-28"><a href="#Open-28"><span class="linenos">28</span></a>    <span class="n">database</span> <span class="o">=</span> <span class="n">_api</span><span class="o">.</span><span class="n">Application</span><span class="p">()</span>
-</span><span id="Open-29"><a href="#Open-29"><span class="linenos">29</span></a>    <span class="n">database</span><span class="o">.</span><span class="n">OpenDatabase</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="Open-30"><a href="#Open-30"><span class="linenos">30</span></a>    <span class="k">return</span> <span class="n">Application</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
-</span></pre></div>
-
-
+    
      
         <div class="docstring"><p>Opens a HyperX database for script access.</p>
 </div>
@@ -209,28 +92,16 @@
 
                 </section>
                 <section id="OpenManagedDatabase">
-                            <input id="OpenManagedDatabase-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
+                    <div class="attr function">
                     <div class="decorator">@contextmanager</div>
 
         <span class="def">def</span>
         <span class="name">OpenManagedDatabase</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">hdbPath</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span></span><span class="return-annotation">) -> <span class="n">Generator</span><span class="p">[</span><span class="n"><a href="../api.html#Application">hyperx.api.Application</a></span><span class="p">,</span> <span class="n">NoneType</span><span class="p">,</span> <span class="n">NoneType</span><span class="p">]</span>:</span></span>
 
-                <label class="view-source-button" for="OpenManagedDatabase-view-source"><span>View Source</span></label>
-
+        
     </div>
     <a class="headerlink" href="#OpenManagedDatabase"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="OpenManagedDatabase-33"><a href="#OpenManagedDatabase-33"><span class="linenos">33</span></a><span class="nd">@contextmanager</span>
-</span><span id="OpenManagedDatabase-34"><a href="#OpenManagedDatabase-34"><span class="linenos">34</span></a><span class="k">def</span> <span class="nf">OpenManagedDatabase</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Application</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-</span><span id="OpenManagedDatabase-35"><a href="#OpenManagedDatabase-35"><span class="linenos">35</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Opens a HyperX database for script access in with statement context managers.&#39;&#39;&#39;</span>
-</span><span id="OpenManagedDatabase-36"><a href="#OpenManagedDatabase-36"><span class="linenos">36</span></a>    <span class="n">app</span> <span class="o">=</span> <span class="n">Open</span><span class="p">(</span><span class="n">hdbPath</span><span class="p">)</span>
-</span><span id="OpenManagedDatabase-37"><a href="#OpenManagedDatabase-37"><span class="linenos">37</span></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="OpenManagedDatabase-38"><a href="#OpenManagedDatabase-38"><span class="linenos">38</span></a>        <span class="k">yield</span> <span class="n">app</span>
-</span><span id="OpenManagedDatabase-39"><a href="#OpenManagedDatabase-39"><span class="linenos">39</span></a>    <span class="k">finally</span><span class="p">:</span>
-</span><span id="OpenManagedDatabase-40"><a href="#OpenManagedDatabase-40"><span class="linenos">40</span></a>        <span class="n">app</span><span class="o">.</span><span class="n">CloseDatabase</span><span class="p">()</span>
-</span></pre></div>
-
-
+    
      
         <div class="docstring"><p>Opens a HyperX database for script access in with statement context managers.</p>
 </div>
@@ -238,23 +109,15 @@
 
                 </section>
                 <section id="OpenWithDefault">
-                            <input id="OpenWithDefault-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
+                    <div class="attr function">
             
         <span class="def">def</span>
         <span class="name">OpenWithDefault</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">):</span></span>
 
-                <label class="view-source-button" for="OpenWithDefault-view-source"><span>View Source</span></label>
-
+        
     </div>
     <a class="headerlink" href="#OpenWithDefault"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="OpenWithDefault-43"><a href="#OpenWithDefault-43"><span class="linenos">43</span></a><span class="k">def</span> <span class="nf">OpenWithDefault</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="OpenWithDefault-44"><a href="#OpenWithDefault-44"><span class="linenos">44</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Opens a file in the default application for its file extension.&#39;&#39;&#39;</span>
-</span><span id="OpenWithDefault-45"><a href="#OpenWithDefault-45"><span class="linenos">45</span></a>    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;explorer.exe &quot;</span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
-</span><span id="OpenWithDefault-46"><a href="#OpenWithDefault-46"><span class="linenos">46</span></a>    <span class="n">CallExternalProcess</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-</span></pre></div>
-
-
+    
      
         <div class="docstring"><p>Opens a file in the default application for its file extension.</p>
 </div>
@@ -262,25 +125,15 @@
 
                 </section>
                 <section id="CallExternalProcess">
-                            <input id="CallExternalProcess-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
+                    <div class="attr function">
             
         <span class="def">def</span>
         <span class="name">CallExternalProcess</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">cmd</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
-                <label class="view-source-button" for="CallExternalProcess-view-source"><span>View Source</span></label>
-
+        
     </div>
     <a class="headerlink" href="#CallExternalProcess"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CallExternalProcess-49"><a href="#CallExternalProcess-49"><span class="linenos">49</span></a><span class="k">def</span> <span class="nf">CallExternalProcess</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CallExternalProcess-50"><a href="#CallExternalProcess-50"><span class="linenos">50</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Calls an external process and returns stdout as a string.&#39;&#39;&#39;</span>
-</span><span id="CallExternalProcess-51"><a href="#CallExternalProcess-51"><span class="linenos">51</span></a>    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span id="CallExternalProcess-52"><a href="#CallExternalProcess-52"><span class="linenos">52</span></a>    <span class="n">stdout_value</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
-</span><span id="CallExternalProcess-53"><a href="#CallExternalProcess-53"><span class="linenos">53</span></a>
-</span><span id="CallExternalProcess-54"><a href="#CallExternalProcess-54"><span class="linenos">54</span></a>    <span class="k">return</span> <span class="n">stdout_value</span>
-</span></pre></div>
-
-
+    
      
         <div class="docstring"><p>Calls an external process and returns stdout as a string.</p>
 </div>
@@ -288,46 +141,15 @@
 
                 </section>
                 <section id="WriteCsv">
-                            <input id="WriteCsv-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
+                    <div class="attr function">
             
         <span class="def">def</span>
         <span class="name">WriteCsv</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]]</span>,</span><span class="param">	<span class="n">headers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">title</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">outputDir</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
-                <label class="view-source-button" for="WriteCsv-view-source"><span>View Source</span></label>
-
+        
     </div>
     <a class="headerlink" href="#WriteCsv"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="WriteCsv-57"><a href="#WriteCsv-57"><span class="linenos">57</span></a><span class="k">def</span> <span class="nf">WriteCsv</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="n">headers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outputDir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="WriteCsv-58"><a href="#WriteCsv-58"><span class="linenos">58</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-</span><span id="WriteCsv-59"><a href="#WriteCsv-59"><span class="linenos">59</span></a><span class="sd">    Write tabular data to a csv file.</span>
-</span><span id="WriteCsv-60"><a href="#WriteCsv-60"><span class="linenos">60</span></a><span class="sd">    Returns the path that the file was written to.</span>
-</span><span id="WriteCsv-61"><a href="#WriteCsv-61"><span class="linenos">61</span></a><span class="sd">    &#39;&#39;&#39;</span>
-</span><span id="WriteCsv-62"><a href="#WriteCsv-62"><span class="linenos">62</span></a>    <span class="n">filename</span> <span class="o">=</span> <span class="n">ScrubFileName</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>  
-</span><span id="WriteCsv-63"><a href="#WriteCsv-63"><span class="linenos">63</span></a>    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">outputDir</span><span class="p">)</span> <span class="o">/</span> <span class="n">filename</span>
-</span><span id="WriteCsv-64"><a href="#WriteCsv-64"><span class="linenos">64</span></a>
-</span><span id="WriteCsv-65"><a href="#WriteCsv-65"><span class="linenos">65</span></a>    <span class="c1"># Excel will lock a file when it is opened but we still need to write out our data</span>
-</span><span id="WriteCsv-66"><a href="#WriteCsv-66"><span class="linenos">66</span></a>    <span class="n">stem</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">stem</span>
-</span><span id="WriteCsv-67"><a href="#WriteCsv-67"><span class="linenos">67</span></a>    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="WriteCsv-68"><a href="#WriteCsv-68"><span class="linenos">68</span></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="WriteCsv-69"><a href="#WriteCsv-69"><span class="linenos">69</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="WriteCsv-70"><a href="#WriteCsv-70"><span class="linenos">70</span></a>            <span class="c1"># Note: newline=&#39;&#39; required to not add `\r\r\r`` as newline on windows.</span>
-</span><span id="WriteCsv-71"><a href="#WriteCsv-71"><span class="linenos">71</span></a>            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span id="WriteCsv-72"><a href="#WriteCsv-72"><span class="linenos">72</span></a>        <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
-</span><span id="WriteCsv-73"><a href="#WriteCsv-73"><span class="linenos">73</span></a>            <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="WriteCsv-74"><a href="#WriteCsv-74"><span class="linenos">74</span></a>            <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_stem</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">stem</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</span><span id="WriteCsv-75"><a href="#WriteCsv-75"><span class="linenos">75</span></a>            <span class="k">continue</span>
-</span><span id="WriteCsv-76"><a href="#WriteCsv-76"><span class="linenos">76</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="WriteCsv-77"><a href="#WriteCsv-77"><span class="linenos">77</span></a>            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-</span><span id="WriteCsv-78"><a href="#WriteCsv-78"><span class="linenos">78</span></a>            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
-</span><span id="WriteCsv-79"><a href="#WriteCsv-79"><span class="linenos">79</span></a>            <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="WriteCsv-80"><a href="#WriteCsv-80"><span class="linenos">80</span></a>            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span id="WriteCsv-81"><a href="#WriteCsv-81"><span class="linenos">81</span></a>            <span class="k">break</span>
-</span><span id="WriteCsv-82"><a href="#WriteCsv-82"><span class="linenos">82</span></a>
-</span><span id="WriteCsv-83"><a href="#WriteCsv-83"><span class="linenos">83</span></a>    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span></pre></div>
-
-
+    
      
         <div class="docstring"><p>Write tabular data to a csv file.
 Returns the path that the file was written to.</p>
@@ -336,24 +158,15 @@ Returns the path that the file was written to.</p>
 
                 </section>
                 <section id="ScrubFileName">
-                            <input id="ScrubFileName-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
+                    <div class="attr function">
             
         <span class="def">def</span>
         <span class="name">ScrubFileName</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
-                <label class="view-source-button" for="ScrubFileName-view-source"><span>View Source</span></label>
-
+        
     </div>
     <a class="headerlink" href="#ScrubFileName"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ScrubFileName-86"><a href="#ScrubFileName-86"><span class="linenos">86</span></a><span class="k">def</span> <span class="nf">ScrubFileName</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="ScrubFileName-87"><a href="#ScrubFileName-87"><span class="linenos">87</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Removes invalid characters from a windows file name.&#39;&#39;&#39;</span>
-</span><span id="ScrubFileName-88"><a href="#ScrubFileName-88"><span class="linenos">88</span></a>    <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span id="ScrubFileName-89"><a href="#ScrubFileName-89"><span class="linenos">89</span></a>    <span class="n">filename</span> <span class="o">=</span> <span class="n">RemoveCharacters</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">/:*?&quot;&lt;&gt;|&#39;</span><span class="p">)</span> <span class="c1"># ref explorer.exe</span>
-</span><span id="ScrubFileName-90"><a href="#ScrubFileName-90"><span class="linenos">90</span></a>    <span class="k">return</span> <span class="n">filename</span>
-</span></pre></div>
-
-
+    
      
         <div class="docstring"><p>Removes invalid characters from a windows file name.</p>
 </div>
@@ -361,24 +174,15 @@ Returns the path that the file was written to.</p>
 
                 </section>
                 <section id="RemoveCharacters">
-                            <input id="RemoveCharacters-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
+                    <div class="attr function">
             
         <span class="def">def</span>
         <span class="name">RemoveCharacters</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">s</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">chars</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
-                <label class="view-source-button" for="RemoveCharacters-view-source"><span>View Source</span></label>
-
+        
     </div>
     <a class="headerlink" href="#RemoveCharacters"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="RemoveCharacters-93"><a href="#RemoveCharacters-93"><span class="linenos">93</span></a><span class="k">def</span> <span class="nf">RemoveCharacters</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">chars</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="RemoveCharacters-94"><a href="#RemoveCharacters-94"><span class="linenos">94</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Removes a set of characters from a string.&#39;&#39;&#39;</span>
-</span><span id="RemoveCharacters-95"><a href="#RemoveCharacters-95"><span class="linenos">95</span></a>    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">chars</span><span class="p">:</span>
-</span><span id="RemoveCharacters-96"><a href="#RemoveCharacters-96"><span class="linenos">96</span></a>        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span id="RemoveCharacters-97"><a href="#RemoveCharacters-97"><span class="linenos">97</span></a>    <span class="k">return</span> <span class="n">s</span>
-</span></pre></div>
-
-
+    
      
         <div class="docstring"><p>Removes a set of characters from a string.</p>
 </div>

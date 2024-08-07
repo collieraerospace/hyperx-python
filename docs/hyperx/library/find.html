@@ -53,94 +53,20 @@
         <div class="docstring"><p>Utilities for finding HyperX files.</p>
 </div>
 
-                        <input id="mod-find-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-
-                        <label class="view-source-button" for="mod-find-view-source"><span>View Source</span></label>
-
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="sd">Utilities for finding HyperX files.</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">import</span> <span class="nn">os</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">import</span> <span class="nn">winreg</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="k">def</span> <span class="nf">_TryGetEnvInstallFolder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;Looks for the HyperX installation folder in the environment variables.&#39;&#39;&#39;</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>    <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HyperXInstall&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="k">return</span> <span class="n">value</span> <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="kc">None</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="k">def</span> <span class="nf">_TryGetRegistryInstallFolder</span><span class="p">(</span><span class="n">keyType</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">    Attempts to find the HyperX install folder in either the current user</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">    or local machine registry.</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">    &#39;&#39;&#39;</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>        <span class="n">hyperXKey</span> <span class="o">=</span> <span class="n">winreg</span><span class="o">.</span><span class="n">OpenKey</span><span class="p">(</span><span class="n">keyType</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;SOFTWARE\Collier Aerospace\HyperX&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">winreg</span><span class="o">.</span><span class="n">KEY_READ</span><span class="p">)</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>        <span class="n">installFolder</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">winreg</span><span class="o">.</span><span class="n">QueryValueEx</span><span class="p">(</span><span class="n">hyperXKey</span><span class="p">,</span> <span class="s1">&#39;InstallFolder&#39;</span><span class="p">)</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="k">except</span><span class="p">:</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="k">return</span> <span class="kc">None</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>        <span class="k">return</span> <span class="n">installFolder</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="k">def</span> <span class="nf">AutoDetectInstallFolder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">    Gets the installation directory of the most recently installed HyperX.</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">    The order of locations searched is:</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">     - environment variable</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">     - current user registry (if installed &#39;for this user only&#39;)</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">     - local machine registry (if installed &#39;for all users&#39;)</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">    &#39;&#39;&#39;</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="n">folder</span> <span class="o">=</span> <span class="n">_TryGetEnvInstallFolder</span><span class="p">()</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="n">folder</span> <span class="o">=</span> <span class="n">_TryGetRegistryInstallFolder</span><span class="p">(</span><span class="n">winreg</span><span class="o">.</span><span class="n">HKEY_CURRENT_USER</span><span class="p">)</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="n">folder</span> <span class="o">=</span> <span class="n">_TryGetRegistryInstallFolder</span><span class="p">(</span><span class="n">winreg</span><span class="o">.</span><span class="n">HKEY_LOCAL_MACHINE</span><span class="p">)</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>            <span class="s1">&#39;Cannot find HyperX install directory.&#39;</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>            <span class="s1">&#39; Try setting the &quot;HyperXInstall&quot; environment variable with&#39;</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>            <span class="s1">&#39; a path to your HyperX installation directory.&#39;</span><span class="p">)</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="k">return</span> <span class="n">folder</span>
-</span></pre></div>
-
-
+                
+                
+                
             </section>
                 <section id="AutoDetectInstallFolder">
-                            <input id="AutoDetectInstallFolder-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
+                    <div class="attr function">
             
         <span class="def">def</span>
         <span class="name">AutoDetectInstallFolder</span><span class="signature pdoc-code condensed">(<span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
-                <label class="view-source-button" for="AutoDetectInstallFolder-view-source"><span>View Source</span></label>
-
+        
     </div>
     <a class="headerlink" href="#AutoDetectInstallFolder"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="AutoDetectInstallFolder-30"><a href="#AutoDetectInstallFolder-30"><span class="linenos">30</span></a><span class="k">def</span> <span class="nf">AutoDetectInstallFolder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="AutoDetectInstallFolder-31"><a href="#AutoDetectInstallFolder-31"><span class="linenos">31</span></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-</span><span id="AutoDetectInstallFolder-32"><a href="#AutoDetectInstallFolder-32"><span class="linenos">32</span></a><span class="sd">    Gets the installation directory of the most recently installed HyperX.</span>
-</span><span id="AutoDetectInstallFolder-33"><a href="#AutoDetectInstallFolder-33"><span class="linenos">33</span></a><span class="sd">    The order of locations searched is:</span>
-</span><span id="AutoDetectInstallFolder-34"><a href="#AutoDetectInstallFolder-34"><span class="linenos">34</span></a><span class="sd">     - environment variable</span>
-</span><span id="AutoDetectInstallFolder-35"><a href="#AutoDetectInstallFolder-35"><span class="linenos">35</span></a><span class="sd">     - current user registry (if installed &#39;for this user only&#39;)</span>
-</span><span id="AutoDetectInstallFolder-36"><a href="#AutoDetectInstallFolder-36"><span class="linenos">36</span></a><span class="sd">     - local machine registry (if installed &#39;for all users&#39;)</span>
-</span><span id="AutoDetectInstallFolder-37"><a href="#AutoDetectInstallFolder-37"><span class="linenos">37</span></a><span class="sd">    &#39;&#39;&#39;</span>
-</span><span id="AutoDetectInstallFolder-38"><a href="#AutoDetectInstallFolder-38"><span class="linenos">38</span></a>    <span class="n">folder</span> <span class="o">=</span> <span class="n">_TryGetEnvInstallFolder</span><span class="p">()</span>
-</span><span id="AutoDetectInstallFolder-39"><a href="#AutoDetectInstallFolder-39"><span class="linenos">39</span></a>    <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="AutoDetectInstallFolder-40"><a href="#AutoDetectInstallFolder-40"><span class="linenos">40</span></a>        <span class="n">folder</span> <span class="o">=</span> <span class="n">_TryGetRegistryInstallFolder</span><span class="p">(</span><span class="n">winreg</span><span class="o">.</span><span class="n">HKEY_CURRENT_USER</span><span class="p">)</span>
-</span><span id="AutoDetectInstallFolder-41"><a href="#AutoDetectInstallFolder-41"><span class="linenos">41</span></a>    <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="AutoDetectInstallFolder-42"><a href="#AutoDetectInstallFolder-42"><span class="linenos">42</span></a>        <span class="n">folder</span> <span class="o">=</span> <span class="n">_TryGetRegistryInstallFolder</span><span class="p">(</span><span class="n">winreg</span><span class="o">.</span><span class="n">HKEY_LOCAL_MACHINE</span><span class="p">)</span>
-</span><span id="AutoDetectInstallFolder-43"><a href="#AutoDetectInstallFolder-43"><span class="linenos">43</span></a>    <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="AutoDetectInstallFolder-44"><a href="#AutoDetectInstallFolder-44"><span class="linenos">44</span></a>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-</span><span id="AutoDetectInstallFolder-45"><a href="#AutoDetectInstallFolder-45"><span class="linenos">45</span></a>            <span class="s1">&#39;Cannot find HyperX install directory.&#39;</span>
-</span><span id="AutoDetectInstallFolder-46"><a href="#AutoDetectInstallFolder-46"><span class="linenos">46</span></a>            <span class="s1">&#39; Try setting the &quot;HyperXInstall&quot; environment variable with&#39;</span>
-</span><span id="AutoDetectInstallFolder-47"><a href="#AutoDetectInstallFolder-47"><span class="linenos">47</span></a>            <span class="s1">&#39; a path to your HyperX installation directory.&#39;</span><span class="p">)</span>
-</span><span id="AutoDetectInstallFolder-48"><a href="#AutoDetectInstallFolder-48"><span class="linenos">48</span></a>    <span class="k">return</span> <span class="n">folder</span>
-</span></pre></div>
-
-
+    
      
         <div class="docstring"><p>Gets the installation directory of the most recently installed HyperX.
 The order of locations searched is:</p>
