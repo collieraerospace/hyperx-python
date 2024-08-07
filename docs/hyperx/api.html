@@ -4462,21 +4462,6 @@
                                 <a class="function" href="#Project.GetDashboardTags">GetDashboardTags</a>
                         </li>
                         <li>
-                                <a class="function" href="#Project.GenerateSolverSizingInputFile">GenerateSolverSizingInputFile</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Project.GenerateSolverAnalysisInputFile">GenerateSolverAnalysisInputFile</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Project.FullRunSolverSizing">FullRunSolverSizing</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Project.FullRunSolverAnalysis">FullRunSolverAnalysis</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Project.RunSolver">RunSolver</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#Project.Dispose">Dispose</a>
                         </li>
                         <li>
@@ -8773,7 +8758,7 @@
                             </div>
                             <div id="AnalysisResult.Margin" class="classattr">
                                 <div class="attr variable">
-            <span class="name">Margin</span><span class="annotation">: &lt;property object at 0x0000025136C39800&gt;</span>
+            <span class="name">Margin</span><span class="annotation">: &lt;property object at 0x0000018119F28F90&gt;</span>
 
         
     </div>
@@ -8787,7 +8772,7 @@
                             </div>
                             <div id="AnalysisResult.AnalysisDefinition" class="classattr">
                                 <div class="attr variable">
-            <span class="name">AnalysisDefinition</span><span class="annotation">: &lt;property object at 0x0000025136C38090&gt;</span>
+            <span class="name">AnalysisDefinition</span><span class="annotation">: &lt;property object at 0x0000018119F28FE0&gt;</span>
 
         
     </div>
@@ -11670,7 +11655,7 @@
                             </div>
                             <div id="Element.Centroid" class="classattr">
                                 <div class="attr variable">
-            <span class="name">Centroid</span><span class="annotation">: &lt;property object at 0x00000291D05BAD90&gt;</span>
+            <span class="name">Centroid</span><span class="annotation">: &lt;property object at 0x000001C1B50E20C0&gt;</span>
 
         
     </div>
@@ -12456,7 +12441,7 @@
                             </div>
                             <div id="ZoneBase.Centroid" class="classattr">
                                 <div class="attr variable">
-            <span class="name">Centroid</span><span class="annotation">: &lt;property object at 0x00000291D0588310&gt;</span>
+            <span class="name">Centroid</span><span class="annotation">: &lt;property object at 0x000001C1B50E3970&gt;</span>
 
         
     </div>
@@ -13562,7 +13547,7 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                             </div>
                             <div id="ZoneJointContainer.Centroid" class="classattr">
                                 <div class="attr variable">
-            <span class="name">Centroid</span><span class="annotation">: &lt;property object at 0x00000291D0574D60&gt;</span>
+            <span class="name">Centroid</span><span class="annotation">: &lt;property object at 0x000001C1B509E2A0&gt;</span>
 
         
     </div>
@@ -19675,7 +19660,7 @@ Note, layerId is 1 indexed.</p>
                             </div>
                             <div id="Orthotropic.OrthotropicEffectiveLaminate" class="classattr">
                                 <div class="attr variable">
-            <span class="name">OrthotropicEffectiveLaminate</span><span class="annotation">: &lt;property object at 0x00000291D074DFD0&gt;</span>
+            <span class="name">OrthotropicEffectiveLaminate</span><span class="annotation">: &lt;property object at 0x000001C1B3AC44F0&gt;</span>
 
         
     </div>
@@ -23182,7 +23167,7 @@ If the specified name is already used, it will be deconflicted.
                             </div>
                             <div id="Project.HyperFea" class="classattr">
                                 <div class="attr variable">
-            <span class="name">HyperFea</span><span class="annotation">: &lt;property object at 0x0000025136CB6A70&gt;</span>
+            <span class="name">HyperFea</span><span class="annotation">: &lt;property object at 0x0000018119FC1C10&gt;</span>
 
         
     </div>
@@ -23204,7 +23189,7 @@ If the specified name is already used, it will be deconflicted.
                             </div>
                             <div id="Project.FemDataSet" class="classattr">
                                 <div class="attr variable">
-            <span class="name">FemDataSet</span><span class="annotation">: &lt;property object at 0x0000025136CB6BB0&gt;</span>
+            <span class="name">FemDataSet</span><span class="annotation">: &lt;property object at 0x0000018119FC3740&gt;</span>
 
         
     </div>
@@ -23464,71 +23449,6 @@ Dashboard login made through HyperX.</p>
 
 
                             </div>
-                            <div id="Project.GenerateSolverSizingInputFile" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">GenerateSolverSizingInputFile</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.GenerateSolverSizingInputFile"></a>
-    
-    
-
-                            </div>
-                            <div id="Project.GenerateSolverAnalysisInputFile" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">GenerateSolverAnalysisInputFile</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.GenerateSolverAnalysisInputFile"></a>
-    
-    
-
-                            </div>
-                            <div id="Project.FullRunSolverSizing" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">FullRunSolverSizing</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">nThreads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.FullRunSolverSizing"></a>
-    
-    
-
-                            </div>
-                            <div id="Project.FullRunSolverAnalysis" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">FullRunSolverAnalysis</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">nThreads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.FullRunSolverAnalysis"></a>
-    
-    
-
-                            </div>
-                            <div id="Project.RunSolver" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">RunSolver</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">nThreads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.RunSolver"></a>
-    
-    
-
-                            </div>
                             <div id="Project.Dispose" class="classattr">
                                 <div class="attr function">
             
@@ -23565,10 +23485,7 @@ Dashboard login made through HyperX.</p>
     </div>
     <a class="headerlink" href="#Project.ImportFem"></a>
     
-     
-        <div class="docstring"><p>OBSOLETE - Use only for tests. This should not be used in scripts.</p>
-</div>
-
+    
 
                             </div>
                             <div id="Project.ImportFeaResults" class="classattr">
@@ -24876,7 +24793,7 @@ application instances with a single process.
                             </div>
                             <div id="Application.UnitSystem" class="classattr">
                                 <div class="attr variable">
-            <span class="name">UnitSystem</span><span class="annotation">: &lt;property object at 0x00000291D08062F0&gt;</span>
+            <span class="name">UnitSystem</span><span class="annotation">: &lt;property object at 0x000001C1B3B89DF0&gt;</span>
 
         
     </div>
@@ -30357,7 +30274,7 @@ Activating a project will deactivate the current project (if present).</p>
                             </div>
                             <div id="LoadPropertyUserGeneralBonded.LoadPropertyJoint" class="classattr">
                                 <div class="attr variable">
-            <span class="name">LoadPropertyJoint</span><span class="annotation">: &lt;property object at 0x00000291CF533790&gt;</span>
+            <span class="name">LoadPropertyJoint</span><span class="annotation">: &lt;property object at 0x000001C1B27FB290&gt;</span>
 
         
     </div>

@@ -7390,81 +7390,6 @@ class Project:
 		'''
 		return list[str](self._Entity.GetDashboardTags(companyName))
 
-	def GenerateSolverSizingInputFile(self, inputFile: str = None, zones: set[int] = None, sectionCuts: set[int] = None, panelSegments: set[int] = None) -> str:
-		zonesSet = HashSet[int]()
-		if zones is not None:
-			for thing in zones:
-				if thing is not None:
-					zonesSet.Add(thing)
-		sectionCutsSet = HashSet[int]()
-		if sectionCuts is not None:
-			for thing in sectionCuts:
-				if thing is not None:
-					sectionCutsSet.Add(thing)
-		panelSegmentsSet = HashSet[int]()
-		if panelSegments is not None:
-			for thing in panelSegments:
-				if thing is not None:
-					panelSegmentsSet.Add(thing)
-		return self._Entity.GenerateSolverSizingInputFile(inputFile, zones if zones is None else zonesSet, sectionCuts if sectionCuts is None else sectionCutsSet, panelSegments if panelSegments is None else panelSegmentsSet)
-
-	def GenerateSolverAnalysisInputFile(self, inputFile: str = None, zones: set[int] = None, sectionCuts: set[int] = None, panelSegments: set[int] = None) -> str:
-		zonesSet = HashSet[int]()
-		if zones is not None:
-			for thing in zones:
-				if thing is not None:
-					zonesSet.Add(thing)
-		sectionCutsSet = HashSet[int]()
-		if sectionCuts is not None:
-			for thing in sectionCuts:
-				if thing is not None:
-					sectionCutsSet.Add(thing)
-		panelSegmentsSet = HashSet[int]()
-		if panelSegments is not None:
-			for thing in panelSegments:
-				if thing is not None:
-					panelSegmentsSet.Add(thing)
-		return self._Entity.GenerateSolverAnalysisInputFile(inputFile, zones if zones is None else zonesSet, sectionCuts if sectionCuts is None else sectionCutsSet, panelSegments if panelSegments is None else panelSegmentsSet)
-
-	def FullRunSolverSizing(self, inputFile: str = None, outputFile: str = None, zones: set[int] = None, sectionCuts: set[int] = None, panelSegments: set[int] = None, nThreads: int = None) -> bool:
-		zonesSet = HashSet[int]()
-		if zones is not None:
-			for thing in zones:
-				if thing is not None:
-					zonesSet.Add(thing)
-		sectionCutsSet = HashSet[int]()
-		if sectionCuts is not None:
-			for thing in sectionCuts:
-				if thing is not None:
-					sectionCutsSet.Add(thing)
-		panelSegmentsSet = HashSet[int]()
-		if panelSegments is not None:
-			for thing in panelSegments:
-				if thing is not None:
-					panelSegmentsSet.Add(thing)
-		return self._Entity.FullRunSolverSizing(inputFile, outputFile, zones if zones is None else zonesSet, sectionCuts if sectionCuts is None else sectionCutsSet, panelSegments if panelSegments is None else panelSegmentsSet, nThreads)
-
-	def FullRunSolverAnalysis(self, inputFile: str = None, outputFile: str = None, zones: set[int] = None, sectionCuts: set[int] = None, panelSegments: set[int] = None, nThreads: int = None) -> bool:
-		zonesSet = HashSet[int]()
-		if zones is not None:
-			for thing in zones:
-				if thing is not None:
-					zonesSet.Add(thing)
-		sectionCutsSet = HashSet[int]()
-		if sectionCuts is not None:
-			for thing in sectionCuts:
-				if thing is not None:
-					sectionCutsSet.Add(thing)
-		panelSegmentsSet = HashSet[int]()
-		if panelSegments is not None:
-			for thing in panelSegments:
-				if thing is not None:
-					panelSegmentsSet.Add(thing)
-		return self._Entity.FullRunSolverAnalysis(inputFile, outputFile, zones if zones is None else zonesSet, sectionCuts if sectionCuts is None else sectionCutsSet, panelSegments if panelSegments is None else panelSegmentsSet, nThreads)
-
-	def RunSolver(self, inputFile: str, outputFile: str = None, nThreads: int = None) -> bool:
-		return self._Entity.RunSolver(inputFile, outputFile, nThreads)
-
 	def Dispose(self) -> None:
 		return self._Entity.Dispose()
 
@@ -7478,9 +7403,6 @@ class Project:
 		return types.SimpleStatus(self._Entity.PackageProject(destinationFilePath, includeFemInputFiles, includeFemOutputFiles, includeWorkingFolder, includeLoadFiles, includePluginPackages, removeAllOtherProjects, deleteUnusedPropertiesAndMaterials, mapFemFilesToRelativePaths, additionalFiles if additionalFiles is None else additionalFilesEnumerable))
 
 	def ImportFem(self) -> None:
-		'''
-		OBSOLETE - Use only for tests. This should not be used in scripts.
-		'''
 		return self._Entity.ImportFem()
 
 	def ImportFeaResults(self, alwaysImport: bool = False) -> str:
