@@ -1,1 +1,0 @@
-Utility methods, commonly helpful when scripting with HyperX.
