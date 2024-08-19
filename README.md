@@ -1,3 +1,3 @@
-# HyperX
+# HyperX Python API Wrapper Documentation
 
-A python package for scripting in HyperX. Bridges the gap between the C# scripting API and Python.
+The documentation for the latest released version of the HyperX Python API wrapper.

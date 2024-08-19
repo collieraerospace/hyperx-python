@@ -1,8 +1,0 @@
-dist/
-*.egg-info/
-build/
-
-setup*twine.bat
-.vscode/
-.vs/
-__pycache__/
