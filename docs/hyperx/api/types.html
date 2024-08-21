@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="pdoc 14.5.1"/>
+    <meta name="generator" content="pdoc 14.4.0"/>
     <title>hyperx.api.types API documentation</title>
 
     <style>/*! * Bootstrap Reboot v5.0.0 (https://getbootstrap.com/) * Copyright 2011-2021 The Bootstrap Authors * Copyright 2011-2021 Twitter, Inc. * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE) * Forked from Normalize.css, licensed MIT (https://github.com/necolas/normalize.css/blob/master/LICENSE.md) */*,::after,::before{box-sizing:border-box}@media (prefers-reduced-motion:no-preference){:root{scroll-behavior:smooth}}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}hr{margin:1rem 0;color:inherit;background-color:currentColor;border:0;opacity:.25}hr:not([size]){height:1px}h1,h2,h3,h4,h5,h6{margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2}h1{font-size:calc(1.375rem + 1.5vw)}@media (min-width:1200px){h1{font-size:2.5rem}}h2{font-size:calc(1.325rem + .9vw)}@media (min-width:1200px){h2{font-size:2rem}}h3{font-size:calc(1.3rem + .6vw)}@media (min-width:1200px){h3{font-size:1.75rem}}h4{font-size:calc(1.275rem + .3vw)}@media (min-width:1200px){h4{font-size:1.5rem}}h5{font-size:1.25rem}h6{font-size:1rem}p{margin-top:0;margin-bottom:1rem}abbr[data-bs-original-title],abbr[title]{-webkit-text-decoration:underline dotted;text-decoration:underline dotted;cursor:help;-webkit-text-decoration-skip-ink:none;text-decoration-skip-ink:none}address{margin-bottom:1rem;font-style:normal;line-height:inherit}ol,ul{padding-left:2rem}dl,ol,ul{margin-top:0;margin-bottom:1rem}ol ol,ol ul,ul ol,ul ul{margin-bottom:0}dt{font-weight:700}dd{margin-bottom:.5rem;margin-left:0}blockquote{margin:0 0 1rem}b,strong{font-weight:bolder}small{font-size:.875em}mark{padding:.2em;background-color:#fcf8e3}sub,sup{position:relative;font-size:.75em;line-height:0;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}a{color:#0d6efd;text-decoration:underline}a:hover{color:#0a58ca}a:not([href]):not([class]),a:not([href]):not([class]):hover{color:inherit;text-decoration:none}code,kbd,pre,samp{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:1em;direction:ltr;unicode-bidi:bidi-override}pre{display:block;margin-top:0;margin-bottom:1rem;overflow:auto;font-size:.875em}pre code{font-size:inherit;color:inherit;word-break:normal}code{font-size:.875em;color:#d63384;word-wrap:break-word}a>code{color:inherit}kbd{padding:.2rem .4rem;font-size:.875em;color:#fff;background-color:#212529;border-radius:.2rem}kbd kbd{padding:0;font-size:1em;font-weight:700}figure{margin:0 0 1rem}img,svg{vertical-align:middle}table{caption-side:bottom;border-collapse:collapse}caption{padding-top:.5rem;padding-bottom:.5rem;color:#6c757d;text-align:left}th{text-align:inherit;text-align:-webkit-match-parent}tbody,td,tfoot,th,thead,tr{border-color:inherit;border-style:solid;border-width:0}label{display:inline-block}button{border-radius:0}button:focus:not(:focus-visible){outline:0}button,input,optgroup,select,textarea{margin:0;font-family:inherit;font-size:inherit;line-height:inherit}button,select{text-transform:none}[role=button]{cursor:pointer}select{word-wrap:normal}select:disabled{opacity:1}[list]::-webkit-calendar-picker-indicator{display:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]:not(:disabled),[type=reset]:not(:disabled),[type=submit]:not(:disabled),button:not(:disabled){cursor:pointer}::-moz-focus-inner{padding:0;border-style:none}textarea{resize:vertical}fieldset{min-width:0;padding:0;margin:0;border:0}legend{float:left;width:100%;padding:0;margin-bottom:.5rem;font-size:calc(1.275rem + .3vw);line-height:inherit}@media (min-width:1200px){legend{font-size:1.5rem}}legend+*{clear:left}::-webkit-datetime-edit-day-field,::-webkit-datetime-edit-fields-wrapper,::-webkit-datetime-edit-hour-field,::-webkit-datetime-edit-minute,::-webkit-datetime-edit-month-field,::-webkit-datetime-edit-text,::-webkit-datetime-edit-year-field{padding:0}::-webkit-inner-spin-button{height:auto}[type=search]{outline-offset:-2px;-webkit-appearance:textfield}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-color-swatch-wrapper{padding:0}::file-selector-button{font:inherit}::-webkit-file-upload-button{font:inherit;-webkit-appearance:button}output{display:inline-block}iframe{border:0}summary{display:list-item;cursor:pointer}progress{vertical-align:baseline}[hidden]{display:none!important}</style>
@@ -787,6 +787,24 @@
                         </li>
                         <li>
                                 <a class="variable" href="#UserConstantDataType.Text">Text</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
+                        <summary>TernaryStatusCode</summary>
+                    <i><a class="class" href="#TernaryStatusCode">TernaryStatusCode</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#TernaryStatusCode.Success">Success</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#TernaryStatusCode.Warning">Warning</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#TernaryStatusCode.Error">Error</a>
                         </li>
                 </ul>
 
@@ -1613,6 +1631,12 @@
                         <li>
                                 <a class="variable" href="#FemType.MPC">MPC</a>
                         </li>
+                        <li>
+                                <a class="variable" href="#FemType.CTRIAR">CTRIAR</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#FemType.CTRIA6">CTRIA6</a>
+                        </li>
                 </ul>
 
                     </details>
@@ -1770,7 +1794,7 @@
                                 <a class="variable" href="#JointRangeId.Torque">Torque</a>
                         </li>
                         <li>
-                                <a class="variable" href="#JointRangeId.Spacing">Spacing</a>
+                                <a class="variable" href="#JointRangeId.FastenerSpacing">FastenerSpacing</a>
                         </li>
                         <li>
                                 <a class="variable" href="#JointRangeId.FastenerRows">FastenerRows</a>
@@ -1828,6 +1852,42 @@
                         </li>
                         <li>
                                 <a class="variable" href="#JointRangeId.Sheet4Thickness">Sheet4Thickness</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#JointRangeId.RivetSpacing">RivetSpacing</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
+                        <summary>JointRangeMode</summary>
+                    <i><a class="class" href="#JointRangeMode">JointRangeMode</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#JointRangeMode.Torque">Torque</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#JointRangeMode.Length">Length</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#JointRangeMode.FastenerRows">FastenerRows</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#JointRangeMode.TaperAngle">TaperAngle</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#JointRangeMode.Thickness">Thickness</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#JointRangeMode.Allowable">Allowable</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#JointRangeMode.NumberOfSteps">NumberOfSteps</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#JointRangeMode.NxD">NxD</a>
                         </li>
                 </ul>
 
@@ -3480,13 +3540,40 @@
                                 <a class="variable" href="#SimpleStatus.Message">Message</a>
                         </li>
                         <li>
+                                <a class="variable" href="#SimpleStatus.NewSuccess">NewSuccess</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#SimpleStatus.ToString">ToString</a>
                         </li>
                         <li>
-                                <a class="function" href="#SimpleStatus.GetHashCode">GetHashCode</a>
+                                <a class="function" href="#SimpleStatus.Equals">Equals</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
+                        <summary>TernaryStatus</summary>
+                    <i><a class="class" href="#TernaryStatus">TernaryStatus</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#TernaryStatus.__init__">TernaryStatus</a>
                         </li>
                         <li>
-                                <a class="function" href="#SimpleStatus.Equals">Equals</a>
+                                <a class="function" href="#TernaryStatus.Create_TernaryStatus">Create_TernaryStatus</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#TernaryStatus.Success">Success</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#TernaryStatus.Status">Status</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#TernaryStatus.ToString">ToString</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#TernaryStatus.Equals">Equals</a>
                         </li>
                 </ul>
 
@@ -3517,9 +3604,6 @@
                         </li>
                         <li>
                                 <a class="function" href="#DesignLink.Equals">Equals</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#DesignLink.GetHashCode">GetHashCode</a>
                         </li>
                 </ul>
 
@@ -6564,6 +6648,65 @@
                                     <div><dt>enum.Enum</dt>
                                 <dd id="UserConstantDataType.name" class="variable">name</dd>
                 <dd id="UserConstantDataType.value" class="variable">value</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="TernaryStatusCode">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">TernaryStatusCode</span><wbr>(<span class="base">enum.Enum</span>):
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatusCode"></a>
+    
+    
+
+                            <div id="TernaryStatusCode.Success" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Success</span>        =
+<span class="default_value">&lt;<a href="#TernaryStatusCode.Success">TernaryStatusCode.Success</a>: 1&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatusCode.Success"></a>
+    
+    
+
+                            </div>
+                            <div id="TernaryStatusCode.Warning" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Warning</span>        =
+<span class="default_value">&lt;<a href="#TernaryStatusCode.Warning">TernaryStatusCode.Warning</a>: 2&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatusCode.Warning"></a>
+    
+    
+
+                            </div>
+                            <div id="TernaryStatusCode.Error" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Error</span>        =
+<span class="default_value">&lt;<a href="#TernaryStatusCode.Error">TernaryStatusCode.Error</a>: 3&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatusCode.Error"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>enum.Enum</dt>
+                                <dd id="TernaryStatusCode.name" class="variable">name</dd>
+                <dd id="TernaryStatusCode.value" class="variable">value</dd>
 
             </div>
                                 </dl>
@@ -9701,6 +9844,30 @@
     
 
                             </div>
+                            <div id="FemType.CTRIAR" class="classattr">
+                                <div class="attr variable">
+            <span class="name">CTRIAR</span>        =
+<span class="default_value">&lt;<a href="#FemType.CTRIAR">FemType.CTRIAR</a>: 102&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#FemType.CTRIAR"></a>
+    
+    
+
+                            </div>
+                            <div id="FemType.CTRIA6" class="classattr">
+                                <div class="attr variable">
+            <span class="name">CTRIA6</span>        =
+<span class="default_value">&lt;<a href="#FemType.CTRIA6">FemType.CTRIA6</a>: 103&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#FemType.CTRIA6"></a>
+    
+    
+
+                            </div>
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
@@ -10247,14 +10414,14 @@
     
 
                             </div>
-                            <div id="JointRangeId.Spacing" class="classattr">
+                            <div id="JointRangeId.FastenerSpacing" class="classattr">
                                 <div class="attr variable">
-            <span class="name">Spacing</span>        =
-<span class="default_value">&lt;<a href="#JointRangeId.Spacing">JointRangeId.Spacing</a>: 2&gt;</span>
+            <span class="name">FastenerSpacing</span>        =
+<span class="default_value">&lt;<a href="#JointRangeId.FastenerSpacing">JointRangeId.FastenerSpacing</a>: 2&gt;</span>
 
         
     </div>
-    <a class="headerlink" href="#JointRangeId.Spacing"></a>
+    <a class="headerlink" href="#JointRangeId.FastenerSpacing"></a>
     
     
 
@@ -10487,12 +10654,143 @@
     
 
                             </div>
+                            <div id="JointRangeId.RivetSpacing" class="classattr">
+                                <div class="attr variable">
+            <span class="name">RivetSpacing</span>        =
+<span class="default_value">&lt;<a href="#JointRangeId.RivetSpacing">JointRangeId.RivetSpacing</a>: 22&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeId.RivetSpacing"></a>
+    
+    
+
+                            </div>
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt>enum.Enum</dt>
                                 <dd id="JointRangeId.name" class="variable">name</dd>
                 <dd id="JointRangeId.value" class="variable">value</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="JointRangeMode">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">JointRangeMode</span><wbr>(<span class="base">enum.Enum</span>):
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeMode"></a>
+    
+    
+
+                            <div id="JointRangeMode.Torque" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Torque</span>        =
+<span class="default_value">&lt;<a href="#JointRangeMode.Torque">JointRangeMode.Torque</a>: 1&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeMode.Torque"></a>
+    
+    
+
+                            </div>
+                            <div id="JointRangeMode.Length" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Length</span>        =
+<span class="default_value">&lt;<a href="#JointRangeMode.Length">JointRangeMode.Length</a>: 2&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeMode.Length"></a>
+    
+    
+
+                            </div>
+                            <div id="JointRangeMode.FastenerRows" class="classattr">
+                                <div class="attr variable">
+            <span class="name">FastenerRows</span>        =
+<span class="default_value">&lt;<a href="#JointRangeMode.FastenerRows">JointRangeMode.FastenerRows</a>: 3&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeMode.FastenerRows"></a>
+    
+    
+
+                            </div>
+                            <div id="JointRangeMode.TaperAngle" class="classattr">
+                                <div class="attr variable">
+            <span class="name">TaperAngle</span>        =
+<span class="default_value">&lt;<a href="#JointRangeMode.TaperAngle">JointRangeMode.TaperAngle</a>: 4&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeMode.TaperAngle"></a>
+    
+    
+
+                            </div>
+                            <div id="JointRangeMode.Thickness" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Thickness</span>        =
+<span class="default_value">&lt;<a href="#JointRangeMode.Thickness">JointRangeMode.Thickness</a>: 5&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeMode.Thickness"></a>
+    
+    
+
+                            </div>
+                            <div id="JointRangeMode.Allowable" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Allowable</span>        =
+<span class="default_value">&lt;<a href="#JointRangeMode.Allowable">JointRangeMode.Allowable</a>: 6&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeMode.Allowable"></a>
+    
+    
+
+                            </div>
+                            <div id="JointRangeMode.NumberOfSteps" class="classattr">
+                                <div class="attr variable">
+            <span class="name">NumberOfSteps</span>        =
+<span class="default_value">&lt;<a href="#JointRangeMode.NumberOfSteps">JointRangeMode.NumberOfSteps</a>: 7&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeMode.NumberOfSteps"></a>
+    
+    
+
+                            </div>
+                            <div id="JointRangeMode.NxD" class="classattr">
+                                <div class="attr variable">
+            <span class="name">NxD</span>        =
+<span class="default_value">&lt;<a href="#JointRangeMode.NxD">JointRangeMode.NxD</a>: 8&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#JointRangeMode.NxD"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>enum.Enum</dt>
+                                <dd id="JointRangeMode.name" class="variable">name</dd>
+                <dd id="JointRangeMode.value" class="variable">value</dd>
 
             </div>
                                 </dl>
@@ -16662,6 +16960,20 @@
     
 
                             </div>
+                            <div id="SimpleStatus.NewSuccess" class="classattr">
+                                <div class="attr variable">
+            <span class="name">NewSuccess</span><span class="annotation">: <a href="#SimpleStatus">SimpleStatus</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#SimpleStatus.NewSuccess"></a>
+    
+     
+        <div class="docstring"><p>For when you just need a success.</p>
+</div>
+
+
+                            </div>
                             <div id="SimpleStatus.ToString" class="classattr">
                                 <div class="attr function">
             
@@ -16671,19 +16983,6 @@
         
     </div>
     <a class="headerlink" href="#SimpleStatus.ToString"></a>
-    
-    
-
-                            </div>
-                            <div id="SimpleStatus.GetHashCode" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">GetHashCode</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">int</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#SimpleStatus.GetHashCode"></a>
     
     
 
@@ -16700,6 +16999,110 @@
     
     
 
+                            </div>
+                </section>
+                <section id="TernaryStatus">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">TernaryStatus</span><wbr>(<span class="base"><a href="#SimpleStatus">SimpleStatus</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatus"></a>
+    
+     
+        <div class="docstring"><p>Lots of methods need to return a Success state and an associated Message.</p>
+</div>
+
+
+                            <div id="TernaryStatus.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">TernaryStatus</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">ternaryStatus</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">TernaryStatus</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatus.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="TernaryStatus.Create_TernaryStatus" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">Create_TernaryStatus</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">status</span><span class="p">:</span> <span class="n"><a href="#TernaryStatusCode">TernaryStatusCode</a></span>, </span><span class="param"><span class="n">message</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">):</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatus.Create_TernaryStatus"></a>
+    
+    
+
+                            </div>
+                            <div id="TernaryStatus.Success" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Success</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatus.Success"></a>
+    
+     
+        <div class="docstring"><p>We succeed as long as we do not fail.</p>
+</div>
+
+
+                            </div>
+                            <div id="TernaryStatus.Status" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Status</span><span class="annotation">: <a href="#TernaryStatusCode">TernaryStatusCode</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatus.Status"></a>
+    
+    
+
+                            </div>
+                            <div id="TernaryStatus.ToString" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">ToString</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatus.ToString"></a>
+    
+    
+
+                            </div>
+                            <div id="TernaryStatus.Equals" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">Equals</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">item1</span><span class="o">=</span><span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#TernaryStatus.Equals"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#SimpleStatus">SimpleStatus</a></dt>
+                                <dd id="TernaryStatus.Create_SimpleStatus_success_message" class="function"><a href="#SimpleStatus.Create_SimpleStatus_success_message">Create_SimpleStatus_success_message</a></dd>
+                <dd id="TernaryStatus.Create_SimpleStatus_tupleInput" class="function"><a href="#SimpleStatus.Create_SimpleStatus_tupleInput">Create_SimpleStatus_tupleInput</a></dd>
+                <dd id="TernaryStatus.Message" class="variable"><a href="#SimpleStatus.Message">Message</a></dd>
+                <dd id="TernaryStatus.NewSuccess" class="variable"><a href="#SimpleStatus.NewSuccess">NewSuccess</a></dd>
+
+            </div>
+                                </dl>
                             </div>
                 </section>
                 <section id="DesignLink">
@@ -16787,24 +17190,11 @@
                                 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">Equals</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">obj</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+        <span class="name">Equals</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">item1</span><span class="o">=</span><span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
         
     </div>
     <a class="headerlink" href="#DesignLink.Equals"></a>
-    
-    
-
-                            </div>
-                            <div id="DesignLink.GetHashCode" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">GetHashCode</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">int</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#DesignLink.GetHashCode"></a>
     
     
 
@@ -16849,7 +17239,7 @@
                             </div>
                             <div id="HyperFeaSolver.ProjectModelFormat" class="classattr">
                                 <div class="attr variable">
-            <span class="name">ProjectModelFormat</span><span class="annotation">: &lt;property object at 0x0000022BED3ACF90&gt;</span>
+            <span class="name">ProjectModelFormat</span><span class="annotation">: <a href="#ProjectModelFormat">ProjectModelFormat</a></span>
 
         
     </div>
