@@ -4474,6 +4474,21 @@
                                 <a class="function" href="#Project.GetDashboardTags">GetDashboardTags</a>
                         </li>
                         <li>
+                                <a class="function" href="#Project.GenerateSolverSizingInputFile">GenerateSolverSizingInputFile</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Project.GenerateSolverAnalysisInputFile">GenerateSolverAnalysisInputFile</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Project.FullRunSolverSizing">FullRunSolverSizing</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Project.FullRunSolverAnalysis">FullRunSolverAnalysis</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Project.RunSolver">RunSolver</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#Project.Dispose">Dispose</a>
                         </li>
                         <li>
@@ -6597,11 +6612,14 @@
             </li>
             <li>
                     <details>
-                        <summary>ZoneBulkUpdaterBase</summary>
-                    <i><a class="class" href="#ZoneBulkUpdaterBase">ZoneBulkUpdaterBase</a></i>
+                        <summary>ZoneBaseBulkUpdater</summary>
+                    <i><a class="class" href="#ZoneBaseBulkUpdater">ZoneBaseBulkUpdater</a></i>
                             <ul class="memberlist">
                         <li>
-                                <a class="function" href="#ZoneBulkUpdaterBase.__init__">ZoneBulkUpdaterBase</a>
+                                <a class="function" href="#ZoneBaseBulkUpdater.__init__">ZoneBaseBulkUpdater</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ZoneBaseBulkUpdater.GetBulkUpdater">GetBulkUpdater</a>
                         </li>
                 </ul>
 
@@ -24115,7 +24133,7 @@ If the specified name is already used, it will be deconflicted.
                                 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">Upload</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">uploadSetName</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">company</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">program</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">tags</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">notes</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">zoneIds</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>,</span><span class="param">	<span class="n">jointIds</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+        <span class="name">Upload</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">uploadSetName</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">company</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">program</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">tags</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">notes</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">zoneIds</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>,</span><span class="param">	<span class="n">jointIds</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#SimpleStatus">hyperx.api.types.SimpleStatus</a></span>:</span></span>
 
         
     </div>
@@ -24173,6 +24191,71 @@ Dashboard login made through HyperX.</p>
 Dashboard login made through HyperX.</p>
 </div>
 
+
+                            </div>
+                            <div id="Project.GenerateSolverSizingInputFile" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">GenerateSolverSizingInputFile</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Project.GenerateSolverSizingInputFile"></a>
+    
+    
+
+                            </div>
+                            <div id="Project.GenerateSolverAnalysisInputFile" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">GenerateSolverAnalysisInputFile</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Project.GenerateSolverAnalysisInputFile"></a>
+    
+    
+
+                            </div>
+                            <div id="Project.FullRunSolverSizing" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">FullRunSolverSizing</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">nThreads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Project.FullRunSolverSizing"></a>
+    
+    
+
+                            </div>
+                            <div id="Project.FullRunSolverAnalysis" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">FullRunSolverAnalysis</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">nThreads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Project.FullRunSolverAnalysis"></a>
+    
+    
+
+                            </div>
+                            <div id="Project.RunSolver" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">RunSolver</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">nThreads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Project.RunSolver"></a>
+    
+    
 
                             </div>
                             <div id="Project.Dispose" class="classattr">
@@ -32898,26 +32981,39 @@ need HyperX.Scripting.dll alongside its binaries.
                                 </dl>
                             </div>
                 </section>
-                <section id="ZoneBulkUpdaterBase">
+                <section id="ZoneBaseBulkUpdater">
                     <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">ZoneBulkUpdaterBase</span><wbr>(<span class="base"><a href="#BulkUpdaterBase">BulkUpdaterBase</a></span>):
+    <span class="name">ZoneBaseBulkUpdater</span><wbr>(<span class="base"><a href="#BulkUpdaterBase">BulkUpdaterBase</a></span>):
 
         
     </div>
-    <a class="headerlink" href="#ZoneBulkUpdaterBase"></a>
+    <a class="headerlink" href="#ZoneBaseBulkUpdater"></a>
     
     
 
-                            <div id="ZoneBulkUpdaterBase.__init__" class="classattr">
+                            <div id="ZoneBaseBulkUpdater.__init__" class="classattr">
                                 <div class="attr function">
             
-        <span class="name">ZoneBulkUpdaterBase</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">zoneBulkUpdaterBase</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">ZoneBulkUpdaterBase</span><span class="p">[]</span></span>)</span>
+        <span class="name">ZoneBaseBulkUpdater</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">zoneBaseBulkUpdater</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">ZoneBaseBulkUpdater</span><span class="p">[]</span></span>)</span>
 
         
     </div>
-    <a class="headerlink" href="#ZoneBulkUpdaterBase.__init__"></a>
+    <a class="headerlink" href="#ZoneBaseBulkUpdater.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="ZoneBaseBulkUpdater.GetBulkUpdater" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#ZoneBase">ZoneBase</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#ZoneBaseBulkUpdater">ZoneBaseBulkUpdater</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ZoneBaseBulkUpdater.GetBulkUpdater"></a>
     
     
 
@@ -32926,7 +33022,7 @@ need HyperX.Scripting.dll alongside its binaries.
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#BulkUpdaterBase">BulkUpdaterBase</a></dt>
-                                <dd id="ZoneBulkUpdaterBase.Update" class="function"><a href="#BulkUpdaterBase.Update">Update</a></dd>
+                                <dd id="ZoneBaseBulkUpdater.Update" class="function"><a href="#BulkUpdaterBase.Update">Update</a></dd>
 
             </div>
                                 </dl>
@@ -32936,7 +33032,7 @@ need HyperX.Scripting.dll alongside its binaries.
                     <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">BeamBulkUpdater</span><wbr>(<span class="base"><a href="#ZoneBulkUpdaterBase">ZoneBulkUpdaterBase</a></span>):
+    <span class="name">BeamBulkUpdater</span><wbr>(<span class="base"><a href="#ZoneBaseBulkUpdater">ZoneBaseBulkUpdater</a></span>):
 
         
     </div>
@@ -33411,7 +33507,7 @@ need HyperX.Scripting.dll alongside its binaries.
                     <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">PanelBulkUpdater</span><wbr>(<span class="base"><a href="#ZoneBulkUpdaterBase">ZoneBulkUpdaterBase</a></span>):
+    <span class="name">PanelBulkUpdater</span><wbr>(<span class="base"><a href="#ZoneBaseBulkUpdater">ZoneBaseBulkUpdater</a></span>):
 
         
     </div>
@@ -33458,7 +33554,7 @@ need HyperX.Scripting.dll alongside its binaries.
                     <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">PanelSegmentBulkUpdater</span><wbr>(<span class="base"><a href="#ZoneBulkUpdaterBase">ZoneBulkUpdaterBase</a></span>):
+    <span class="name">PanelSegmentBulkUpdater</span><wbr>(<span class="base"><a href="#ZoneBaseBulkUpdater">ZoneBaseBulkUpdater</a></span>):
 
         
     </div>
@@ -33505,7 +33601,7 @@ need HyperX.Scripting.dll alongside its binaries.
                     <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">ZoneBulkUpdater</span><wbr>(<span class="base"><a href="#ZoneBulkUpdaterBase">ZoneBulkUpdaterBase</a></span>):
+    <span class="name">ZoneBulkUpdater</span><wbr>(<span class="base"><a href="#ZoneBaseBulkUpdater">ZoneBaseBulkUpdater</a></span>):
 
         
     </div>
