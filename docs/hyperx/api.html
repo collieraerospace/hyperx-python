@@ -4474,28 +4474,10 @@
                                 <a class="function" href="#Project.GetDashboardTags">GetDashboardTags</a>
                         </li>
                         <li>
-                                <a class="function" href="#Project.GenerateSolverSizingInputFile">GenerateSolverSizingInputFile</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Project.GenerateSolverAnalysisInputFile">GenerateSolverAnalysisInputFile</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Project.FullRunSolverSizing">FullRunSolverSizing</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Project.FullRunSolverAnalysis">FullRunSolverAnalysis</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Project.RunSolver">RunSolver</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#Project.Dispose">Dispose</a>
                         </li>
                         <li>
                                 <a class="function" href="#Project.PackageProject">PackageProject</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Project.ImportFem">ImportFem</a>
                         </li>
                         <li>
                                 <a class="function" href="#Project.ImportFeaResults">ImportFeaResults</a>
@@ -24193,71 +24175,6 @@ Dashboard login made through HyperX.</p>
 
 
                             </div>
-                            <div id="Project.GenerateSolverSizingInputFile" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">GenerateSolverSizingInputFile</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.GenerateSolverSizingInputFile"></a>
-    
-    
-
-                            </div>
-                            <div id="Project.GenerateSolverAnalysisInputFile" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">GenerateSolverAnalysisInputFile</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.GenerateSolverAnalysisInputFile"></a>
-    
-    
-
-                            </div>
-                            <div id="Project.FullRunSolverSizing" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">FullRunSolverSizing</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">nThreads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.FullRunSolverSizing"></a>
-    
-    
-
-                            </div>
-                            <div id="Project.FullRunSolverAnalysis" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">FullRunSolverAnalysis</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">zones</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sectionCuts</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">panelSegments</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">nThreads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.FullRunSolverAnalysis"></a>
-    
-    
-
-                            </div>
-                            <div id="Project.RunSolver" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">RunSolver</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">inputFile</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">outputFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">nThreads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.RunSolver"></a>
-    
-    
-
-                            </div>
                             <div id="Project.Dispose" class="classattr">
                                 <div class="attr function">
             
@@ -24282,22 +24199,6 @@ Dashboard login made through HyperX.</p>
     <a class="headerlink" href="#Project.PackageProject"></a>
     
     
-
-                            </div>
-                            <div id="Project.ImportFem" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">ImportFem</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Project.ImportFem"></a>
-    
-     
-        <div class="docstring"><p>OBSOLETE - Use only for tests. This should not be used in scripts.</p>
-</div>
-
 
                             </div>
                             <div id="Project.ImportFeaResults" class="classattr">
