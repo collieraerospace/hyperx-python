@@ -4947,6 +4947,24 @@
             </li>
             <li>
                     <details>
+                        <summary>FabricationCriterionRatio</summary>
+                    <i><a class="class" href="#FabricationCriterionRatio">FabricationCriterionRatio</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#FabricationCriterionRatio.__init__">FabricationCriterionRatio</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#FabricationCriterionRatio.FabricationRatioId">FabricationRatioId</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#FabricationCriterionRatio.Check">Check</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
                         <summary>JointDesignProperty</summary>
                     <i><a class="class" href="#JointDesignProperty">JointDesignProperty</a></i>
                             <ul class="memberlist">
@@ -5187,6 +5205,24 @@
             </li>
             <li>
                     <details>
+                        <summary>FabricationCriterionRatioCol</summary>
+                    <i><a class="class" href="#FabricationCriterionRatioCol">FabricationCriterionRatioCol</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#FabricationCriterionRatioCol.__init__">FabricationCriterionRatioCol</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#FabricationCriterionRatioCol.FabricationCriterionRatioColList">FabricationCriterionRatioColList</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#FabricationCriterionRatioCol.Get">Get</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
                         <summary>ToolingConstraintCol</summary>
                     <i><a class="class" href="#ToolingConstraintCol">ToolingConstraintCol</a></i>
                             <ul class="memberlist">
@@ -5243,6 +5279,12 @@
                         </li>
                         <li>
                                 <a class="variable" href="#ZoneDesignProperty.DesignVariables">DesignVariables</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ZoneDesignProperty.HasFabricationCriteria">HasFabricationCriteria</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ZoneDesignProperty.FabricationCriterionRatios">FabricationCriterionRatios</a>
                         </li>
                 </ul>
 
@@ -27849,6 +27891,65 @@ Activating a project will deactivate the current project (if present).</p>
 
                             </div>
                 </section>
+                <section id="FabricationCriterionRatio">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">FabricationCriterionRatio</span><wbr>(<span class="base"><a href="#IdEntity">IdEntity</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#FabricationCriterionRatio"></a>
+    
+     
+        <div class="docstring"><p>Represents an entity with an ID.</p>
+</div>
+
+
+                            <div id="FabricationCriterionRatio.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">FabricationCriterionRatio</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">fabricationCriterionRatio</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">FabricationCriterionRatio</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#FabricationCriterionRatio.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="FabricationCriterionRatio.FabricationRatioId" class="classattr">
+                                <div class="attr variable">
+            <span class="name">FabricationRatioId</span><span class="annotation">: <a href="api/types.html#FabricationRatio">hyperx.api.types.FabricationRatio</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#FabricationCriterionRatio.FabricationRatioId"></a>
+    
+    
+
+                            </div>
+                            <div id="FabricationCriterionRatio.Check" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Check</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#FabricationCriterionRatio.Check"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#IdEntity">IdEntity</a></dt>
+                                <dd id="FabricationCriterionRatio.Id" class="variable"><a href="#IdEntity.Id">Id</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
                 <section id="JointDesignProperty">
                     <div class="attr class">
             
@@ -28968,6 +29069,72 @@ In the case of a laminate, the analysis value is derived from thickness, and set
                                 </dl>
                             </div>
                 </section>
+                <section id="FabricationCriterionRatioCol">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">FabricationCriterionRatioCol</span><wbr>(<span class="base"><a href="#IdEntityCol">hyperx.api.IdEntityCol[hyperx.api.FabricationCriterionRatio]</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#FabricationCriterionRatioCol"></a>
+    
+    
+
+                            <div id="FabricationCriterionRatioCol.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">FabricationCriterionRatioCol</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">fabricationCriterionRatioCol</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">FabricationCriterionRatioCol</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#FabricationCriterionRatioCol.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="FabricationCriterionRatioCol.FabricationCriterionRatioColList" class="classattr">
+                                <div class="attr variable">
+            <span class="name">FabricationCriterionRatioColList</span><span class="annotation">: tuple[<a href="#FabricationCriterionRatio">FabricationCriterionRatio</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#FabricationCriterionRatioCol.FabricationCriterionRatioColList"></a>
+    
+    
+
+                            </div>
+                            <div id="FabricationCriterionRatioCol.Get" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">Get</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">item1</span><span class="o">=</span><span class="kc">None</span></span><span class="return-annotation">) -> <span class="n"><a href="#FabricationCriterionRatio">FabricationCriterionRatio</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#FabricationCriterionRatioCol.Get"></a>
+    
+     
+        <div class="docstring"><p>Overload 1: <code>Get(self, fabricationRatioId: types.FabricationRatio) -&gt; FabricationCriterionRatio</code></p>
+
+<p>Overload 2: <code>Get(self, id: int) -&gt; FabricationCriterionRatio</code></p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
+                                <dd id="FabricationCriterionRatioCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
+                <dd id="FabricationCriterionRatioCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                <dd id="FabricationCriterionRatioCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
+                <dd id="FabricationCriterionRatioCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
                 <section id="ToolingConstraintCol">
                     <div class="attr class">
             
@@ -29197,6 +29364,31 @@ In the case of a laminate, the analysis value is derived from thickness, and set
     
      
         <div class="docstring"><p>Get a <code><a href="#DesignVariable">DesignVariable</a></code> collection for this <code><a href="#ZoneDesignProperty">ZoneDesignProperty</a></code>.</p>
+</div>
+
+
+                            </div>
+                            <div id="ZoneDesignProperty.HasFabricationCriteria" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HasFabricationCriteria</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ZoneDesignProperty.HasFabricationCriteria"></a>
+    
+    
+
+                            </div>
+                            <div id="ZoneDesignProperty.FabricationCriterionRatios" class="classattr">
+                                <div class="attr variable">
+            <span class="name">FabricationCriterionRatios</span><span class="annotation">: <a href="#FabricationCriterionRatioCol">FabricationCriterionRatioCol</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ZoneDesignProperty.FabricationCriterionRatios"></a>
+    
+     
+        <div class="docstring"><p>Gets a <code><a href="#FabricationCriterionRatioCol">FabricationCriterionRatioCol</a></code> of fabrication criterion ratios.</p>
 </div>
 
 
