@@ -1104,10 +1104,10 @@
                     <i><a class="class" href="#HeightSizingVariable">HeightSizingVariable</a></i>
                             <ul class="memberlist">
                         <li>
-                                <a class="variable" href="#HeightSizingVariable.Invalid">Invalid</a>
+                                <a class="variable" href="#HeightSizingVariable.NotApplicable">NotApplicable</a>
                         </li>
                         <li>
-                                <a class="variable" href="#HeightSizingVariable.TotalPanelHeight">TotalPanelHeight</a>
+                                <a class="variable" href="#HeightSizingVariable.TotalHeight">TotalHeight</a>
                         </li>
                         <li>
                                 <a class="variable" href="#HeightSizingVariable.StiffenerHeight">StiffenerHeight</a>
@@ -2032,6 +2032,51 @@
                         </li>
                         <li>
                                 <a class="variable" href="#BoundaryConditionType.Fixed">Fixed</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
+                        <summary>DesignLoadFilteringOptions</summary>
+                    <i><a class="class" href="#DesignLoadFilteringOptions">DesignLoadFilteringOptions</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#DesignLoadFilteringOptions.DoNothing">DoNothing</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadFilteringOptions.UpdateDuringNextSizingOrAnalysis">UpdateDuringNextSizingOrAnalysis</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadFilteringOptions.ApplyDuringSizingOrAnalysis">ApplyDuringSizingOrAnalysis</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
+                        <summary>DesignLoadOverrideMode</summary>
+                    <i><a class="class" href="#DesignLoadOverrideMode">DesignLoadOverrideMode</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#DesignLoadOverrideMode.IncludedCases">IncludedCases</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverrideMode.LimitFactor">LimitFactor</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverrideMode.UltimateFactor">UltimateFactor</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverrideMode.ThermalHelp">ThermalHelp</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverrideMode.ThermalHurt">ThermalHurt</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverrideMode.Temperature">Temperature</a>
                         </li>
                 </ul>
 
@@ -7924,26 +7969,26 @@
     
     
 
-                            <div id="HeightSizingVariable.Invalid" class="classattr">
+                            <div id="HeightSizingVariable.NotApplicable" class="classattr">
                                 <div class="attr variable">
-            <span class="name">Invalid</span>        =
-<span class="default_value">&lt;<a href="#HeightSizingVariable.Invalid">HeightSizingVariable.Invalid</a>: 0&gt;</span>
+            <span class="name">NotApplicable</span>        =
+<span class="default_value">&lt;<a href="#HeightSizingVariable.NotApplicable">HeightSizingVariable.NotApplicable</a>: 0&gt;</span>
 
         
     </div>
-    <a class="headerlink" href="#HeightSizingVariable.Invalid"></a>
+    <a class="headerlink" href="#HeightSizingVariable.NotApplicable"></a>
     
     
 
                             </div>
-                            <div id="HeightSizingVariable.TotalPanelHeight" class="classattr">
+                            <div id="HeightSizingVariable.TotalHeight" class="classattr">
                                 <div class="attr variable">
-            <span class="name">TotalPanelHeight</span>        =
-<span class="default_value">&lt;<a href="#HeightSizingVariable.TotalPanelHeight">HeightSizingVariable.TotalPanelHeight</a>: 1&gt;</span>
+            <span class="name">TotalHeight</span>        =
+<span class="default_value">&lt;<a href="#HeightSizingVariable.TotalHeight">HeightSizingVariable.TotalHeight</a>: 1&gt;</span>
 
         
     </div>
-    <a class="headerlink" href="#HeightSizingVariable.TotalPanelHeight"></a>
+    <a class="headerlink" href="#HeightSizingVariable.TotalHeight"></a>
     
     
 
@@ -11415,6 +11460,160 @@
                                     <div><dt>enum.Enum</dt>
                                 <dd id="BoundaryConditionType.name" class="variable">name</dd>
                 <dd id="BoundaryConditionType.value" class="variable">value</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="DesignLoadFilteringOptions">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">DesignLoadFilteringOptions</span><wbr>(<span class="base">enum.Enum</span>):
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadFilteringOptions"></a>
+    
+    
+
+                            <div id="DesignLoadFilteringOptions.DoNothing" class="classattr">
+                                <div class="attr variable">
+            <span class="name">DoNothing</span>        =
+<span class="default_value">&lt;<a href="#DesignLoadFilteringOptions.DoNothing">DesignLoadFilteringOptions.DoNothing</a>: 0&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadFilteringOptions.DoNothing"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadFilteringOptions.UpdateDuringNextSizingOrAnalysis" class="classattr">
+                                <div class="attr variable">
+            <span class="name">UpdateDuringNextSizingOrAnalysis</span>        =
+<span class="default_value">&lt;<a href="#DesignLoadFilteringOptions.UpdateDuringNextSizingOrAnalysis">DesignLoadFilteringOptions.UpdateDuringNextSizingOrAnalysis</a>: 1&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadFilteringOptions.UpdateDuringNextSizingOrAnalysis"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadFilteringOptions.ApplyDuringSizingOrAnalysis" class="classattr">
+                                <div class="attr variable">
+            <span class="name">ApplyDuringSizingOrAnalysis</span>        =
+<span class="default_value">&lt;<a href="#DesignLoadFilteringOptions.ApplyDuringSizingOrAnalysis">DesignLoadFilteringOptions.ApplyDuringSizingOrAnalysis</a>: 2&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadFilteringOptions.ApplyDuringSizingOrAnalysis"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>enum.Enum</dt>
+                                <dd id="DesignLoadFilteringOptions.name" class="variable">name</dd>
+                <dd id="DesignLoadFilteringOptions.value" class="variable">value</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="DesignLoadOverrideMode">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">DesignLoadOverrideMode</span><wbr>(<span class="base">enum.Enum</span>):
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverrideMode"></a>
+    
+    
+
+                            <div id="DesignLoadOverrideMode.IncludedCases" class="classattr">
+                                <div class="attr variable">
+            <span class="name">IncludedCases</span>        =
+<span class="default_value">&lt;<a href="#DesignLoadOverrideMode.IncludedCases">DesignLoadOverrideMode.IncludedCases</a>: 0&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverrideMode.IncludedCases"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverrideMode.LimitFactor" class="classattr">
+                                <div class="attr variable">
+            <span class="name">LimitFactor</span>        =
+<span class="default_value">&lt;<a href="#DesignLoadOverrideMode.LimitFactor">DesignLoadOverrideMode.LimitFactor</a>: 1&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverrideMode.LimitFactor"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverrideMode.UltimateFactor" class="classattr">
+                                <div class="attr variable">
+            <span class="name">UltimateFactor</span>        =
+<span class="default_value">&lt;<a href="#DesignLoadOverrideMode.UltimateFactor">DesignLoadOverrideMode.UltimateFactor</a>: 2&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverrideMode.UltimateFactor"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverrideMode.ThermalHelp" class="classattr">
+                                <div class="attr variable">
+            <span class="name">ThermalHelp</span>        =
+<span class="default_value">&lt;<a href="#DesignLoadOverrideMode.ThermalHelp">DesignLoadOverrideMode.ThermalHelp</a>: 3&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverrideMode.ThermalHelp"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverrideMode.ThermalHurt" class="classattr">
+                                <div class="attr variable">
+            <span class="name">ThermalHurt</span>        =
+<span class="default_value">&lt;<a href="#DesignLoadOverrideMode.ThermalHurt">DesignLoadOverrideMode.ThermalHurt</a>: 4&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverrideMode.ThermalHurt"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverrideMode.Temperature" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Temperature</span>        =
+<span class="default_value">&lt;<a href="#DesignLoadOverrideMode.Temperature">DesignLoadOverrideMode.Temperature</a>: 5&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverrideMode.Temperature"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>enum.Enum</dt>
+                                <dd id="DesignLoadOverrideMode.name" class="variable">name</dd>
+                <dd id="DesignLoadOverrideMode.value" class="variable">value</dd>
 
             </div>
                                 </dl>

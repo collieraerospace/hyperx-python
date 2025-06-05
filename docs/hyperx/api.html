@@ -38,6 +38,9 @@
                     <a class="function" href="#MakeCSharpIntList">MakeCSharpIntList</a>
             </li>
             <li>
+                    <a class="function" href="#MakeCSharpStringList">MakeCSharpStringList</a>
+            </li>
+            <li>
                     <details>
                         <summary>AnalysisResultToReturn</summary>
                     <i><a class="class" href="#AnalysisResultToReturn">AnalysisResultToReturn</a></i>
@@ -1617,6 +1620,33 @@
             </li>
             <li>
                     <details>
+                        <summary>DesignLoadOverride</summary>
+                    <i><a class="class" href="#DesignLoadOverride">DesignLoadOverride</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#DesignLoadOverride.__init__">DesignLoadOverride</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverride.LimitFactor">LimitFactor</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverride.UltimateFactor">UltimateFactor</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverride.HelpFactor">HelpFactor</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverride.HurtFactor">HurtFactor</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DesignLoadOverride.Temperature">Temperature</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
                         <summary>ZoneDesignResultCol</summary>
                     <i><a class="class" href="#ZoneDesignResultCol">ZoneDesignResultCol</a></i>
                             <ul class="memberlist">
@@ -1652,6 +1682,12 @@
                         </li>
                         <li>
                                 <a class="variable" href="#ZoneBase.Weight">Weight</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ZoneBase.IncludedDesignLoads">IncludedDesignLoads</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ZoneBase.DesignLoadOverrides">DesignLoadOverrides</a>
                         </li>
                         <li>
                                 <a class="variable" href="#ZoneBase.NonOptimumFactor">NonOptimumFactor</a>
@@ -1727,6 +1763,9 @@
                         </li>
                         <li>
                                 <a class="variable" href="#ZoneBase.Dmid">Dmid</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ZoneBase.IncludeAllDesignLoads">IncludeAllDesignLoads</a>
                         </li>
                         <li>
                                 <a class="function" href="#ZoneBase.GetObjectName">GetObjectName</a>
@@ -4219,6 +4258,15 @@
                                 <a class="variable" href="#DesignLoadCol.DesignLoadColList">DesignLoadColList</a>
                         </li>
                         <li>
+                                <a class="variable" href="#DesignLoadCol.FilterOptions">FilterOptions</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DesignLoadCol.SetIsActiveById">SetIsActiveById</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DesignLoadCol.SetIsActiveByName">SetIsActiveByName</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#DesignLoadCol.Get">Get</a>
                         </li>
                 </ul>
@@ -5279,6 +5327,9 @@
                         </li>
                         <li>
                                 <a class="variable" href="#ZoneDesignProperty.DesignVariables">DesignVariables</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ZoneDesignProperty.HeightSizingVariable">HeightSizingVariable</a>
                         </li>
                         <li>
                                 <a class="variable" href="#ZoneDesignProperty.HasFabricationCriteria">HasFabricationCriteria</a>
@@ -6478,9 +6529,6 @@
                     <i><a class="class" href="#Environment">Environment</a></i>
                             <ul class="memberlist">
                         <li>
-                                <a class="function" href="#Environment.__init__">Environment</a>
-                        </li>
-                        <li>
                                 <a class="variable" href="#Environment.InstallLocation">InstallLocation</a>
                         </li>
                         <li>
@@ -6522,9 +6570,6 @@
                         <summary>HelperFunctions</summary>
                     <i><a class="class" href="#HelperFunctions">HelperFunctions</a></i>
                             <ul class="memberlist">
-                        <li>
-                                <a class="function" href="#HelperFunctions.__init__">HelperFunctions</a>
-                        </li>
                         <li>
                                 <a class="function" href="#HelperFunctions.NullableSingle">NullableSingle</a>
                         </li>
@@ -6852,6 +6897,19 @@
         <div class="docstring"><p>Convert a python list to a C#-compatible list.</p>
 </div>
 
+
+                </section>
+                <section id="MakeCSharpStringList">
+                    <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">MakeCSharpStringList</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">strings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n">System</span><span class="o">.</span><span class="n">Collections</span><span class="o">.</span><span class="n">Generic</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">String</span><span class="p">]</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#MakeCSharpStringList"></a>
+    
+    
 
                 </section>
                 <section id="AnalysisResultToReturn">
@@ -12874,6 +12932,98 @@ Not valid for discrete fields containing vector data.</p>
                                 </dl>
                             </div>
                 </section>
+                <section id="DesignLoadOverride">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">DesignLoadOverride</span><wbr>(<span class="base"><a href="#IdEntity">IdEntity</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverride"></a>
+    
+     
+        <div class="docstring"><p>Represents an entity with an ID.</p>
+</div>
+
+
+                            <div id="DesignLoadOverride.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">DesignLoadOverride</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">designLoadOverride</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">DesignLoadOverride</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverride.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverride.LimitFactor" class="classattr">
+                                <div class="attr variable">
+            <span class="name">LimitFactor</span><span class="annotation">: float | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverride.LimitFactor"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverride.UltimateFactor" class="classattr">
+                                <div class="attr variable">
+            <span class="name">UltimateFactor</span><span class="annotation">: float | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverride.UltimateFactor"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverride.HelpFactor" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HelpFactor</span><span class="annotation">: float | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverride.HelpFactor"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverride.HurtFactor" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HurtFactor</span><span class="annotation">: float | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverride.HurtFactor"></a>
+    
+    
+
+                            </div>
+                            <div id="DesignLoadOverride.Temperature" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Temperature</span><span class="annotation">: float | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadOverride.Temperature"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#IdEntity">IdEntity</a></dt>
+                                <dd id="DesignLoadOverride.Id" class="variable"><a href="#IdEntity.Id">Id</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
                 <section id="ZoneDesignResultCol">
                     <div class="attr class">
             
@@ -13012,6 +13162,31 @@ Not valid for discrete fields containing vector data.</p>
     <a class="headerlink" href="#ZoneBase.Weight"></a>
     
     
+
+                            </div>
+                            <div id="ZoneBase.IncludedDesignLoads" class="classattr">
+                                <div class="attr variable">
+            <span class="name">IncludedDesignLoads</span><span class="annotation">: tuple[str]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ZoneBase.IncludedDesignLoads"></a>
+    
+    
+
+                            </div>
+                            <div id="ZoneBase.DesignLoadOverrides" class="classattr">
+                                <div class="attr variable">
+            <span class="name">DesignLoadOverrides</span><span class="annotation">: dict[str, <a href="#DesignLoadOverride">DesignLoadOverride</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ZoneBase.DesignLoadOverrides"></a>
+    
+     
+        <div class="docstring"><p>Design load overrides keyed by <code><a href="#DesignLoad">DesignLoad</a></code> name.</p>
+</div>
+
 
                             </div>
                             <div id="ZoneBase.NonOptimumFactor" class="classattr">
@@ -13322,6 +13497,22 @@ Panel Units: English = lb/ft² | Standard = kg/m².</p>
     
      
         <div class="docstring"><p>Units: English = in | Standard = mm.</p>
+</div>
+
+
+                            </div>
+                            <div id="ZoneBase.IncludeAllDesignLoads" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">IncludeAllDesignLoads</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ZoneBase.IncludeAllDesignLoads"></a>
+    
+     
+        <div class="docstring"><p>Convenience method for including all design loads in analysis, in the event any have been previously excluded via design load overrides.</p>
 </div>
 
 
@@ -13659,6 +13850,8 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                                 <dd id="PanelSegment.Centroid" class="variable"><a href="#ZoneBase.Centroid">Centroid</a></dd>
                 <dd id="PanelSegment.Id" class="variable"><a href="#ZoneBase.Id">Id</a></dd>
                 <dd id="PanelSegment.Weight" class="variable"><a href="#ZoneBase.Weight">Weight</a></dd>
+                <dd id="PanelSegment.IncludedDesignLoads" class="variable"><a href="#ZoneBase.IncludedDesignLoads">IncludedDesignLoads</a></dd>
+                <dd id="PanelSegment.DesignLoadOverrides" class="variable"><a href="#ZoneBase.DesignLoadOverrides">DesignLoadOverrides</a></dd>
                 <dd id="PanelSegment.NonOptimumFactor" class="variable"><a href="#ZoneBase.NonOptimumFactor">NonOptimumFactor</a></dd>
                 <dd id="PanelSegment.AddedWeight" class="variable"><a href="#ZoneBase.AddedWeight">AddedWeight</a></dd>
                 <dd id="PanelSegment.SuperimposePanel" class="variable"><a href="#ZoneBase.SuperimposePanel">SuperimposePanel</a></dd>
@@ -13684,6 +13877,7 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                 <dd id="PanelSegment.GJAuto" class="variable"><a href="#ZoneBase.GJAuto">GJAuto</a></dd>
                 <dd id="PanelSegment.Ex" class="variable"><a href="#ZoneBase.Ex">Ex</a></dd>
                 <dd id="PanelSegment.Dmid" class="variable"><a href="#ZoneBase.Dmid">Dmid</a></dd>
+                <dd id="PanelSegment.IncludeAllDesignLoads" class="function"><a href="#ZoneBase.IncludeAllDesignLoads">IncludeAllDesignLoads</a></dd>
                 <dd id="PanelSegment.GetObjectName" class="function"><a href="#ZoneBase.GetObjectName">GetObjectName</a></dd>
                 <dd id="PanelSegment.GetConceptName" class="function"><a href="#ZoneBase.GetConceptName">GetConceptName</a></dd>
                 <dd id="PanelSegment.GetZoneDesignResults" class="function"><a href="#ZoneBase.GetZoneDesignResults">GetZoneDesignResults</a></dd>
@@ -13774,6 +13968,8 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                                 <dd id="Zone.Centroid" class="variable"><a href="#ZoneBase.Centroid">Centroid</a></dd>
                 <dd id="Zone.Id" class="variable"><a href="#ZoneBase.Id">Id</a></dd>
                 <dd id="Zone.Weight" class="variable"><a href="#ZoneBase.Weight">Weight</a></dd>
+                <dd id="Zone.IncludedDesignLoads" class="variable"><a href="#ZoneBase.IncludedDesignLoads">IncludedDesignLoads</a></dd>
+                <dd id="Zone.DesignLoadOverrides" class="variable"><a href="#ZoneBase.DesignLoadOverrides">DesignLoadOverrides</a></dd>
                 <dd id="Zone.NonOptimumFactor" class="variable"><a href="#ZoneBase.NonOptimumFactor">NonOptimumFactor</a></dd>
                 <dd id="Zone.AddedWeight" class="variable"><a href="#ZoneBase.AddedWeight">AddedWeight</a></dd>
                 <dd id="Zone.SuperimposePanel" class="variable"><a href="#ZoneBase.SuperimposePanel">SuperimposePanel</a></dd>
@@ -13799,6 +13995,7 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                 <dd id="Zone.GJAuto" class="variable"><a href="#ZoneBase.GJAuto">GJAuto</a></dd>
                 <dd id="Zone.Ex" class="variable"><a href="#ZoneBase.Ex">Ex</a></dd>
                 <dd id="Zone.Dmid" class="variable"><a href="#ZoneBase.Dmid">Dmid</a></dd>
+                <dd id="Zone.IncludeAllDesignLoads" class="function"><a href="#ZoneBase.IncludeAllDesignLoads">IncludeAllDesignLoads</a></dd>
                 <dd id="Zone.GetObjectName" class="function"><a href="#ZoneBase.GetObjectName">GetObjectName</a></dd>
                 <dd id="Zone.GetConceptName" class="function"><a href="#ZoneBase.GetConceptName">GetConceptName</a></dd>
                 <dd id="Zone.GetZoneDesignResults" class="function"><a href="#ZoneBase.GetZoneDesignResults">GetZoneDesignResults</a></dd>
@@ -24326,6 +24523,52 @@ which may have a different name to what was provided.</p>
     
 
                             </div>
+                            <div id="DesignLoadCol.FilterOptions" class="classattr">
+                                <div class="attr variable">
+            <span class="name">FilterOptions</span><span class="annotation">: <a href="api/types.html#DesignLoadFilteringOptions">hyperx.api.types.DesignLoadFilteringOptions</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadCol.FilterOptions"></a>
+    
+     
+        <div class="docstring"><p>Options to determine how design load filtering is applied or updated during sizing and analysis.</p>
+</div>
+
+
+                            </div>
+                            <div id="DesignLoadCol.SetIsActiveById" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">SetIsActiveById</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">designLoads</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>,</span><span class="param">	<span class="n">isActive</span><span class="p">:</span> <span class="nb">bool</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#SimpleStatus">hyperx.api.types.SimpleStatus</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadCol.SetIsActiveById"></a>
+    
+     
+        <div class="docstring"><p>Set the <code><a href="#DesignLoad.IsActive">DesignLoad.IsActive</a>&gt;&lt;/see&gt; flag for a set of</code><a href="#DesignLoad">DesignLoad</a>></see> based on the <code>isActive</code> parameter.</p>
+</div>
+
+
+                            </div>
+                            <div id="DesignLoadCol.SetIsActiveByName" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">SetIsActiveByName</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">designLoads</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">isActive</span><span class="p">:</span> <span class="nb">bool</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#SimpleStatus">hyperx.api.types.SimpleStatus</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignLoadCol.SetIsActiveByName"></a>
+    
+     
+        <div class="docstring"><p>Set the <code><a href="#DesignLoad.IsActive">DesignLoad.IsActive</a>&gt;&lt;/see&gt; flag for a set of</code><a href="#DesignLoad">DesignLoad</a>></see> based on the <code>isActive</code> parameter.</p>
+</div>
+
+
+                            </div>
                             <div id="DesignLoadCol.Get" class="classattr">
                                 <div class="attr function">
             
@@ -29368,6 +29611,17 @@ In the case of a laminate, the analysis value is derived from thickness, and set
 
 
                             </div>
+                            <div id="ZoneDesignProperty.HeightSizingVariable" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HeightSizingVariable</span><span class="annotation">: <a href="api/types.html#HeightSizingVariable">hyperx.api.types.HeightSizingVariable</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ZoneDesignProperty.HeightSizingVariable"></a>
+    
+    
+
+                            </div>
                             <div id="ZoneDesignProperty.HasFabricationCriteria" class="classattr">
                                 <div class="attr variable">
             <span class="name">HasFabricationCriteria</span><span class="annotation">: bool</span>
@@ -29880,7 +30134,8 @@ Thermal =&gt; Temperature: Units: English = °F | Standard = °C.</p>
                             </div>
                             <div id="LoadPropertyUserFeaBeamRowBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#LoadPropertyUserFeaBeamRow">LoadPropertyUserFeaBeamRow</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#LoadPropertyUserFeaBeamRowBulkUpdater">LoadPropertyUserFeaBeamRowBulkUpdater</a></span>:</span></span>
 
@@ -30168,7 +30423,8 @@ Thermal =&gt; Temperature: Units: English = °F | Standard = °C.</p>
                             </div>
                             <div id="LoadPropertyUserFeaJointRowBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#LoadPropertyUserFeaJointRow">LoadPropertyUserFeaJointRow</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#LoadPropertyUserFeaJointRowBulkUpdater">LoadPropertyUserFeaJointRowBulkUpdater</a></span>:</span></span>
 
@@ -30293,7 +30549,8 @@ Thermal =&gt; Temperature: Units: English = °F | Standard = °C.</p>
                             </div>
                             <div id="LoadPropertyUserFeaPanelRowBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#LoadPropertyUserFeaPanelRow">LoadPropertyUserFeaPanelRow</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#LoadPropertyUserFeaPanelRowBulkUpdater">LoadPropertyUserFeaPanelRowBulkUpdater</a></span>:</span></span>
 
@@ -30620,7 +30877,8 @@ Strain Units: English = µin/in | Standard = µm/m.</p>
                             </div>
                             <div id="LoadPropertyUserGeneralBeamRowBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#LoadPropertyUserGeneralBeamRow">LoadPropertyUserGeneralBeamRow</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#LoadPropertyUserGeneralBeamRowBulkUpdater">LoadPropertyUserGeneralBeamRowBulkUpdater</a></span>:</span></span>
 
@@ -30948,7 +31206,8 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                             </div>
                             <div id="LoadPropertyUserGeneralPanelRowBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#LoadPropertyUserGeneralPanelRow">LoadPropertyUserGeneralPanelRow</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#LoadPropertyUserGeneralPanelRowBulkUpdater">LoadPropertyUserGeneralPanelRowBulkUpdater</a></span>:</span></span>
 
@@ -34387,18 +34646,6 @@ To see this change on any rows, you must get the row from the collection again.<
 </div>
 
 
-                            <div id="Environment.__init__" class="classattr">
-                                <div class="attr function">
-            
-        <span class="name">Environment</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">environment</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">Environment</span></span>)</span>
-
-        
-    </div>
-    <a class="headerlink" href="#Environment.__init__"></a>
-    
-    
-
-                            </div>
                             <div id="Environment.InstallLocation" class="classattr">
                                 <div class="attr variable">
             <span class="name">InstallLocation</span><span class="annotation">: str</span>
@@ -34412,7 +34659,8 @@ To see this change on any rows, you must get the row from the collection again.<
                             </div>
                             <div id="Environment.SetLocation" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">SetLocation</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">location</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -34440,7 +34688,8 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                             </div>
                             <div id="Environment.Initialize" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">Initialize</span><span class="signature pdoc-code condensed">(<span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -34583,21 +34832,10 @@ need HyperX.Scripting.dll alongside its binaries.</li>
     
     
 
-                            <div id="HelperFunctions.__init__" class="classattr">
-                                <div class="attr function">
-            
-        <span class="name">HelperFunctions</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">helperFunctions</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">HelperFunctions</span></span>)</span>
-
-        
-    </div>
-    <a class="headerlink" href="#HelperFunctions.__init__"></a>
-    
-    
-
-                            </div>
                             <div id="HelperFunctions.NullableSingle" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">NullableSingle</span><span class="signature pdoc-code condensed">(<span class="param"><span class="nb">input</span><span class="p">:</span> <span class="nb">float</span></span><span class="return-annotation">) -> <span class="nb">float</span>:</span></span>
 
@@ -34610,7 +34848,8 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                             </div>
                             <div id="HelperFunctions.GetFamilyObjectForObjectId" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetFamilyObjectForObjectId</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">familyId</span><span class="p">:</span> <span class="n"><a href="api/types.html#BeamPanelFamily">hyperx.api.types.BeamPanelFamily</a></span>,</span><span class="param">	<span class="n">objectId</span><span class="p">:</span> <span class="nb">int</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#FamilyObjectUID">hyperx.api.types.FamilyObjectUID</a></span>:</span></span>
 
@@ -35059,6 +35298,8 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                                 <dd id="Beam.Centroid" class="variable"><a href="#ZoneBase.Centroid">Centroid</a></dd>
                 <dd id="Beam.Id" class="variable"><a href="#ZoneBase.Id">Id</a></dd>
                 <dd id="Beam.Weight" class="variable"><a href="#ZoneBase.Weight">Weight</a></dd>
+                <dd id="Beam.IncludedDesignLoads" class="variable"><a href="#ZoneBase.IncludedDesignLoads">IncludedDesignLoads</a></dd>
+                <dd id="Beam.DesignLoadOverrides" class="variable"><a href="#ZoneBase.DesignLoadOverrides">DesignLoadOverrides</a></dd>
                 <dd id="Beam.NonOptimumFactor" class="variable"><a href="#ZoneBase.NonOptimumFactor">NonOptimumFactor</a></dd>
                 <dd id="Beam.AddedWeight" class="variable"><a href="#ZoneBase.AddedWeight">AddedWeight</a></dd>
                 <dd id="Beam.SuperimposePanel" class="variable"><a href="#ZoneBase.SuperimposePanel">SuperimposePanel</a></dd>
@@ -35084,6 +35325,7 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                 <dd id="Beam.GJAuto" class="variable"><a href="#ZoneBase.GJAuto">GJAuto</a></dd>
                 <dd id="Beam.Ex" class="variable"><a href="#ZoneBase.Ex">Ex</a></dd>
                 <dd id="Beam.Dmid" class="variable"><a href="#ZoneBase.Dmid">Dmid</a></dd>
+                <dd id="Beam.IncludeAllDesignLoads" class="function"><a href="#ZoneBase.IncludeAllDesignLoads">IncludeAllDesignLoads</a></dd>
                 <dd id="Beam.GetObjectName" class="function"><a href="#ZoneBase.GetObjectName">GetObjectName</a></dd>
                 <dd id="Beam.GetConceptName" class="function"><a href="#ZoneBase.GetConceptName">GetConceptName</a></dd>
                 <dd id="Beam.GetZoneDesignResults" class="function"><a href="#ZoneBase.GetZoneDesignResults">GetZoneDesignResults</a></dd>
@@ -35142,7 +35384,8 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                             </div>
                             <div id="ZoneBaseBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#ZoneBase">ZoneBase</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#ZoneBaseBulkUpdater">ZoneBaseBulkUpdater</a></span>:</span></span>
 
@@ -35189,7 +35432,8 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                             </div>
                             <div id="BeamBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#Beam">Beam</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#BeamBulkUpdater">BeamBulkUpdater</a></span>:</span></span>
 
@@ -35581,6 +35825,8 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                                 <dd id="Panel.Centroid" class="variable"><a href="#ZoneBase.Centroid">Centroid</a></dd>
                 <dd id="Panel.Id" class="variable"><a href="#ZoneBase.Id">Id</a></dd>
                 <dd id="Panel.Weight" class="variable"><a href="#ZoneBase.Weight">Weight</a></dd>
+                <dd id="Panel.IncludedDesignLoads" class="variable"><a href="#ZoneBase.IncludedDesignLoads">IncludedDesignLoads</a></dd>
+                <dd id="Panel.DesignLoadOverrides" class="variable"><a href="#ZoneBase.DesignLoadOverrides">DesignLoadOverrides</a></dd>
                 <dd id="Panel.NonOptimumFactor" class="variable"><a href="#ZoneBase.NonOptimumFactor">NonOptimumFactor</a></dd>
                 <dd id="Panel.AddedWeight" class="variable"><a href="#ZoneBase.AddedWeight">AddedWeight</a></dd>
                 <dd id="Panel.SuperimposePanel" class="variable"><a href="#ZoneBase.SuperimposePanel">SuperimposePanel</a></dd>
@@ -35606,6 +35852,7 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                 <dd id="Panel.GJAuto" class="variable"><a href="#ZoneBase.GJAuto">GJAuto</a></dd>
                 <dd id="Panel.Ex" class="variable"><a href="#ZoneBase.Ex">Ex</a></dd>
                 <dd id="Panel.Dmid" class="variable"><a href="#ZoneBase.Dmid">Dmid</a></dd>
+                <dd id="Panel.IncludeAllDesignLoads" class="function"><a href="#ZoneBase.IncludeAllDesignLoads">IncludeAllDesignLoads</a></dd>
                 <dd id="Panel.GetObjectName" class="function"><a href="#ZoneBase.GetObjectName">GetObjectName</a></dd>
                 <dd id="Panel.GetConceptName" class="function"><a href="#ZoneBase.GetConceptName">GetConceptName</a></dd>
                 <dd id="Panel.GetZoneDesignResults" class="function"><a href="#ZoneBase.GetZoneDesignResults">GetZoneDesignResults</a></dd>
@@ -35664,7 +35911,8 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                             </div>
                             <div id="PanelBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#Panel">Panel</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#PanelBulkUpdater">PanelBulkUpdater</a></span>:</span></span>
 
@@ -35711,7 +35959,8 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                             </div>
                             <div id="PanelSegmentBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#PanelSegment">PanelSegment</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#PanelSegmentBulkUpdater">PanelSegmentBulkUpdater</a></span>:</span></span>
 
@@ -35758,7 +36007,8 @@ need HyperX.Scripting.dll alongside its binaries.</li>
                             </div>
                             <div id="ZoneBulkUpdater.GetBulkUpdater" class="classattr">
                                 <div class="attr function">
-            
+                    <div class="decorator">@staticmethod</div>
+
         <span class="def">def</span>
         <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#Zone">Zone</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#ZoneBulkUpdater">ZoneBulkUpdater</a></span>:</span></span>
 
