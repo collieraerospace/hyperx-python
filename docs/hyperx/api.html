@@ -525,6 +525,12 @@
                         <li>
                                 <a class="variable" href="#AnalysisDefinition.Description">Description</a>
                         </li>
+                        <li>
+                                <a class="variable" href="#AnalysisDefinition.UID">UID</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AnalysisDefinition.V205UID">V205UID</a>
+                        </li>
                 </ul>
 
                     </details>
@@ -829,9 +835,6 @@
                                 <a class="function" href="#IdEntityCol.__init__">IdEntityCol</a>
                         </li>
                         <li>
-                                <a class="variable" href="#IdEntityCol.IdEntityColList">IdEntityColList</a>
-                        </li>
-                        <li>
                                 <a class="variable" href="#IdEntityCol.Ids">Ids</a>
                         </li>
                         <li>
@@ -852,9 +855,6 @@
                         <summary>IdNameEntityCol</summary>
                     <i><a class="class" href="#IdNameEntityCol">IdNameEntityCol</a></i>
                             <ul class="memberlist">
-                        <li>
-                                <a class="variable" href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a>
-                        </li>
                         <li>
                                 <a class="variable" href="#IdNameEntityCol.Names">Names</a>
                         </li>
@@ -907,6 +907,12 @@
                                 <a class="function" href="#FailureCriterion.__init__">FailureCriterion</a>
                         </li>
                         <li>
+                                <a class="variable" href="#FailureCriterion.Id">Id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#FailureCriterion.Identifier">Identifier</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#FailureCriterion.Description">Description</a>
                         </li>
                         <li>
@@ -953,6 +959,9 @@
                         </li>
                         <li>
                                 <a class="variable" href="#FailureCriterionCol.FailureCriterionColList">FailureCriterionColList</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#FailureCriterionCol.GetByIdentifier">GetByIdentifier</a>
                         </li>
                         <li>
                                 <a class="function" href="#FailureCriterionCol.Get">Get</a>
@@ -1452,6 +1461,21 @@
             </li>
             <li>
                     <details>
+                        <summary>PlateElement</summary>
+                    <i><a class="class" href="#PlateElement">PlateElement</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#PlateElement.__init__">PlateElement</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PlateElement.MaterialDirection">MaterialDirection</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
                         <summary>FailureModeCategory</summary>
                     <i><a class="class" href="#FailureModeCategory">FailureModeCategory</a></i>
                             <ul class="memberlist">
@@ -1657,6 +1681,9 @@
                                 <a class="variable" href="#ZoneDesignResultCol.ZoneDesignResultColList">ZoneDesignResultColList</a>
                         </li>
                         <li>
+                                <a class="variable" href="#ZoneDesignResultCol.SelectedCandidate">SelectedCandidate</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#ZoneDesignResultCol.Weight">Weight</a>
                         </li>
                         <li>
@@ -1809,6 +1836,12 @@
                         <li>
                                 <a class="variable" href="#ElementCol.ElementColList">ElementColList</a>
                         </li>
+                        <li>
+                                <a class="variable" href="#ElementCol.PlateIds">PlateIds</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ElementCol.PlateElements">PlateElements</a>
+                        </li>
                 </ul>
 
                     </details>
@@ -1872,9 +1905,6 @@
                         <summary>EntityWithAssignablePropertiesCol</summary>
                     <i><a class="class" href="#EntityWithAssignablePropertiesCol">EntityWithAssignablePropertiesCol</a></i>
                             <ul class="memberlist">
-                        <li>
-                                <a class="variable" href="#EntityWithAssignablePropertiesCol.EntityWithAssignablePropertiesColList">EntityWithAssignablePropertiesColList</a>
-                        </li>
                         <li>
                                 <a class="function" href="#EntityWithAssignablePropertiesCol.AssignPropertyToAll">AssignPropertyToAll</a>
                         </li>
@@ -2384,6 +2414,60 @@
                         </li>
                         <li>
                                 <a class="function" href="#HyperFea.GetSolverSetup">GetSolverSetup</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
+                        <summary>HyperXpertPoint</summary>
+                    <i><a class="class" href="#HyperXpertPoint">HyperXpertPoint</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#HyperXpertPoint.__init__">HyperXpertPoint</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#HyperXpertPoint.Weight">Weight</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#HyperXpertPoint.V">V</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#HyperXpertPoint.Variables">Variables</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
+                        <summary>RunSet</summary>
+                    <i><a class="class" href="#RunSet">RunSet</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#RunSet.__init__">RunSet</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
+                        <summary>RunSetSpecifier</summary>
+                    <i><a class="class" href="#RunSetSpecifier">RunSetSpecifier</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#RunSetSpecifier.__init__">RunSetSpecifier</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#RunSetSpecifier.Create_RunSetSpecifier">Create_RunSetSpecifier</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RunSetSpecifier.ProjectId">ProjectId</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RunSetSpecifier.RunSetId">RunSetId</a>
                         </li>
                 </ul>
 
@@ -3766,6 +3850,9 @@
                                 <a class="variable" href="#Ply.MaterialId">MaterialId</a>
                         </li>
                         <li>
+                                <a class="variable" href="#Ply.MaterialName">MaterialName</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#Ply.Orientation">Orientation</a>
                         </li>
                         <li>
@@ -4342,9 +4429,6 @@
                     <i><a class="class" href="#ZoneJointContainerCol">ZoneJointContainerCol</a></i>
                             <ul class="memberlist">
                         <li>
-                                <a class="variable" href="#ZoneJointContainerCol.ZoneJointContainerColList">ZoneJointContainerColList</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#ZoneJointContainerCol.Create">Create</a>
                         </li>
                 </ul>
@@ -4589,6 +4673,15 @@
                         </li>
                         <li>
                                 <a class="function" href="#Project.RegeneratePfem">RegeneratePfem</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Project.CopyResultsToOverrides">CopyResultsToOverrides</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Project.CreateHyperXpertPoints">CreateHyperXpertPoints</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Project.GetRunSets">GetRunSets</a>
                         </li>
                 </ul>
 
@@ -4882,7 +4975,7 @@
                                 <a class="variable" href="#Application.UnitSystem">UnitSystem</a>
                         </li>
                         <li>
-                                <a class="variable" href="#Application.CompilationDate">CompilationDate</a>
+                                <a class="function" href="#Application.CompilationDate">CompilationDate</a>
                         </li>
                         <li>
                                 <a class="variable" href="#Application.DatabasePath">DatabasePath</a>
@@ -4894,7 +4987,7 @@
                                 <a class="variable" href="#Application.UiRunnerMode">UiRunnerMode</a>
                         </li>
                         <li>
-                                <a class="variable" href="#Application.Version">Version</a>
+                                <a class="function" href="#Application.Version">Version</a>
                         </li>
                         <li>
                                 <a class="variable" href="#Application.FailureModeCategories">FailureModeCategories</a>
@@ -4989,6 +5082,12 @@
                         <li>
                                 <a class="function" href="#Application.ImportMaterialsFromExcel">ImportMaterialsFromExcel</a>
                         </li>
+                        <li>
+                                <a class="function" href="#Application.CreateHyperXpertPoints">CreateHyperXpertPoints</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Application.GetRunSetsByProject">GetRunSetsByProject</a>
+                        </li>
                 </ul>
 
                     </details>
@@ -5035,6 +5134,9 @@
                                 <a class="variable" href="#SizingMaterial.MaterialId">MaterialId</a>
                         </li>
                         <li>
+                                <a class="variable" href="#SizingMaterial.MaterialName">MaterialName</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#SizingMaterial.MaterialType">MaterialType</a>
                         </li>
                 </ul>
@@ -5062,7 +5164,22 @@
                                 <a class="function" href="#SizingMaterialCol.AddSizingMaterial">AddSizingMaterial</a>
                         </li>
                         <li>
+                                <a class="function" href="#SizingMaterialCol.AddSizingMaterialsByName">AddSizingMaterialsByName</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#SizingMaterialCol.AddSizingMaterialsById">AddSizingMaterialsById</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#SizingMaterialCol.RemoveSizingMaterial">RemoveSizingMaterial</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#SizingMaterialCol.RemoveSizingMaterialsById">RemoveSizingMaterialsById</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#SizingMaterialCol.RemoveSizingMaterialsByName">RemoveSizingMaterialsByName</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#SizingMaterialCol.RemoveAllSizingMaterials">RemoveAllSizingMaterials</a>
                         </li>
                 </ul>
 
@@ -5233,6 +5350,9 @@
                                 <a class="variable" href="#DesignVariable.Overrides">Overrides</a>
                         </li>
                         <li>
+                                <a class="variable" href="#DesignVariable.SizingMaterials">SizingMaterials</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#DesignVariable.AddMaterials">AddMaterials</a>
                         </li>
                         <li>
@@ -5336,6 +5456,9 @@
                         </li>
                         <li>
                                 <a class="variable" href="#ZoneDesignProperty.FabricationCriterionRatios">FabricationCriterionRatios</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ZoneDesignProperty.DiscreteStiffenerTechnique">DiscreteStiffenerTechnique</a>
                         </li>
                 </ul>
 
@@ -5755,16 +5878,34 @@
                                 <a class="variable" href="#LoadPropertyFea.M2a">M2a</a>
                         </li>
                         <li>
+                                <a class="variable" href="#LoadPropertyFea.HasM2a">HasM2a</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#LoadPropertyFea.HasM2b">HasM2b</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#LoadPropertyFea.V1">V1</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#LoadPropertyFea.HasV1">HasV1</a>
                         </li>
                         <li>
                                 <a class="variable" href="#LoadPropertyFea.V2">V2</a>
                         </li>
                         <li>
+                                <a class="variable" href="#LoadPropertyFea.HasV2">HasV2</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#LoadPropertyFea.Axial">Axial</a>
                         </li>
                         <li>
+                                <a class="variable" href="#LoadPropertyFea.HasAxial">HasAxial</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#LoadPropertyFea.Torque">Torque</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#LoadPropertyFea.HasTorque">HasTorque</a>
                         </li>
                         <li>
                                 <a class="variable" href="#LoadPropertyFea.Tension">Tension</a>
@@ -5856,9 +5997,6 @@
                         <summary>LoadPropertyUserFeaRowCol</summary>
                     <i><a class="class" href="#LoadPropertyUserFeaRowCol">LoadPropertyUserFeaRowCol</a></i>
                             <ul class="memberlist">
-                        <li>
-                                <a class="variable" href="#LoadPropertyUserFeaRowCol.LoadPropertyUserFeaRowColList">LoadPropertyUserFeaRowColList</a>
-                        </li>
                         <li>
                                 <a class="function" href="#LoadPropertyUserFeaRowCol.AddScenario">AddScenario</a>
                         </li>
@@ -6072,9 +6210,6 @@
                         <summary>LoadPropertyUserGeneralRowCol</summary>
                     <i><a class="class" href="#LoadPropertyUserGeneralRowCol">LoadPropertyUserGeneralRowCol</a></i>
                             <ul class="memberlist">
-                        <li>
-                                <a class="variable" href="#LoadPropertyUserGeneralRowCol.LoadPropertyUserGeneralRowColList">LoadPropertyUserGeneralRowColList</a>
-                        </li>
                         <li>
                                 <a class="function" href="#LoadPropertyUserGeneralRowCol.AddScenario">AddScenario</a>
                         </li>
@@ -6525,11 +6660,29 @@
             </li>
             <li>
                     <details>
+                        <summary>PlateElementBulkUpdater</summary>
+                    <i><a class="class" href="#PlateElementBulkUpdater">PlateElementBulkUpdater</a></i>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#PlateElementBulkUpdater.__init__">PlateElementBulkUpdater</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#PlateElementBulkUpdater.GetBulkUpdater">GetBulkUpdater</a>
+                        </li>
+                </ul>
+
+                    </details>
+            </li>
+            <li>
+                    <details>
                         <summary>Environment</summary>
                     <i><a class="class" href="#Environment">Environment</a></i>
                             <ul class="memberlist">
                         <li>
-                                <a class="variable" href="#Environment.InstallLocation">InstallLocation</a>
+                                <a class="function" href="#Environment.InstallLocation">InstallLocation</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Environment.ApiVersion">ApiVersion</a>
                         </li>
                         <li>
                                 <a class="function" href="#Environment.SetLocation">SetLocation</a>
@@ -8593,6 +8746,28 @@ If not, this indicates why the zone was not created.</p>
 
 
                             </div>
+                            <div id="AnalysisDefinition.UID" class="classattr">
+                                <div class="attr variable">
+            <span class="name">UID</span><span class="annotation">: System.Guid</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AnalysisDefinition.UID"></a>
+    
+    
+
+                            </div>
+                            <div id="AnalysisDefinition.V205UID" class="classattr">
+                                <div class="attr variable">
+            <span class="name">V205UID</span><span class="annotation">: System.Guid | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AnalysisDefinition.V205UID"></a>
+    
+    
+
+                            </div>
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
@@ -9703,17 +9878,6 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
     
 
                             </div>
-                            <div id="IdEntityCol.IdEntityColList" class="classattr">
-                                <div class="attr variable">
-            <span class="name">IdEntityColList</span><span class="annotation">: tuple[<a href="#IdEntity">IdEntity</a>]</span>
-
-        
-    </div>
-    <a class="headerlink" href="#IdEntityCol.IdEntityColList"></a>
-    
-    
-
-                            </div>
                             <div id="IdEntityCol.Ids" class="classattr">
                                 <div class="attr variable">
             <span class="name">Ids</span><span class="annotation">: tuple[int]</span>
@@ -9777,17 +9941,6 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
     
     
 
-                            <div id="IdNameEntityCol.IdNameEntityColList" class="classattr">
-                                <div class="attr variable">
-            <span class="name">IdNameEntityColList</span><span class="annotation">: tuple[~T]</span>
-
-        
-    </div>
-    <a class="headerlink" href="#IdNameEntityCol.IdNameEntityColList"></a>
-    
-    
-
-                            </div>
                             <div id="IdNameEntityCol.Names" class="classattr">
                                 <div class="attr variable">
             <span class="name">Names</span><span class="annotation">: tuple[str]</span>
@@ -9804,7 +9957,6 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
                                 <dd id="IdNameEntityCol.__init__" class="function"><a href="#IdEntityCol.__init__">IdEntityCol</a></dd>
-                <dd id="IdNameEntityCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
                 <dd id="IdNameEntityCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="IdNameEntityCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="IdNameEntityCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
@@ -9875,13 +10027,11 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="FailureObjectGroupCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="FailureObjectGroupCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="FailureObjectGroupCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="FailureObjectGroupCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="FailureObjectGroupCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="FailureObjectGroupCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="FailureObjectGroupCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="FailureObjectGroupCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -9946,13 +10096,11 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="FailureSettingCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="FailureSettingCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="FailureSettingCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="FailureSettingCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="FailureSettingCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="FailureSettingCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="FailureSettingCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="FailureSettingCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -9983,6 +10131,31 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
         
     </div>
     <a class="headerlink" href="#FailureCriterion.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="FailureCriterion.Id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#FailureCriterion.Id"></a>
+    
+     
+        <div class="docstring"><p>Obsolete! Use <code><a href="#FailureCriterion.Identifier">FailureCriterion.Identifier</a></code> instead.</p>
+</div>
+
+
+                            </div>
+                            <div id="FailureCriterion.Identifier" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Identifier</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#FailureCriterion.Identifier"></a>
     
     
 
@@ -10067,10 +10240,6 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
                                 <dl>
                                     <div><dt><a href="#IdNameEntity">IdNameEntity</a></dt>
                                 <dd id="FailureCriterion.Name" class="variable"><a href="#IdNameEntity.Name">Name</a></dd>
-
-            </div>
-            <div><dt><a href="#IdEntity">IdEntity</a></dt>
-                                <dd id="FailureCriterion.Id" class="variable"><a href="#IdEntity.Id">Id</a></dd>
 
             </div>
                                 </dl>
@@ -10165,6 +10334,30 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
     
 
                             </div>
+                            <div id="FailureCriterionCol.GetByIdentifier" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">GetByIdentifier</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n"><a href="#FailureCriterion">FailureCriterion</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#FailureCriterionCol.GetByIdentifier"></a>
+    
+     
+        <div class="docstring"><p>Get a <code><a href="#FailureCriterion">FailureCriterion</a></code> by <code><a href="#FailureCriterion.Identifier">FailureCriterion.Identifier</a></code>.
+<br /><br />
+Throws a <code>System.Collections.Generic.KeyNotFoundException</code> if a <code><a href="#FailureCriterion">FailureCriterion</a></code> with the <code>identifier</code> is not found.</p>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong><code>System.Collections.Generic.KeyNotFoundException</code></strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
                             <div id="FailureCriterionCol.Get" class="classattr">
                                 <div class="attr function">
             
@@ -10187,13 +10380,11 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="FailureCriterionCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="FailureCriterionCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="FailureCriterionCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="FailureCriterionCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="FailureCriterionCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="FailureCriterionCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="FailureCriterionCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="FailureCriterionCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -10437,13 +10628,11 @@ or returns <code><a href="api/types.html#MarginCode.Value">hyperx.api.types.Marg
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="FailureModeCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="FailureModeCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="FailureModeCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="FailureModeCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="FailureModeCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="FailureModeCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="FailureModeCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="FailureModeCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -11247,13 +11436,11 @@ and this field will be false</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="DesignLoadSubcaseMultiplierCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="DesignLoadSubcaseMultiplierCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="DesignLoadSubcaseMultiplierCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="DesignLoadSubcaseMultiplierCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="DesignLoadSubcaseMultiplierCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="DesignLoadSubcaseMultiplierCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="DesignLoadSubcaseMultiplierCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="DesignLoadSubcaseMultiplierCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -12245,6 +12432,64 @@ Not valid for discrete fields containing vector data.</p>
                                 </dl>
                             </div>
                 </section>
+                <section id="PlateElement">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">PlateElement</span><wbr>(<span class="base"><a href="#Element">Element</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#PlateElement"></a>
+    
+     
+        <div class="docstring"><p>Represents an entity with an ID.</p>
+</div>
+
+
+                            <div id="PlateElement.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">PlateElement</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">plateElement</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">PlateElement</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PlateElement.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="PlateElement.MaterialDirection" class="classattr">
+                                <div class="attr variable">
+            <span class="name">MaterialDirection</span><span class="annotation">: <a href="#Vector3d">Vector3d</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#PlateElement.MaterialDirection"></a>
+    
+     
+        <div class="docstring"><p>Global material direction for plate elements
+If setting more than one <code><a href="#PlateElement.MaterialDirection">PlateElement.MaterialDirection</a></code>, use <code><a href="#PlateElementBulkUpdater">PlateElementBulkUpdater</a></code> to avoid major performance hits.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#Element">Element</a></dt>
+                                <dd id="PlateElement.MarginOfSafety" class="variable"><a href="#Element.MarginOfSafety">MarginOfSafety</a></dd>
+                <dd id="PlateElement.Centroid" class="variable"><a href="#Element.Centroid">Centroid</a></dd>
+                <dd id="PlateElement.Nodes" class="variable"><a href="#Element.Nodes">Nodes</a></dd>
+
+            </div>
+            <div><dt><a href="#IdEntity">IdEntity</a></dt>
+                                <dd id="PlateElement.Id" class="variable"><a href="#IdEntity.Id">Id</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
                 <section id="FailureModeCategory">
                     <div class="attr class">
             
@@ -12791,8 +13036,7 @@ Not valid for discrete fields containing vector data.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="JointDesignResultCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="JointDesignResultCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="JointDesignResultCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="JointDesignResultCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="JointDesignResultCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -13059,6 +13303,17 @@ Not valid for discrete fields containing vector data.</p>
     
 
                             </div>
+                            <div id="ZoneDesignResultCol.SelectedCandidate" class="classattr">
+                                <div class="attr variable">
+            <span class="name">SelectedCandidate</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ZoneDesignResultCol.SelectedCandidate"></a>
+    
+    
+
+                            </div>
                             <div id="ZoneDesignResultCol.Weight" class="classattr">
                                 <div class="attr variable">
             <span class="name">Weight</span><span class="annotation">: float</span>
@@ -13092,8 +13347,7 @@ Not valid for discrete fields containing vector data.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="ZoneDesignResultCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="ZoneDesignResultCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="ZoneDesignResultCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="ZoneDesignResultCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="ZoneDesignResultCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -13707,12 +13961,33 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
     
 
                             </div>
+                            <div id="ElementCol.PlateIds" class="classattr">
+                                <div class="attr variable">
+            <span class="name">PlateIds</span><span class="annotation">: tuple[int]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ElementCol.PlateIds"></a>
+    
+    
+
+                            </div>
+                            <div id="ElementCol.PlateElements" class="classattr">
+                                <div class="attr variable">
+            <span class="name">PlateElements</span><span class="annotation">: tuple[<a href="#PlateElement">PlateElement</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ElementCol.PlateElements"></a>
+    
+    
+
+                            </div>
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="ElementCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="ElementCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="ElementCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="ElementCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="ElementCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
                 <dd id="ElementCol.Get" class="function"><a href="#IdEntityCol.Get">Get</a></dd>
@@ -14040,17 +14315,6 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
     
     
 
-                            <div id="EntityWithAssignablePropertiesCol.EntityWithAssignablePropertiesColList" class="classattr">
-                                <div class="attr variable">
-            <span class="name">EntityWithAssignablePropertiesColList</span><span class="annotation">: tuple[~T]</span>
-
-        
-    </div>
-    <a class="headerlink" href="#EntityWithAssignablePropertiesCol.EntityWithAssignablePropertiesColList"></a>
-    
-    
-
-                            </div>
                             <div id="EntityWithAssignablePropertiesCol.AssignPropertyToAll" class="classattr">
                                 <div class="attr function">
             
@@ -14069,14 +14333,12 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
                                 <dd id="EntityWithAssignablePropertiesCol.__init__" class="function"><a href="#IdNameEntityCol.__init__">IdNameEntityCol</a></dd>
-                <dd id="EntityWithAssignablePropertiesCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
                 <dd id="EntityWithAssignablePropertiesCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
                 <dd id="EntityWithAssignablePropertiesCol.Get" class="function"><a href="#IdNameEntityCol.Get">Get</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="EntityWithAssignablePropertiesCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="EntityWithAssignablePropertiesCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="EntityWithAssignablePropertiesCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="EntityWithAssignablePropertiesCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="EntityWithAssignablePropertiesCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -14141,18 +14403,15 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#EntityWithAssignablePropertiesCol">EntityWithAssignablePropertiesCol</a></dt>
-                                <dd id="JointCol.EntityWithAssignablePropertiesColList" class="variable"><a href="#EntityWithAssignablePropertiesCol.EntityWithAssignablePropertiesColList">EntityWithAssignablePropertiesColList</a></dd>
-                <dd id="JointCol.AssignPropertyToAll" class="function"><a href="#EntityWithAssignablePropertiesCol.AssignPropertyToAll">AssignPropertyToAll</a></dd>
+                                <dd id="JointCol.AssignPropertyToAll" class="function"><a href="#EntityWithAssignablePropertiesCol.AssignPropertyToAll">AssignPropertyToAll</a></dd>
 
             </div>
             <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="JointCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="JointCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="JointCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="JointCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="JointCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="JointCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="JointCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="JointCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -14217,18 +14476,15 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#EntityWithAssignablePropertiesCol">EntityWithAssignablePropertiesCol</a></dt>
-                                <dd id="PanelSegmentCol.EntityWithAssignablePropertiesColList" class="variable"><a href="#EntityWithAssignablePropertiesCol.EntityWithAssignablePropertiesColList">EntityWithAssignablePropertiesColList</a></dd>
-                <dd id="PanelSegmentCol.AssignPropertyToAll" class="function"><a href="#EntityWithAssignablePropertiesCol.AssignPropertyToAll">AssignPropertyToAll</a></dd>
+                                <dd id="PanelSegmentCol.AssignPropertyToAll" class="function"><a href="#EntityWithAssignablePropertiesCol.AssignPropertyToAll">AssignPropertyToAll</a></dd>
 
             </div>
             <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="PanelSegmentCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="PanelSegmentCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="PanelSegmentCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="PanelSegmentCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="PanelSegmentCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="PanelSegmentCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="PanelSegmentCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="PanelSegmentCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -14293,18 +14549,15 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#EntityWithAssignablePropertiesCol">EntityWithAssignablePropertiesCol</a></dt>
-                                <dd id="ZoneCol.EntityWithAssignablePropertiesColList" class="variable"><a href="#EntityWithAssignablePropertiesCol.EntityWithAssignablePropertiesColList">EntityWithAssignablePropertiesColList</a></dd>
-                <dd id="ZoneCol.AssignPropertyToAll" class="function"><a href="#EntityWithAssignablePropertiesCol.AssignPropertyToAll">AssignPropertyToAll</a></dd>
+                                <dd id="ZoneCol.AssignPropertyToAll" class="function"><a href="#EntityWithAssignablePropertiesCol.AssignPropertyToAll">AssignPropertyToAll</a></dd>
 
             </div>
             <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="ZoneCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="ZoneCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="ZoneCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="ZoneCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="ZoneCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="ZoneCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="ZoneCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="ZoneCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -16189,13 +16442,11 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="AutomatedConstraintCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="AutomatedConstraintCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="AutomatedConstraintCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="AutomatedConstraintCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="AutomatedConstraintCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="AutomatedConstraintCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="AutomatedConstraintCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="AutomatedConstraintCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -16430,13 +16681,11 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="ManualConstraintCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="ManualConstraintCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="ManualConstraintCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="ManualConstraintCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="ManualConstraintCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="ManualConstraintCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="ManualConstraintCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="ManualConstraintCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -16528,14 +16777,26 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
                                 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">SetupSolver</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">solverPath</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">arguments</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#SimpleStatus">hyperx.api.types.SimpleStatus</a></span>:</span></span>
+        <span class="name">SetupSolver</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">item1</span><span class="o">=</span><span class="kc">None</span>,</span><span class="param">	<span class="n">item2</span><span class="o">=</span><span class="kc">None</span>,</span><span class="param">	<span class="n">item3</span><span class="o">=</span><span class="kc">None</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#SimpleStatus">hyperx.api.types.SimpleStatus</a></span>:</span></span>
 
         
     </div>
     <a class="headerlink" href="#HyperFea.SetupSolver"></a>
     
      
-        <div class="docstring"><p>Setup FEA solver.</p>
+        <div class="docstring"><p>Overload 1: <code>SetupSolver(self, solverPath: str, arguments: str) -&gt; types.SimpleStatus</code></p>
+
+<p>Setup FEA solver.</p>
+
+<p>Overload 2: <code>SetupSolver(self, solverPath: str, arguments: str, isBatchRun: bool) -&gt; types.SimpleStatus</code></p>
+
+<p>Setup the solver command for running FEA.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>isBatchRun</strong>:  Flag that indicates whether to run a custom batch file or the standard solver exectuable.</li>
+</ul>
 </div>
 
 
@@ -16570,6 +16831,168 @@ If analysis details are unavailable, use <code><a href="#ZoneBase.GetControlling
         <div class="docstring"><p>Get the current FEA solver setup.</p>
 </div>
 
+
+                            </div>
+                </section>
+                <section id="HyperXpertPoint">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">HyperXpertPoint</span>:
+
+        
+    </div>
+    <a class="headerlink" href="#HyperXpertPoint"></a>
+    
+    
+
+                            <div id="HyperXpertPoint.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">HyperXpertPoint</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">hyperXpertPoint</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">HyperXpertPoint</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#HyperXpertPoint.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="HyperXpertPoint.Weight" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Weight</span><span class="annotation">: float</span>
+
+        
+    </div>
+    <a class="headerlink" href="#HyperXpertPoint.Weight"></a>
+    
+    
+
+                            </div>
+                            <div id="HyperXpertPoint.V" class="classattr">
+                                <div class="attr variable">
+            <span class="name">V</span><span class="annotation">: float</span>
+
+        
+    </div>
+    <a class="headerlink" href="#HyperXpertPoint.V"></a>
+    
+    
+
+                            </div>
+                            <div id="HyperXpertPoint.Variables" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Variables</span><span class="annotation">: list[str]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#HyperXpertPoint.Variables"></a>
+    
+    
+
+                            </div>
+                </section>
+                <section id="RunSet">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">RunSet</span><wbr>(<span class="base"><a href="#IdNameEntity">IdNameEntity</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#RunSet"></a>
+    
+     
+        <div class="docstring"><p>Represents an entity with an ID and Name.</p>
+</div>
+
+
+                            <div id="RunSet.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">RunSet</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">runSet</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">RunSet</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RunSet.__init__"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#IdNameEntity">IdNameEntity</a></dt>
+                                <dd id="RunSet.Name" class="variable"><a href="#IdNameEntity.Name">Name</a></dd>
+
+            </div>
+            <div><dt><a href="#IdEntity">IdEntity</a></dt>
+                                <dd id="RunSet.Id" class="variable"><a href="#IdEntity.Id">Id</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="RunSetSpecifier">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">RunSetSpecifier</span>:
+
+        
+    </div>
+    <a class="headerlink" href="#RunSetSpecifier"></a>
+    
+     
+        <div class="docstring"><p>Used to specify runsets as an input to some methods.</p>
+</div>
+
+
+                            <div id="RunSetSpecifier.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">RunSetSpecifier</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">runSetSpecifier</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">RunSetSpecifier</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RunSetSpecifier.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="RunSetSpecifier.Create_RunSetSpecifier" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">Create_RunSetSpecifier</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">projectId</span><span class="p">:</span> <span class="nb">int</span>, </span><span class="param"><span class="n">runSetId</span><span class="p">:</span> <span class="nb">int</span></span><span class="return-annotation">):</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#RunSetSpecifier.Create_RunSetSpecifier"></a>
+    
+    
+
+                            </div>
+                            <div id="RunSetSpecifier.ProjectId" class="classattr">
+                                <div class="attr variable">
+            <span class="name">ProjectId</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RunSetSpecifier.ProjectId"></a>
+    
+    
+
+                            </div>
+                            <div id="RunSetSpecifier.RunSetId" class="classattr">
+                                <div class="attr variable">
+            <span class="name">RunSetId</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RunSetSpecifier.RunSetId"></a>
+    
+    
 
                             </div>
                 </section>
@@ -22063,8 +22486,7 @@ An orthotropic material can only have one laminate allowable of each property (a
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="ElementSetCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="ElementSetCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="ElementSetCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="ElementSetCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="ElementSetCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
                 <dd id="ElementSetCol.Get" class="function"><a href="#IdEntityCol.Get">Get</a></dd>
@@ -22112,8 +22534,7 @@ An orthotropic material can only have one laminate allowable of each property (a
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="FemPropertyCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="FemPropertyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="FemPropertyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="FemPropertyCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="FemPropertyCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
                 <dd id="FemPropertyCol.Get" class="function"><a href="#IdEntityCol.Get">Get</a></dd>
@@ -22354,6 +22775,17 @@ An orthotropic material can only have one laminate allowable of each property (a
         
     </div>
     <a class="headerlink" href="#Ply.MaterialId"></a>
+    
+    
+
+                            </div>
+                            <div id="Ply.MaterialName" class="classattr">
+                                <div class="attr variable">
+            <span class="name">MaterialName</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Ply.MaterialName"></a>
     
     
 
@@ -23680,13 +24112,11 @@ Values closer to 0 are more even and heavier. Values closer to 1 are more target
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="PlyCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="PlyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="PlyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="PlyCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="PlyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="PlyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="PlyCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="PlyCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -24216,13 +24646,11 @@ which may have a different name to what was provided.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="AnalysisPropertyCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="AnalysisPropertyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="AnalysisPropertyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="AnalysisPropertyCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="AnalysisPropertyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="AnalysisPropertyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="AnalysisPropertyCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="AnalysisPropertyCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -24269,7 +24697,7 @@ which may have a different name to what was provided.</p>
                                 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">CreateDesignProperty</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">familyConcept</span><span class="p">:</span> <span class="n"><a href="api/types.html#FamilyConceptUID">hyperx.api.types.FamilyConceptUID</a></span>,</span><span class="param">	<span class="n">materialMode</span><span class="p">:</span> <span class="n"><a href="api/types.html#MaterialMode">hyperx.api.types.MaterialMode</a></span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">MaterialMode</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span>,</span><span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="n"><a href="#DesignProperty">DesignProperty</a></span>:</span></span>
+        <span class="name">CreateDesignProperty</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">familyConcept</span><span class="p">:</span> <span class="n"><a href="api/types.html#FamilyConceptUID">hyperx.api.types.FamilyConceptUID</a></span>,</span><span class="param">	<span class="n">materialMode</span><span class="p">:</span> <span class="n"><a href="api/types.html#MaterialMode">hyperx.api.types.MaterialMode</a></span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">MaterialMode</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span>,</span><span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">discreteTechnique</span><span class="p">:</span> <span class="n"><a href="api/types.html#DiscreteTechnique">hyperx.api.types.DiscreteTechnique</a></span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="n"><a href="#DesignProperty">DesignProperty</a></span>:</span></span>
 
         
     </div>
@@ -24345,13 +24773,11 @@ which may have a different name to what was provided.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="DesignPropertyCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="DesignPropertyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="DesignPropertyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="DesignPropertyCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="DesignPropertyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="DesignPropertyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="DesignPropertyCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="DesignPropertyCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -24474,13 +24900,11 @@ which may have a different name to what was provided.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="LoadPropertyCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="LoadPropertyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="LoadPropertyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -24591,13 +25015,11 @@ which may have a different name to what was provided.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="DesignLoadCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="DesignLoadCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="DesignLoadCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="DesignLoadCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="DesignLoadCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="DesignLoadCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="DesignLoadCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="DesignLoadCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -24757,13 +25179,11 @@ note that the discrete field is associated with a ply, and therefore cannot be d
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="DiscreteFieldCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="DiscreteFieldCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="DiscreteFieldCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="DiscreteFieldCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="DiscreteFieldCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="DiscreteFieldCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="DiscreteFieldCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="DiscreteFieldCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -24891,13 +25311,11 @@ note that the discrete field is associated with a ply, and therefore cannot be d
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="FolderCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="FolderCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="FolderCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="FolderCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="FolderCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="FolderCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="FolderCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="FolderCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -24917,17 +25335,6 @@ note that the discrete field is associated with a ply, and therefore cannot be d
     
     
 
-                            <div id="ZoneJointContainerCol.ZoneJointContainerColList" class="classattr">
-                                <div class="attr variable">
-            <span class="name">ZoneJointContainerColList</span><span class="annotation">: tuple[~T]</span>
-
-        
-    </div>
-    <a class="headerlink" href="#ZoneJointContainerCol.ZoneJointContainerColList"></a>
-    
-    
-
-                            </div>
                             <div id="ZoneJointContainerCol.Create" class="classattr">
                                 <div class="attr function">
                     <div class="decorator">@abstractmethod</div>
@@ -24946,14 +25353,12 @@ note that the discrete field is associated with a ply, and therefore cannot be d
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="ZoneJointContainerCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="ZoneJointContainerCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="ZoneJointContainerCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
                 <dd id="ZoneJointContainerCol.Get" class="function"><a href="#IdNameEntityCol.Get">Get</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="ZoneJointContainerCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="ZoneJointContainerCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="ZoneJointContainerCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="ZoneJointContainerCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="ZoneJointContainerCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -25113,8 +25518,7 @@ collection of rundecks</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="RundeckCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="RundeckCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="RundeckCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="RundeckCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="RundeckCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
                 <dd id="RundeckCol.Get" class="function"><a href="#IdEntityCol.Get">Get</a></dd>
@@ -25217,13 +25621,11 @@ collection of rundecks</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="SectionCutCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="SectionCutCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="SectionCutCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="SectionCutCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="SectionCutCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="SectionCutCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="SectionCutCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="SectionCutCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -25326,18 +25728,12 @@ collection of rundecks</p>
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
-                                    <div><dt><a href="#ZoneJointContainerCol">ZoneJointContainerCol</a></dt>
-                                <dd id="SetCol.ZoneJointContainerColList" class="variable"><a href="#ZoneJointContainerCol.ZoneJointContainerColList">ZoneJointContainerColList</a></dd>
-
-            </div>
-            <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="SetCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="SetCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                    <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
+                                <dd id="SetCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="SetCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="SetCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="SetCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="SetCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="SetCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -25467,18 +25863,12 @@ If the specified name is already used, it will be deconflicted.</p>
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
-                                    <div><dt><a href="#ZoneJointContainerCol">ZoneJointContainerCol</a></dt>
-                                <dd id="StructureCol.ZoneJointContainerColList" class="variable"><a href="#ZoneJointContainerCol.ZoneJointContainerColList">ZoneJointContainerColList</a></dd>
-
-            </div>
-            <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="StructureCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="StructureCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                    <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
+                                <dd id="StructureCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="StructureCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="StructureCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="StructureCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="StructureCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="StructureCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -26143,6 +26533,53 @@ do not call this method</p>
 
 
                             </div>
+                            <div id="Project.CopyResultsToOverrides" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">CopyResultsToOverrides</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">item1</span><span class="o">=</span><span class="kc">None</span>, </span><span class="param"><span class="n">item2</span><span class="o">=</span><span class="kc">None</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#SimpleStatus">hyperx.api.types.SimpleStatus</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Project.CopyResultsToOverrides"></a>
+    
+     
+        <div class="docstring"><p>Overload 1: <code>CopyResultsToOverrides(self, forceDeletePlies: bool, zones: tuple[ZoneBase]) -&gt; types.SimpleStatus</code></p>
+
+<p>Overload 2: <code>CopyResultsToOverrides(self, forceDeletePlies: bool, zoneIds: tuple[int]) -&gt; types.SimpleStatus</code></p>
+</div>
+
+
+                            </div>
+                            <div id="Project.CreateHyperXpertPoints" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">CreateHyperXpertPoints</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">runsets</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>,</span><span class="param">	<span class="n">plotMode</span><span class="p">:</span> <span class="n"><a href="api/types.html#DoePlotMode">hyperx.api.types.DoePlotMode</a></span>,</span><span class="param">	<span class="n">pointType</span><span class="p">:</span> <span class="n"><a href="api/types.html#DoePointType">hyperx.api.types.DoePointType</a></span>,</span><span class="param">	<span class="n">generateVariabilityForLinked</span><span class="p">:</span> <span class="nb">bool</span>,</span><span class="param">	<span class="n">filterNonGeometry</span><span class="p">:</span> <span class="nb">bool</span></span><span class="return-annotation">) -> <span class="nb">list</span><span class="p">[</span><span class="n"><a href="#HyperXpertPoint">HyperXpertPoint</a></span><span class="p">]</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Project.CreateHyperXpertPoints"></a>
+    
+     
+        <div class="docstring"><p>Create HyperXpert points based on specific run sets.</p>
+</div>
+
+
+                            </div>
+                            <div id="Project.GetRunSets" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">GetRunSets</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">list</span><span class="p">[</span><span class="n"><a href="#RunSet">RunSet</a></span><span class="p">]</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Project.GetRunSets"></a>
+    
+    
+
+                            </div>
                 </section>
                 <section id="ProjectInfo">
                     <div class="attr class">
@@ -26246,13 +26683,11 @@ do not call this method</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="FailureModeCategoryCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="FailureModeCategoryCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="FailureModeCategoryCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="FailureModeCategoryCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="FailureModeCategoryCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="FailureModeCategoryCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="FailureModeCategoryCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="FailureModeCategoryCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -26815,13 +27250,11 @@ Returns false if the method the material is not found.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="LaminateFamilyCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="LaminateFamilyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="LaminateFamilyCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LaminateFamilyCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LaminateFamilyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LaminateFamilyCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LaminateFamilyCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LaminateFamilyCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -27420,13 +27853,11 @@ Includes name, id, file path, version, description, and modification date</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="PluginPackageCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="PluginPackageCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="PluginPackageCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="PluginPackageCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="PluginPackageCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="PluginPackageCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="PluginPackageCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="PluginPackageCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -27491,13 +27922,11 @@ Includes name, id, file path, version, description, and modification date</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="ProjectInfoCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="ProjectInfoCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="ProjectInfoCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="ProjectInfoCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="ProjectInfoCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="ProjectInfoCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="ProjectInfoCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="ProjectInfoCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -27549,8 +27978,11 @@ application instances with a single process.</p>
 
                             </div>
                             <div id="Application.CompilationDate" class="classattr">
-                                <div class="attr variable">
-            <span class="name">CompilationDate</span><span class="annotation">: str</span>
+                                <div class="attr function">
+                    <div class="decorator">@classmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">CompilationDate</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
         
     </div>
@@ -27603,8 +28035,11 @@ Only one project is ever active at a time.</p>
 
                             </div>
                             <div id="Application.Version" class="classattr">
-                                <div class="attr variable">
-            <span class="name">Version</span><span class="annotation">: str</span>
+                                <div class="attr function">
+                    <div class="decorator">@classmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">Version</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
         
     </div>
@@ -28133,6 +28568,38 @@ Activating a project will deactivate the current project (if present).</p>
 
 
                             </div>
+                            <div id="Application.CreateHyperXpertPoints" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">CreateHyperXpertPoints</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">runSetSpecifiers</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n"><a href="#RunSetSpecifier">RunSetSpecifier</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">plotMode</span><span class="p">:</span> <span class="n"><a href="api/types.html#DoePlotMode">hyperx.api.types.DoePlotMode</a></span>,</span><span class="param">	<span class="n">pointType</span><span class="p">:</span> <span class="n"><a href="api/types.html#DoePointType">hyperx.api.types.DoePointType</a></span>,</span><span class="param">	<span class="n">generateVariabilityForLinked</span><span class="p">:</span> <span class="nb">bool</span>,</span><span class="param">	<span class="n">filterNonGeometry</span><span class="p">:</span> <span class="nb">bool</span></span><span class="return-annotation">) -> <span class="nb">list</span><span class="p">[</span><span class="n"><a href="#HyperXpertPoint">HyperXpertPoint</a></span><span class="p">]</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Application.CreateHyperXpertPoints"></a>
+    
+     
+        <div class="docstring"><p>Create HyperXpert points based on specific run sets.</p>
+</div>
+
+
+                            </div>
+                            <div id="Application.GetRunSetsByProject" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">GetRunSetsByProject</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n"><a href="#RunSet">RunSet</a></span><span class="p">]]</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Application.GetRunSetsByProject"></a>
+    
+     
+        <div class="docstring"><p>Gets a dictionary mapping ProjectId to a List of RunSets.</p>
+</div>
+
+
+                            </div>
                 </section>
                 <section id="FabricationCriterionRatio">
                     <div class="attr class">
@@ -28281,6 +28748,17 @@ Activating a project will deactivate the current project (if present).</p>
     
 
                             </div>
+                            <div id="SizingMaterial.MaterialName" class="classattr">
+                                <div class="attr variable">
+            <span class="name">MaterialName</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#SizingMaterial.MaterialName"></a>
+    
+    
+
+                            </div>
                             <div id="SizingMaterial.MaterialType" class="classattr">
                                 <div class="attr variable">
             <span class="name">MaterialType</span><span class="annotation">: <a href="api/types.html#MaterialType">hyperx.api.types.MaterialType</a></span>
@@ -28402,23 +28880,89 @@ Activating a project will deactivate the current project (if present).</p>
      
         <div class="docstring"><p>Overload 1: <code>AddSizingMaterial(self, materialId: int) -&gt; bool</code></p>
 
-<p>Add a <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>materialId</code> to the list of sizing material overrides for a <code><a href="#Zone">Zone</a></code>.</p>
+<p>Add a <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>materialId</code> to the list of sizing materials.</p>
 
 <h6 id="returns">Returns</h6>
 
 <blockquote>
-  <p><code>False</code> if the material does not exist or is already in the list of sizing materials.</p>
+  <p><code>False</code> if the material was not found.</p>
 </blockquote>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong><code>System.InvalidOperationException</code></strong>: </li>
+</ul>
 
 <p>Overload 2: <code>AddSizingMaterial(self, name: str) -&gt; bool</code></p>
 
-<p>Add a <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>name</code> to the list of sizing material overrides for a <code><a href="#Zone">Zone</a></code>.</p>
+<p>Add a <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>name</code> to the list of sizing materials.</p>
 
 <h6 id="returns-2">Returns</h6>
 
 <blockquote>
-  <p><code>False</code> if the material does not exist or is already in the list of sizing materials.</p>
+  <p><code>False</code> if the material was not found.</p>
 </blockquote>
+
+<ul>
+<li><strong><code>System.InvalidOperationException</code></strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="SizingMaterialCol.AddSizingMaterialsByName" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">AddSizingMaterialsByName</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">materialNames</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">ignoreMissingMaterials</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#TernaryStatus">hyperx.api.types.TernaryStatus</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#SizingMaterialCol.AddSizingMaterialsByName"></a>
+    
+     
+        <div class="docstring"><p>Add a set of <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>materialNames</code> to the list of sizing materials.</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p><code><a href="api/types.html#TernaryStatus">hyperx.api.types.TernaryStatus</a></code> with information about whether materials were successfully added or failed.</p>
+</blockquote>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong><code>System.InvalidOperationException</code></strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="SizingMaterialCol.AddSizingMaterialsById" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">AddSizingMaterialsById</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">materialIds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>,</span><span class="param">	<span class="n">ignoreMissingMaterials</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#TernaryStatus">hyperx.api.types.TernaryStatus</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#SizingMaterialCol.AddSizingMaterialsById"></a>
+    
+     
+        <div class="docstring"><p>Add a set of <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>materialIds</code> to the list of sizing materials.</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p><code><a href="api/types.html#TernaryStatus">hyperx.api.types.TernaryStatus</a></code> with information about whether materials were successfully added or failed.</p>
+</blockquote>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong><code>System.InvalidOperationException</code></strong>: </li>
+</ul>
 </div>
 
 
@@ -28436,7 +28980,7 @@ Activating a project will deactivate the current project (if present).</p>
      
         <div class="docstring"><p>Overload 1: <code>RemoveSizingMaterial(self, materialId: int) -&gt; bool</code></p>
 
-<p>Remove a <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>materialId</code> from the list of sizing material overrides for a <code><a href="#Zone">Zone</a></code>.</p>
+<p>Remove a <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>materialId</code> from the list of sizing materials.</p>
 
 <h6 id="returns">Returns</h6>
 
@@ -28446,13 +28990,91 @@ Activating a project will deactivate the current project (if present).</p>
 
 <p>Overload 2: <code>RemoveSizingMaterial(self, name: str) -&gt; bool</code></p>
 
-<p>Remove a <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>name</code> from the list of sizing material overrides for a <code><a href="#Zone">Zone</a></code>.</p>
+<p>Remove a <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>name</code> from the list of sizing materials.</p>
 
 <h6 id="returns-2">Returns</h6>
 
 <blockquote>
-  <p><code>False</code> if the material does not exist or is not in the list of sizing materials.</p>
+  <p><code>False</code> if the material is not in the list of sizing materials.</p>
 </blockquote>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong><code>System.InvalidOperationException</code></strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="SizingMaterialCol.RemoveSizingMaterialsById" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">RemoveSizingMaterialsById</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">materialIds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>,</span><span class="param">	<span class="n">ignoreMissingMaterials</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#TernaryStatus">hyperx.api.types.TernaryStatus</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#SizingMaterialCol.RemoveSizingMaterialsById"></a>
+    
+     
+        <div class="docstring"><p>Remove a set of <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>materialIds</code> from the list of sizing materials.</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p><code><a href="api/types.html#TernaryStatus">hyperx.api.types.TernaryStatus</a></code> with information about whether materials were successfully removed or failed.</p>
+</blockquote>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong><code>System.InvalidOperationException</code></strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="SizingMaterialCol.RemoveSizingMaterialsByName" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">RemoveSizingMaterialsByName</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">materialNames</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">ignoreMissingMaterials</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#TernaryStatus">hyperx.api.types.TernaryStatus</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#SizingMaterialCol.RemoveSizingMaterialsByName"></a>
+    
+     
+        <div class="docstring"><p>Remove a set of <code><a href="#SizingMaterial">SizingMaterial</a></code> by <code>materialNames</code> from the list of sizing materials.</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p><code><a href="api/types.html#TernaryStatus">hyperx.api.types.TernaryStatus</a></code> with information about whether materials were successfully removed or failed.</p>
+</blockquote>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong><code>System.InvalidOperationException</code></strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="SizingMaterialCol.RemoveAllSizingMaterials" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">RemoveAllSizingMaterials</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#SizingMaterialCol.RemoveAllSizingMaterials"></a>
+    
+     
+        <div class="docstring"><p>Remove all <code><a href="#SizingMaterial">SizingMaterial</a></code> from the list of sizing materials.</p>
 </div>
 
 
@@ -28461,8 +29083,7 @@ Activating a project will deactivate the current project (if present).</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="SizingMaterialCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="SizingMaterialCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="SizingMaterialCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="SizingMaterialCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
             </div>
@@ -28989,8 +29610,7 @@ Sets the <code><a href="#ToolingConstraint.ToolingSelectionType">ToolingConstrai
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="ZoneOverrideCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="ZoneOverrideCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="ZoneOverrideCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="ZoneOverrideCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="ZoneOverrideCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -29210,6 +29830,20 @@ In the case of a laminate, the analysis value is derived from thickness, and set
 
 
                             </div>
+                            <div id="DesignVariable.SizingMaterials" class="classattr">
+                                <div class="attr variable">
+            <span class="name">SizingMaterials</span><span class="annotation">: <a href="#SizingMaterialCol">SizingMaterialCol</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#DesignVariable.SizingMaterials"></a>
+    
+     
+        <div class="docstring"><p>Collection of <code><a href="#SizingMaterial">SizingMaterial</a></code> candidates</p>
+</div>
+
+
+                            </div>
                             <div id="DesignVariable.AddMaterials" class="classattr">
                                 <div class="attr function">
             
@@ -29223,11 +29857,15 @@ In the case of a laminate, the analysis value is derived from thickness, and set
      
         <div class="docstring"><p>Overload 1: <code>AddMaterials(self, materialIds: set[int]) -&gt; None</code></p>
 
-<p>Add sizing materials by material Id.</p>
+<p>Obsolete use <code><a href="#DesignVariable.SizingMaterials">DesignVariable.SizingMaterials</a></code> instead.
+<br />
+Add sizing materials by material Id.</p>
 
 <p>Overload 2: <code>AddMaterials(self, materialNames: set[str]) -&gt; None</code></p>
 
-<p>Add sizing materials by material Name.</p>
+<p>Obsolete use <code><a href="#DesignVariable.SizingMaterials">DesignVariable.SizingMaterials</a></code> instead.
+<br />
+Add sizing materials by material Name.</p>
 </div>
 
 
@@ -29243,7 +29881,9 @@ In the case of a laminate, the analysis value is derived from thickness, and set
     <a class="headerlink" href="#DesignVariable.GetSizingMaterials"></a>
     
      
-        <div class="docstring"><p>Get a list of material Ids used for sizing, if they exist.</p>
+        <div class="docstring"><p>Obsolete use <code><a href="#DesignVariable.SizingMaterials">DesignVariable.SizingMaterials</a></code> instead.
+<br />
+Get a list of material Ids used for sizing, if they exist.</p>
 </div>
 
 
@@ -29259,7 +29899,9 @@ In the case of a laminate, the analysis value is derived from thickness, and set
     <a class="headerlink" href="#DesignVariable.RemoveSizingMaterials"></a>
     
      
-        <div class="docstring"><p>Remove sizing materials assigned to this variable by a collection of Ids.</p>
+        <div class="docstring"><p>Obsolete use <code><a href="#DesignVariable.SizingMaterials">DesignVariable.SizingMaterials</a></code> instead.
+<br />
+Remove sizing materials assigned to this variable by a collection of Ids.</p>
 
 <h6 id="parameters">Parameters</h6>
 
@@ -29281,7 +29923,9 @@ In the case of a laminate, the analysis value is derived from thickness, and set
     <a class="headerlink" href="#DesignVariable.GetAnalysisMaterial"></a>
     
      
-        <div class="docstring"><p>Get the material used for analysis, if it exists.</p>
+        <div class="docstring"><p>Obsolete use <code><a href="#DesignVariable.AnalysisMaterial">DesignVariable.AnalysisMaterial</a></code> instead.
+<br />
+Get the material used for analysis, if it exists.</p>
 </div>
 
 
@@ -29369,8 +30013,7 @@ In the case of a laminate, the analysis value is derived from thickness, and set
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="FabricationCriterionRatioCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="FabricationCriterionRatioCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="FabricationCriterionRatioCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="FabricationCriterionRatioCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="FabricationCriterionRatioCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -29435,13 +30078,11 @@ In the case of a laminate, the analysis value is derived from thickness, and set
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="ToolingConstraintCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="ToolingConstraintCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="ToolingConstraintCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="ToolingConstraintCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="ToolingConstraintCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="ToolingConstraintCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="ToolingConstraintCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="ToolingConstraintCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -29514,8 +30155,7 @@ In the case of a laminate, the analysis value is derived from thickness, and set
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="DesignVariableCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="DesignVariableCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="DesignVariableCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="DesignVariableCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="DesignVariableCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -29645,6 +30285,17 @@ In the case of a laminate, the analysis value is derived from thickness, and set
         <div class="docstring"><p>Gets a <code><a href="#FabricationCriterionRatioCol">FabricationCriterionRatioCol</a></code> of fabrication criterion ratios.</p>
 </div>
 
+
+                            </div>
+                            <div id="ZoneDesignProperty.DiscreteStiffenerTechnique" class="classattr">
+                                <div class="attr variable">
+            <span class="name">DiscreteStiffenerTechnique</span><span class="annotation">: <a href="api/types.html#DiscreteTechnique">hyperx.api.types.DiscreteTechnique</a> | None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ZoneDesignProperty.DiscreteStiffenerTechnique"></a>
+    
+    
 
                             </div>
                             <div class="inherited">
@@ -31376,6 +32027,28 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
     
 
                             </div>
+                            <div id="LoadPropertyFea.HasM2a" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HasM2a</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#LoadPropertyFea.HasM2a"></a>
+    
+    
+
+                            </div>
+                            <div id="LoadPropertyFea.HasM2b" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HasM2b</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#LoadPropertyFea.HasM2b"></a>
+    
+    
+
+                            </div>
                             <div id="LoadPropertyFea.V1" class="classattr">
                                 <div class="attr variable">
             <span class="name">V1</span><span class="annotation">: bool</span>
@@ -31383,6 +32056,17 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
         
     </div>
     <a class="headerlink" href="#LoadPropertyFea.V1"></a>
+    
+    
+
+                            </div>
+                            <div id="LoadPropertyFea.HasV1" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HasV1</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#LoadPropertyFea.HasV1"></a>
     
     
 
@@ -31398,6 +32082,17 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
     
 
                             </div>
+                            <div id="LoadPropertyFea.HasV2" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HasV2</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#LoadPropertyFea.HasV2"></a>
+    
+    
+
+                            </div>
                             <div id="LoadPropertyFea.Axial" class="classattr">
                                 <div class="attr variable">
             <span class="name">Axial</span><span class="annotation">: bool</span>
@@ -31409,6 +32104,17 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
     
 
                             </div>
+                            <div id="LoadPropertyFea.HasAxial" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HasAxial</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#LoadPropertyFea.HasAxial"></a>
+    
+    
+
+                            </div>
                             <div id="LoadPropertyFea.Torque" class="classattr">
                                 <div class="attr variable">
             <span class="name">Torque</span><span class="annotation">: bool</span>
@@ -31416,6 +32122,17 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
         
     </div>
     <a class="headerlink" href="#LoadPropertyFea.Torque"></a>
+    
+    
+
+                            </div>
+                            <div id="LoadPropertyFea.HasTorque" class="classattr">
+                                <div class="attr variable">
+            <span class="name">HasTorque</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#LoadPropertyFea.HasTorque"></a>
     
     
 
@@ -31529,10 +32246,16 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                 <dd id="LoadPropertyAverage.HasM1a" class="variable"><a href="#LoadPropertyFea.HasM1a">HasM1a</a></dd>
                 <dd id="LoadPropertyAverage.HasM1b" class="variable"><a href="#LoadPropertyFea.HasM1b">HasM1b</a></dd>
                 <dd id="LoadPropertyAverage.M2a" class="variable"><a href="#LoadPropertyFea.M2a">M2a</a></dd>
+                <dd id="LoadPropertyAverage.HasM2a" class="variable"><a href="#LoadPropertyFea.HasM2a">HasM2a</a></dd>
+                <dd id="LoadPropertyAverage.HasM2b" class="variable"><a href="#LoadPropertyFea.HasM2b">HasM2b</a></dd>
                 <dd id="LoadPropertyAverage.V1" class="variable"><a href="#LoadPropertyFea.V1">V1</a></dd>
+                <dd id="LoadPropertyAverage.HasV1" class="variable"><a href="#LoadPropertyFea.HasV1">HasV1</a></dd>
                 <dd id="LoadPropertyAverage.V2" class="variable"><a href="#LoadPropertyFea.V2">V2</a></dd>
+                <dd id="LoadPropertyAverage.HasV2" class="variable"><a href="#LoadPropertyFea.HasV2">HasV2</a></dd>
                 <dd id="LoadPropertyAverage.Axial" class="variable"><a href="#LoadPropertyFea.Axial">Axial</a></dd>
+                <dd id="LoadPropertyAverage.HasAxial" class="variable"><a href="#LoadPropertyFea.HasAxial">HasAxial</a></dd>
                 <dd id="LoadPropertyAverage.Torque" class="variable"><a href="#LoadPropertyFea.Torque">Torque</a></dd>
+                <dd id="LoadPropertyAverage.HasTorque" class="variable"><a href="#LoadPropertyFea.HasTorque">HasTorque</a></dd>
                 <dd id="LoadPropertyAverage.Tension" class="variable"><a href="#LoadPropertyFea.Tension">Tension</a></dd>
                 <dd id="LoadPropertyAverage.Shear" class="variable"><a href="#LoadPropertyFea.Shear">Shear</a></dd>
                 <dd id="LoadPropertyAverage.Moment" class="variable"><a href="#LoadPropertyFea.Moment">Moment</a></dd>
@@ -31600,10 +32323,16 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                 <dd id="LoadPropertyElementBased.HasM1a" class="variable"><a href="#LoadPropertyFea.HasM1a">HasM1a</a></dd>
                 <dd id="LoadPropertyElementBased.HasM1b" class="variable"><a href="#LoadPropertyFea.HasM1b">HasM1b</a></dd>
                 <dd id="LoadPropertyElementBased.M2a" class="variable"><a href="#LoadPropertyFea.M2a">M2a</a></dd>
+                <dd id="LoadPropertyElementBased.HasM2a" class="variable"><a href="#LoadPropertyFea.HasM2a">HasM2a</a></dd>
+                <dd id="LoadPropertyElementBased.HasM2b" class="variable"><a href="#LoadPropertyFea.HasM2b">HasM2b</a></dd>
                 <dd id="LoadPropertyElementBased.V1" class="variable"><a href="#LoadPropertyFea.V1">V1</a></dd>
+                <dd id="LoadPropertyElementBased.HasV1" class="variable"><a href="#LoadPropertyFea.HasV1">HasV1</a></dd>
                 <dd id="LoadPropertyElementBased.V2" class="variable"><a href="#LoadPropertyFea.V2">V2</a></dd>
+                <dd id="LoadPropertyElementBased.HasV2" class="variable"><a href="#LoadPropertyFea.HasV2">HasV2</a></dd>
                 <dd id="LoadPropertyElementBased.Axial" class="variable"><a href="#LoadPropertyFea.Axial">Axial</a></dd>
+                <dd id="LoadPropertyElementBased.HasAxial" class="variable"><a href="#LoadPropertyFea.HasAxial">HasAxial</a></dd>
                 <dd id="LoadPropertyElementBased.Torque" class="variable"><a href="#LoadPropertyFea.Torque">Torque</a></dd>
+                <dd id="LoadPropertyElementBased.HasTorque" class="variable"><a href="#LoadPropertyFea.HasTorque">HasTorque</a></dd>
                 <dd id="LoadPropertyElementBased.Tension" class="variable"><a href="#LoadPropertyFea.Tension">Tension</a></dd>
                 <dd id="LoadPropertyElementBased.Shear" class="variable"><a href="#LoadPropertyFea.Shear">Shear</a></dd>
                 <dd id="LoadPropertyElementBased.Moment" class="variable"><a href="#LoadPropertyFea.Moment">Moment</a></dd>
@@ -31682,10 +32411,16 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                 <dd id="LoadPropertyNeighborAverage.HasM1a" class="variable"><a href="#LoadPropertyFea.HasM1a">HasM1a</a></dd>
                 <dd id="LoadPropertyNeighborAverage.HasM1b" class="variable"><a href="#LoadPropertyFea.HasM1b">HasM1b</a></dd>
                 <dd id="LoadPropertyNeighborAverage.M2a" class="variable"><a href="#LoadPropertyFea.M2a">M2a</a></dd>
+                <dd id="LoadPropertyNeighborAverage.HasM2a" class="variable"><a href="#LoadPropertyFea.HasM2a">HasM2a</a></dd>
+                <dd id="LoadPropertyNeighborAverage.HasM2b" class="variable"><a href="#LoadPropertyFea.HasM2b">HasM2b</a></dd>
                 <dd id="LoadPropertyNeighborAverage.V1" class="variable"><a href="#LoadPropertyFea.V1">V1</a></dd>
+                <dd id="LoadPropertyNeighborAverage.HasV1" class="variable"><a href="#LoadPropertyFea.HasV1">HasV1</a></dd>
                 <dd id="LoadPropertyNeighborAverage.V2" class="variable"><a href="#LoadPropertyFea.V2">V2</a></dd>
+                <dd id="LoadPropertyNeighborAverage.HasV2" class="variable"><a href="#LoadPropertyFea.HasV2">HasV2</a></dd>
                 <dd id="LoadPropertyNeighborAverage.Axial" class="variable"><a href="#LoadPropertyFea.Axial">Axial</a></dd>
+                <dd id="LoadPropertyNeighborAverage.HasAxial" class="variable"><a href="#LoadPropertyFea.HasAxial">HasAxial</a></dd>
                 <dd id="LoadPropertyNeighborAverage.Torque" class="variable"><a href="#LoadPropertyFea.Torque">Torque</a></dd>
+                <dd id="LoadPropertyNeighborAverage.HasTorque" class="variable"><a href="#LoadPropertyFea.HasTorque">HasTorque</a></dd>
                 <dd id="LoadPropertyNeighborAverage.Tension" class="variable"><a href="#LoadPropertyFea.Tension">Tension</a></dd>
                 <dd id="LoadPropertyNeighborAverage.Shear" class="variable"><a href="#LoadPropertyFea.Shear">Shear</a></dd>
                 <dd id="LoadPropertyNeighborAverage.Moment" class="variable"><a href="#LoadPropertyFea.Moment">Moment</a></dd>
@@ -31764,10 +32499,16 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                 <dd id="LoadPropertyPeakLoad.HasM1a" class="variable"><a href="#LoadPropertyFea.HasM1a">HasM1a</a></dd>
                 <dd id="LoadPropertyPeakLoad.HasM1b" class="variable"><a href="#LoadPropertyFea.HasM1b">HasM1b</a></dd>
                 <dd id="LoadPropertyPeakLoad.M2a" class="variable"><a href="#LoadPropertyFea.M2a">M2a</a></dd>
+                <dd id="LoadPropertyPeakLoad.HasM2a" class="variable"><a href="#LoadPropertyFea.HasM2a">HasM2a</a></dd>
+                <dd id="LoadPropertyPeakLoad.HasM2b" class="variable"><a href="#LoadPropertyFea.HasM2b">HasM2b</a></dd>
                 <dd id="LoadPropertyPeakLoad.V1" class="variable"><a href="#LoadPropertyFea.V1">V1</a></dd>
+                <dd id="LoadPropertyPeakLoad.HasV1" class="variable"><a href="#LoadPropertyFea.HasV1">HasV1</a></dd>
                 <dd id="LoadPropertyPeakLoad.V2" class="variable"><a href="#LoadPropertyFea.V2">V2</a></dd>
+                <dd id="LoadPropertyPeakLoad.HasV2" class="variable"><a href="#LoadPropertyFea.HasV2">HasV2</a></dd>
                 <dd id="LoadPropertyPeakLoad.Axial" class="variable"><a href="#LoadPropertyFea.Axial">Axial</a></dd>
+                <dd id="LoadPropertyPeakLoad.HasAxial" class="variable"><a href="#LoadPropertyFea.HasAxial">HasAxial</a></dd>
                 <dd id="LoadPropertyPeakLoad.Torque" class="variable"><a href="#LoadPropertyFea.Torque">Torque</a></dd>
+                <dd id="LoadPropertyPeakLoad.HasTorque" class="variable"><a href="#LoadPropertyFea.HasTorque">HasTorque</a></dd>
                 <dd id="LoadPropertyPeakLoad.Tension" class="variable"><a href="#LoadPropertyFea.Tension">Tension</a></dd>
                 <dd id="LoadPropertyPeakLoad.Shear" class="variable"><a href="#LoadPropertyFea.Shear">Shear</a></dd>
                 <dd id="LoadPropertyPeakLoad.Moment" class="variable"><a href="#LoadPropertyFea.Moment">Moment</a></dd>
@@ -31846,10 +32587,16 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                 <dd id="LoadPropertyStatistical.HasM1a" class="variable"><a href="#LoadPropertyFea.HasM1a">HasM1a</a></dd>
                 <dd id="LoadPropertyStatistical.HasM1b" class="variable"><a href="#LoadPropertyFea.HasM1b">HasM1b</a></dd>
                 <dd id="LoadPropertyStatistical.M2a" class="variable"><a href="#LoadPropertyFea.M2a">M2a</a></dd>
+                <dd id="LoadPropertyStatistical.HasM2a" class="variable"><a href="#LoadPropertyFea.HasM2a">HasM2a</a></dd>
+                <dd id="LoadPropertyStatistical.HasM2b" class="variable"><a href="#LoadPropertyFea.HasM2b">HasM2b</a></dd>
                 <dd id="LoadPropertyStatistical.V1" class="variable"><a href="#LoadPropertyFea.V1">V1</a></dd>
+                <dd id="LoadPropertyStatistical.HasV1" class="variable"><a href="#LoadPropertyFea.HasV1">HasV1</a></dd>
                 <dd id="LoadPropertyStatistical.V2" class="variable"><a href="#LoadPropertyFea.V2">V2</a></dd>
+                <dd id="LoadPropertyStatistical.HasV2" class="variable"><a href="#LoadPropertyFea.HasV2">HasV2</a></dd>
                 <dd id="LoadPropertyStatistical.Axial" class="variable"><a href="#LoadPropertyFea.Axial">Axial</a></dd>
+                <dd id="LoadPropertyStatistical.HasAxial" class="variable"><a href="#LoadPropertyFea.HasAxial">HasAxial</a></dd>
                 <dd id="LoadPropertyStatistical.Torque" class="variable"><a href="#LoadPropertyFea.Torque">Torque</a></dd>
+                <dd id="LoadPropertyStatistical.HasTorque" class="variable"><a href="#LoadPropertyFea.HasTorque">HasTorque</a></dd>
                 <dd id="LoadPropertyStatistical.Tension" class="variable"><a href="#LoadPropertyFea.Tension">Tension</a></dd>
                 <dd id="LoadPropertyStatistical.Shear" class="variable"><a href="#LoadPropertyFea.Shear">Shear</a></dd>
                 <dd id="LoadPropertyStatistical.Moment" class="variable"><a href="#LoadPropertyFea.Moment">Moment</a></dd>
@@ -31887,17 +32634,6 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
     
     
 
-                            <div id="LoadPropertyUserFeaRowCol.LoadPropertyUserFeaRowColList" class="classattr">
-                                <div class="attr variable">
-            <span class="name">LoadPropertyUserFeaRowColList</span><span class="annotation">: tuple[~T]</span>
-
-        
-    </div>
-    <a class="headerlink" href="#LoadPropertyUserFeaRowCol.LoadPropertyUserFeaRowColList"></a>
-    
-    
-
-                            </div>
                             <div id="LoadPropertyUserFeaRowCol.AddScenario" class="classattr">
                                 <div class="attr function">
             
@@ -31941,14 +32677,12 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
                                 <dd id="LoadPropertyUserFeaRowCol.__init__" class="function"><a href="#IdNameEntityCol.__init__">IdNameEntityCol</a></dd>
-                <dd id="LoadPropertyUserFeaRowCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
                 <dd id="LoadPropertyUserFeaRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
                 <dd id="LoadPropertyUserFeaRowCol.Get" class="function"><a href="#IdNameEntityCol.Get">Get</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyUserFeaRowCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyUserFeaRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyUserFeaRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyUserFeaRowCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyUserFeaRowCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -32031,18 +32765,15 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#LoadPropertyUserFeaRowCol">LoadPropertyUserFeaRowCol</a></dt>
-                                <dd id="LoadPropertyUserFeaBeamRowCol.LoadPropertyUserFeaRowColList" class="variable"><a href="#LoadPropertyUserFeaRowCol.LoadPropertyUserFeaRowColList">LoadPropertyUserFeaRowColList</a></dd>
-                <dd id="LoadPropertyUserFeaBeamRowCol.AddScenario" class="function"><a href="#LoadPropertyUserFeaRowCol.AddScenario">AddScenario</a></dd>
+                                <dd id="LoadPropertyUserFeaBeamRowCol.AddScenario" class="function"><a href="#LoadPropertyUserFeaRowCol.AddScenario">AddScenario</a></dd>
 
             </div>
             <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="LoadPropertyUserFeaBeamRowCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="LoadPropertyUserFeaBeamRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="LoadPropertyUserFeaBeamRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyUserFeaBeamRowCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyUserFeaBeamRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyUserFeaBeamRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyUserFeaBeamRowCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyUserFeaBeamRowCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -32189,18 +32920,15 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#LoadPropertyUserFeaRowCol">LoadPropertyUserFeaRowCol</a></dt>
-                                <dd id="LoadPropertyUserFeaJointRowCol.LoadPropertyUserFeaRowColList" class="variable"><a href="#LoadPropertyUserFeaRowCol.LoadPropertyUserFeaRowColList">LoadPropertyUserFeaRowColList</a></dd>
-                <dd id="LoadPropertyUserFeaJointRowCol.AddScenario" class="function"><a href="#LoadPropertyUserFeaRowCol.AddScenario">AddScenario</a></dd>
+                                <dd id="LoadPropertyUserFeaJointRowCol.AddScenario" class="function"><a href="#LoadPropertyUserFeaRowCol.AddScenario">AddScenario</a></dd>
 
             </div>
             <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="LoadPropertyUserFeaJointRowCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="LoadPropertyUserFeaJointRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="LoadPropertyUserFeaJointRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyUserFeaJointRowCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyUserFeaJointRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyUserFeaJointRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyUserFeaJointRowCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyUserFeaJointRowCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -32347,18 +33075,15 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#LoadPropertyUserFeaRowCol">LoadPropertyUserFeaRowCol</a></dt>
-                                <dd id="LoadPropertyUserFeaPanelRowCol.LoadPropertyUserFeaRowColList" class="variable"><a href="#LoadPropertyUserFeaRowCol.LoadPropertyUserFeaRowColList">LoadPropertyUserFeaRowColList</a></dd>
-                <dd id="LoadPropertyUserFeaPanelRowCol.AddScenario" class="function"><a href="#LoadPropertyUserFeaRowCol.AddScenario">AddScenario</a></dd>
+                                <dd id="LoadPropertyUserFeaPanelRowCol.AddScenario" class="function"><a href="#LoadPropertyUserFeaRowCol.AddScenario">AddScenario</a></dd>
 
             </div>
             <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="LoadPropertyUserFeaPanelRowCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="LoadPropertyUserFeaPanelRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="LoadPropertyUserFeaPanelRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyUserFeaPanelRowCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyUserFeaPanelRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyUserFeaPanelRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyUserFeaPanelRowCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyUserFeaPanelRowCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -32820,17 +33545,6 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
     
     
 
-                            <div id="LoadPropertyUserGeneralRowCol.LoadPropertyUserGeneralRowColList" class="classattr">
-                                <div class="attr variable">
-            <span class="name">LoadPropertyUserGeneralRowColList</span><span class="annotation">: tuple[~T]</span>
-
-        
-    </div>
-    <a class="headerlink" href="#LoadPropertyUserGeneralRowCol.LoadPropertyUserGeneralRowColList"></a>
-    
-    
-
-                            </div>
                             <div id="LoadPropertyUserGeneralRowCol.AddScenario" class="classattr">
                                 <div class="attr function">
             
@@ -32874,14 +33588,12 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                                 <dl>
                                     <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
                                 <dd id="LoadPropertyUserGeneralRowCol.__init__" class="function"><a href="#IdNameEntityCol.__init__">IdNameEntityCol</a></dd>
-                <dd id="LoadPropertyUserGeneralRowCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
                 <dd id="LoadPropertyUserGeneralRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
                 <dd id="LoadPropertyUserGeneralRowCol.Get" class="function"><a href="#IdNameEntityCol.Get">Get</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyUserGeneralRowCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyUserGeneralRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyUserGeneralRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyUserGeneralRowCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyUserGeneralRowCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -32964,18 +33676,15 @@ Curvature Units: English = 1/in | Standard = 1/mm.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#LoadPropertyUserGeneralRowCol">LoadPropertyUserGeneralRowCol</a></dt>
-                                <dd id="LoadPropertyUserGeneralBeamRowCol.LoadPropertyUserGeneralRowColList" class="variable"><a href="#LoadPropertyUserGeneralRowCol.LoadPropertyUserGeneralRowColList">LoadPropertyUserGeneralRowColList</a></dd>
-                <dd id="LoadPropertyUserGeneralBeamRowCol.AddScenario" class="function"><a href="#LoadPropertyUserGeneralRowCol.AddScenario">AddScenario</a></dd>
+                                <dd id="LoadPropertyUserGeneralBeamRowCol.AddScenario" class="function"><a href="#LoadPropertyUserGeneralRowCol.AddScenario">AddScenario</a></dd>
 
             </div>
             <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="LoadPropertyUserGeneralBeamRowCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="LoadPropertyUserGeneralBeamRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="LoadPropertyUserGeneralBeamRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyUserGeneralBeamRowCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyUserGeneralBeamRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyUserGeneralBeamRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyUserGeneralBeamRowCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyUserGeneralBeamRowCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -33341,8 +34050,7 @@ To see this change on any rows, you must get the row from the collection again.<
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyUserGeneralBoltedRowCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyUserGeneralBoltedRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyUserGeneralBoltedRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyUserGeneralBoltedRowCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyUserGeneralBoltedRowCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
                 <dd id="LoadPropertyUserGeneralBoltedRowCol.Get" class="function"><a href="#IdEntityCol.Get">Get</a></dd>
@@ -33652,8 +34360,7 @@ Length Units: English = in | Standard = mm.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyUserGeneralBondedRowCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyUserGeneralBondedRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyUserGeneralBondedRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyUserGeneralBondedRowCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyUserGeneralBondedRowCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
                 <dd id="LoadPropertyUserGeneralBondedRowCol.Get" class="function"><a href="#IdEntityCol.Get">Get</a></dd>
@@ -34201,18 +34908,15 @@ Length Units: English = in | Standard = mm.</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#LoadPropertyUserGeneralRowCol">LoadPropertyUserGeneralRowCol</a></dt>
-                                <dd id="LoadPropertyUserGeneralPanelRowCol.LoadPropertyUserGeneralRowColList" class="variable"><a href="#LoadPropertyUserGeneralRowCol.LoadPropertyUserGeneralRowColList">LoadPropertyUserGeneralRowColList</a></dd>
-                <dd id="LoadPropertyUserGeneralPanelRowCol.AddScenario" class="function"><a href="#LoadPropertyUserGeneralRowCol.AddScenario">AddScenario</a></dd>
+                                <dd id="LoadPropertyUserGeneralPanelRowCol.AddScenario" class="function"><a href="#LoadPropertyUserGeneralRowCol.AddScenario">AddScenario</a></dd>
 
             </div>
             <div><dt><a href="#IdNameEntityCol">IdNameEntityCol</a></dt>
-                                <dd id="LoadPropertyUserGeneralPanelRowCol.IdNameEntityColList" class="variable"><a href="#IdNameEntityCol.IdNameEntityColList">IdNameEntityColList</a></dd>
-                <dd id="LoadPropertyUserGeneralPanelRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
+                                <dd id="LoadPropertyUserGeneralPanelRowCol.Names" class="variable"><a href="#IdNameEntityCol.Names">Names</a></dd>
 
             </div>
             <div><dt><a href="#IdEntityCol">IdEntityCol</a></dt>
-                                <dd id="LoadPropertyUserGeneralPanelRowCol.IdEntityColList" class="variable"><a href="#IdEntityCol.IdEntityColList">IdEntityColList</a></dd>
-                <dd id="LoadPropertyUserGeneralPanelRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
+                                <dd id="LoadPropertyUserGeneralPanelRowCol.Ids" class="variable"><a href="#IdEntityCol.Ids">Ids</a></dd>
                 <dd id="LoadPropertyUserGeneralPanelRowCol.Contains" class="function"><a href="#IdEntityCol.Contains">Contains</a></dd>
                 <dd id="LoadPropertyUserGeneralPanelRowCol.Count" class="function"><a href="#IdEntityCol.Count">Count</a></dd>
 
@@ -34631,6 +35335,54 @@ To see this change on any rows, you must get the row from the collection again.<
                                 </dl>
                             </div>
                 </section>
+                <section id="PlateElementBulkUpdater">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">PlateElementBulkUpdater</span><wbr>(<span class="base"><a href="#BulkUpdaterBase">BulkUpdaterBase</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#PlateElementBulkUpdater"></a>
+    
+    
+
+                            <div id="PlateElementBulkUpdater.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">PlateElementBulkUpdater</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">plateElementBulkUpdater</span><span class="p">:</span> <span class="n">HyperX</span><span class="o">.</span><span class="n">Scripting</span><span class="o">.</span><span class="n">PlateElementBulkUpdater</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PlateElementBulkUpdater.__init__"></a>
+    
+    
+
+                            </div>
+                            <div id="PlateElementBulkUpdater.GetBulkUpdater" class="classattr">
+                                <div class="attr function">
+                    <div class="decorator">@staticmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">GetBulkUpdater</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">application</span><span class="p">:</span> <span class="n"><a href="#Application">Application</a></span>,</span><span class="param">	<span class="n">items</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n"><a href="#PlateElement">PlateElement</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n"><a href="#PlateElementBulkUpdater">PlateElementBulkUpdater</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#PlateElementBulkUpdater.GetBulkUpdater"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#BulkUpdaterBase">BulkUpdaterBase</a></dt>
+                                <dd id="PlateElementBulkUpdater.Update" class="function"><a href="#BulkUpdaterBase.Update">Update</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
                 <section id="Environment">
                     <div class="attr class">
             
@@ -34647,14 +35399,34 @@ To see this change on any rows, you must get the row from the collection again.<
 
 
                             <div id="Environment.InstallLocation" class="classattr">
-                                <div class="attr variable">
-            <span class="name">InstallLocation</span><span class="annotation">: str</span>
+                                <div class="attr function">
+                    <div class="decorator">@classmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">InstallLocation</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
         
     </div>
     <a class="headerlink" href="#Environment.InstallLocation"></a>
     
     
+
+                            </div>
+                            <div id="Environment.ApiVersion" class="classattr">
+                                <div class="attr function">
+                    <div class="decorator">@classmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">ApiVersion</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Environment.ApiVersion"></a>
+    
+     
+        <div class="docstring"><p>The scripting API version of this HyperX environment</p>
+</div>
+
 
                             </div>
                             <div id="Environment.SetLocation" class="classattr">
