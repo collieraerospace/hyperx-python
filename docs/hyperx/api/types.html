@@ -540,10 +540,10 @@
                                 <a class="variable" href="#AnalysisId.JointBoltedSingleHoleBearingIsotropicAllowable">JointBoltedSingleHoleBearingIsotropicAllowable</a>
                         </li>
                         <li>
-                                <a class="variable" href="#AnalysisId.JointBoltedUserDefined1">JointBoltedUserDefined1</a>
+                                <a class="variable" href="#AnalysisId.JointBoltedPullThroughAnalytical">JointBoltedPullThroughAnalytical</a>
                         </li>
                         <li>
-                                <a class="variable" href="#AnalysisId.JointBoltedUserDefined2">JointBoltedUserDefined2</a>
+                                <a class="variable" href="#AnalysisId.JointBoltedPullThroughAllowable">JointBoltedPullThroughAllowable</a>
                         </li>
                         <li>
                                 <a class="variable" href="#AnalysisId.ProgressiveFailureInverseABDTraceMethod">ProgressiveFailureInverseABDTraceMethod</a>
@@ -571,6 +571,12 @@
                         </li>
                         <li>
                                 <a class="variable" href="#AnalysisId.JointWebInteraction">JointWebInteraction</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AnalysisId.JointBoltedInterRiverBucklingSSSF">JointBoltedInterRiverBucklingSSSF</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AnalysisId.JointBoltedInterRiverBucklingColumn">JointBoltedInterRiverBucklingColumn</a>
                         </li>
                         <li>
                                 <a class="variable" href="#AnalysisId.GeometryRule71StiffenerAllLaminatesThicknesstoHoleDiameterRatioMinMaxRepairAngle">GeometryRule71StiffenerAllLaminatesThicknesstoHoleDiameterRatioMinMaxRepairAngle</a>
@@ -3163,6 +3169,9 @@
                         </li>
                         <li>
                                 <a class="variable" href="#AllowablePropertyName.Strain_Shear_SAI">Strain_Shear_SAI</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AllowablePropertyName.Force_PullThrough">Force_PullThrough</a>
                         </li>
                         <li>
                                 <a class="variable" href="#AllowablePropertyName.Stress_PullThrough">Stress_PullThrough</a>
@@ -7126,26 +7135,26 @@ Based on: <a href="https://stackoverflow.com/a/62309159">https://stackoverflow.c
     
 
                             </div>
-                            <div id="AnalysisId.JointBoltedUserDefined1" class="classattr">
+                            <div id="AnalysisId.JointBoltedPullThroughAnalytical" class="classattr">
                                 <div class="attr variable">
-            <span class="name">JointBoltedUserDefined1</span>        =
-<span class="default_value">&lt;<a href="#AnalysisId.JointBoltedUserDefined1">AnalysisId.JointBoltedUserDefined1</a>: 198&gt;</span>
+            <span class="name">JointBoltedPullThroughAnalytical</span>        =
+<span class="default_value">&lt;<a href="#AnalysisId.JointBoltedPullThroughAnalytical">AnalysisId.JointBoltedPullThroughAnalytical</a>: 198&gt;</span>
 
         
     </div>
-    <a class="headerlink" href="#AnalysisId.JointBoltedUserDefined1"></a>
+    <a class="headerlink" href="#AnalysisId.JointBoltedPullThroughAnalytical"></a>
     
     
 
                             </div>
-                            <div id="AnalysisId.JointBoltedUserDefined2" class="classattr">
+                            <div id="AnalysisId.JointBoltedPullThroughAllowable" class="classattr">
                                 <div class="attr variable">
-            <span class="name">JointBoltedUserDefined2</span>        =
-<span class="default_value">&lt;<a href="#AnalysisId.JointBoltedUserDefined2">AnalysisId.JointBoltedUserDefined2</a>: 199&gt;</span>
+            <span class="name">JointBoltedPullThroughAllowable</span>        =
+<span class="default_value">&lt;<a href="#AnalysisId.JointBoltedPullThroughAllowable">AnalysisId.JointBoltedPullThroughAllowable</a>: 199&gt;</span>
 
         
     </div>
-    <a class="headerlink" href="#AnalysisId.JointBoltedUserDefined2"></a>
+    <a class="headerlink" href="#AnalysisId.JointBoltedPullThroughAllowable"></a>
     
     
 
@@ -7254,6 +7263,30 @@ Based on: <a href="https://stackoverflow.com/a/62309159">https://stackoverflow.c
         
     </div>
     <a class="headerlink" href="#AnalysisId.JointWebInteraction"></a>
+    
+    
+
+                            </div>
+                            <div id="AnalysisId.JointBoltedInterRiverBucklingSSSF" class="classattr">
+                                <div class="attr variable">
+            <span class="name">JointBoltedInterRiverBucklingSSSF</span>        =
+<span class="default_value">&lt;<a href="#AnalysisId.JointBoltedInterRiverBucklingSSSF">AnalysisId.JointBoltedInterRiverBucklingSSSF</a>: 213&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AnalysisId.JointBoltedInterRiverBucklingSSSF"></a>
+    
+    
+
+                            </div>
+                            <div id="AnalysisId.JointBoltedInterRiverBucklingColumn" class="classattr">
+                                <div class="attr variable">
+            <span class="name">JointBoltedInterRiverBucklingColumn</span>        =
+<span class="default_value">&lt;<a href="#AnalysisId.JointBoltedInterRiverBucklingColumn">AnalysisId.JointBoltedInterRiverBucklingColumn</a>: 214&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AnalysisId.JointBoltedInterRiverBucklingColumn"></a>
     
     
 
@@ -16944,7 +16977,7 @@ Analysis temperature can only be Value or Subcase.</p>
                     <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">AllowablePropertyName</span><wbr>(<span class="base">enum.Enum</span>):
+    <span class="name">AllowablePropertyName</span><wbr>(<span class="base"><a href="#DeprecatedEnum">DeprecatedEnum</a></span>):
 
         
     </div>
@@ -17099,10 +17132,22 @@ Analysis temperature can only be Value or Subcase.</p>
     
 
                             </div>
+                            <div id="AllowablePropertyName.Force_PullThrough" class="classattr">
+                                <div class="attr variable">
+            <span class="name">Force_PullThrough</span>        =
+<span class="default_value">&lt;<a href="#AllowablePropertyName.Force_PullThrough">AllowablePropertyName.Force_PullThrough</a>: &lt;<a href="#DuplicatedValue">DuplicatedValue</a> object&gt;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AllowablePropertyName.Force_PullThrough"></a>
+    
+    
+
+                            </div>
                             <div id="AllowablePropertyName.Stress_PullThrough" class="classattr">
                                 <div class="attr variable">
             <span class="name">Stress_PullThrough</span>        =
-<span class="default_value">&lt;<a href="#AllowablePropertyName.Stress_PullThrough">AllowablePropertyName.Stress_PullThrough</a>: 15&gt;</span>
+<span class="default_value">&lt;<a href="#AllowablePropertyName.Stress_PullThrough">AllowablePropertyName.Stress_PullThrough</a>: &lt;<a href="#DuplicatedValue">DuplicatedValue</a> object&gt;&gt;</span>
 
         
     </div>
@@ -17138,7 +17183,11 @@ Analysis temperature can only be Value or Subcase.</p>
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
-                                    <div><dt>enum.Enum</dt>
+                                    <div><dt><a href="#DeprecatedEnum">DeprecatedEnum</a></dt>
+                                <dd id="AllowablePropertyName.deprecate" class="function"><a href="#DeprecatedEnum.deprecate">deprecate</a></dd>
+
+            </div>
+            <div><dt>enum.Enum</dt>
                                 <dd id="AllowablePropertyName.name" class="variable">name</dd>
                 <dd id="AllowablePropertyName.value" class="variable">value</dd>
 
