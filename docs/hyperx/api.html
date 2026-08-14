@@ -3213,6 +3213,12 @@
                         <li>
                                 <a class="function" href="#PackageManager.Unpin">Unpin</a>
                         </li>
+                        <li>
+                                <a class="function" href="#PackageManager.Refresh">Refresh</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#PackageManager.SyncPackages">SyncPackages</a>
+                        </li>
                 </ul>
 
                     </details>
@@ -20994,6 +21000,42 @@ Currently, no API definition or bulk updater exists for <code>BeamElement</code>
     
      
         <div class="docstring"><p>Allow <code>package</code> to automatically update to the latest version.</p>
+</div>
+
+
+                            </div>
+                            <div id="PackageManager.Refresh" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">Refresh</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#PackageManager.Refresh"></a>
+    
+    
+
+                            </div>
+                            <div id="PackageManager.SyncPackages" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">SyncPackages</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">leftDbPath</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">copyLeftToMakeChanges</span><span class="p">:</span> <span class="nb">bool</span></span><span class="return-annotation">) -> <span class="n"><a href="api/types.html#SimpleStatus">hyperx.api.types.SimpleStatus</a></span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#PackageManager.SyncPackages"></a>
+    
+     
+        <div class="docstring"><p>Installs any packages in <code>leftDbPath</code> that are not in the current database. Syncs all packages that are in common to the most recent version installed in either database.
+Added in 2026.1.14</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>copyLeftToMakeChanges</strong>:  If true, any changes made to the "left" database will be on a temporary sample and will not persist.</li>
+</ul>
 </div>
 
 
